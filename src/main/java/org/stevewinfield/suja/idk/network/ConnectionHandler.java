@@ -5,7 +5,6 @@
 package org.stevewinfield.suja.idk.network;
 
 import org.apache.log4j.Logger;
-import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.ExceptionEvent;
@@ -13,9 +12,6 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.IDK;
-import org.stevewinfield.suja.idk.communication.MessageHandler;
-import org.stevewinfield.suja.idk.communication.MessageReaderFactory;
-import org.stevewinfield.suja.idk.encryption.Base64Encryption;
 import org.stevewinfield.suja.idk.network.sessions.Session;
 
 public class ConnectionHandler extends SimpleChannelHandler {
@@ -54,26 +50,9 @@ public class ConnectionHandler extends SimpleChannelHandler {
     @Override
     public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent e) {
         if (Bootloader.getSessionManager().hasSession(ctx.getChannel())) {
-            final ChannelBuffer message = (ChannelBuffer) e.getMessage();
-            if (message.readableBytes() < 5) {
+            if (!(e.getMessage() instanceof Integer)) {
+                ctx.getChannel().close();
                 return;
-            }
-            while (message.readableBytes() > 0) {
-                final byte testXmlLength = message.readByte();
-                if (testXmlLength == 60) {
-                    ctx.getChannel().write(IDK.XML_POLICY);
-                    return;
-                }
-                final int messageLength = Base64Encryption.decode(new String(new byte[] { testXmlLength,
-                        message.readByte(), message.readByte() }));
-                final short messageId = (short) Base64Encryption.decode(new String(new byte[] { message.readByte(),
-                        message.readByte() }));
-
-                final byte[] content = new byte[messageLength - 2];
-
-                message.readBytes(content);
-                MessageHandler.handleMessage((Session) ctx.getChannel().getAttachment(),
-                MessageReaderFactory.getMessageReader(messageId, content));
             }
         }
     }

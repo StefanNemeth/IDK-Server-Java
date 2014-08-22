@@ -11,6 +11,7 @@ import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.ChannelException;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.stevewinfield.suja.idk.network.codec.NetworkDecoder;
+import org.stevewinfield.suja.idk.network.codec.NetworkEncoder;
 import org.stevewinfield.suja.idk.threadpools.WorkerTasks;
 
 public class ConnectionListener {
@@ -32,6 +33,7 @@ public class ConnectionListener {
 
     public boolean tryListen() {
         try {
+            this.bootstrap.getPipeline().addLast("encoder", new NetworkEncoder());
             this.bootstrap.getPipeline().addLast("decoder", new NetworkDecoder());
             this.bootstrap.getPipeline().addLast("handler", new ConnectionHandler());
             this.bootstrap.bind(new InetSocketAddress(this.ip, this.port));
