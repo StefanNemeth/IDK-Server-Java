@@ -1,0 +1,98 @@
+apply plugin: 'java'
+
+ext {
+    mainClassName = 'org.stevewinfield.suja.idk.Bootloader' // class to start when JAR is started
+}
+
+repositories {
+	mavenCentral()
+}
+
+group = 'org.stevewinfield.suja.idk'
+version = '0.1' // could probably be changed to match the build number and reading it in via getClass().getImplementationVersion()
+
+// Java 7
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+sourceSets {
+    dist
+}
+
+dependencies {
+	compile 'com.jolbox:bonecp:0.7.1.RELEASE'
+	compile 'org.magicwerk:brownies-collections:0.9.4'
+	compile 'com.google.guava:guava:14.0.1'
+	compile 'com.googlecode.json-simple:json-simple:1.1.1'
+	compile 'log4j:log4j:1.2.17'
+	compile 'mysql:mysql-connector-java:5.1.25'
+	compile 'io.netty:netty:3.6.6.Final'
+	compile 'org.slf4j:slf4j-api:1.7.5'
+	compile 'org.slf4j:slf4j-nop:1.7.5'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName, 'Implementation-Title': project.name, 'Implementation-Version': version
+    }
+}
+
+// creates a JAR containing all the javadoc
+task javadocJar(type: Jar, dependsOn: javadoc) {
+	classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+// creates a JAR containg the source code
+task sourceJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+// contains a runnable JAR containing this project and its dependencies
+task allJar(type: Jar) {
+    from sourceSets.main.output
+    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+
+    classifier = 'all'
+
+    exclude 'META-INF/*.SF'
+    exclude 'META-INF/*.DSA'
+    exclude 'META-INF/*.RSA'
+    exclude 'META-INF/MANIFEST.MF'
+    exclude 'LICENSE.txt'
+
+    manifest {
+        attributes 'Main-Class': mainClassName, 'Implementation-Title': project.name, 'Implementation-Version': version
+    }
+}
+
+// contains a ZIP usable for distributing
+task distZip(type: Zip, dependsOn: processDistResources) {
+	from sourceSets.dist.output
+	from allJar.outputs.files
+
+	classifier = 'dist'
+}
+
+// this task can be called when wanting to create a distribution
+task dist {}
+
+dist.dependsOn jar
+dist.dependsOn javadocJar
+dist.dependsOn sourceJar
+dist.dependsOn allJar
+dist.dependsOn distZip
+
+// this is needed for being able to change the binary name in the .sh and .bat scripts
+def engine = new groovy.text.GStringTemplateEngine()
+
+processDistResources {
+	from(sourceSets.dist.resources.srcDirs) {
+		include '**/*.sh'
+		include '**/*.bat'
+		filter org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+			binary: allJar.archiveName
+		]
+	}
+}
