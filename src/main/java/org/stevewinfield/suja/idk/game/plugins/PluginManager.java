@@ -73,8 +73,8 @@ public class PluginManager {
         } catch (final ScriptException e) {
             logger.error("ScriptException for plugin " + name, e);
         }
-        if (plugins.containsKey(name)) {
-            logger.error("A plugin by the name " + name + " already exists. Replacing it by " + filename);
+        if (plugins.containsKey(name) && showLog) {
+            logger.warn("A plugin by the name " + name + " already exists. Replacing it by " + filename);
         }
         this.plugins.put(name, (GamePlugin) engine.get("IDK"));
         if (showLog)
