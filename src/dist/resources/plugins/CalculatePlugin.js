@@ -22,7 +22,7 @@ var calculateInteractor = {
         // Loop message text (chars))
         for (var i = 0; i < messageText.length(); i++) {
             // Get char
-            var chr = String.fromCharCode(messageText.charAt(i));
+            var chr = String.fromCharCode(messageText.charCodeAt(i));
             if (!isNaN(chr)) {
                 calculationStarted = true;
             }
