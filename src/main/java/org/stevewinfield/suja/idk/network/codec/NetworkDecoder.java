@@ -31,10 +31,8 @@ public class NetworkDecoder extends FrameDecoder {
             try {
                 final byte testXmlLength = buffer.readByte();
                 if (testXmlLength != 64) {
-                    if (testXmlLength == 60) {
-                        ctx.getChannel().write(IDK.XML_POLICY);
-                    }
-                    logger.info(testXmlLength);
+					buffer.discardReadBytes();
+					ctx.getChannel().write(IDK.XML_POLICY);
                     return null;
                 }
                 
