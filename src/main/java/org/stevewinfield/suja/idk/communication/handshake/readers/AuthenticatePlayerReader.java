@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.IDK;
+import org.stevewinfield.suja.idk.Translations;
 import org.stevewinfield.suja.idk.communication.IMessageReader;
 import org.stevewinfield.suja.idk.communication.MessageReader;
 import org.stevewinfield.suja.idk.communication.QueuedMessageWriter;
@@ -42,7 +43,7 @@ public class AuthenticatePlayerReader implements IMessageReader {
             session
             .sendNotification(
             NotifyType.MULTI_ALERT,
-            "Der Token, der f�r deine Authentizierung generiert wurde, existiert anscheinend nicht mehr. Wir bitten dich das Hotel neuzuladen.");
+            Translations.getTranslation("fail_authenticate"));
             return;
         }
 

@@ -120,6 +120,17 @@ public class Bootloader {
         }
 
         try {
+            Translations.loadTranslations();
+            logger.info(Translations.getCount() + " Translation(s) loaded");
+        } catch (final FileNotFoundException e) {
+            logger.error("Couldn't found translations file.", e);
+            return;
+        } catch (final IOException e) {
+            logger.error("Couldn't read translations file.", e);
+            return;
+        }
+
+        try {
             IDK.loadSettings();
             logger.info("GameSetting(s) loaded.");
         } catch (final Exception e) {

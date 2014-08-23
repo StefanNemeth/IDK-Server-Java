@@ -31,7 +31,7 @@ public class StoragePooling {
         try {
             boneCP = new BoneCP(boneCPConfig);
         } catch (final Exception e) {
-            logger.error("Could'nt create SQL Connection!", e);
+            logger.error("Couldn't create SQL Connection!", e);
             return false;
         }
         return true;

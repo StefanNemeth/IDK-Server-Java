@@ -5,6 +5,7 @@
 package org.stevewinfield.suja.idk.game.miscellaneous.commands;
 
 import org.stevewinfield.suja.idk.IDK;
+import org.stevewinfield.suja.idk.Translations;
 import org.stevewinfield.suja.idk.game.miscellaneous.ChatCommandArguments;
 import org.stevewinfield.suja.idk.game.miscellaneous.IChatCommand;
 import org.stevewinfield.suja.idk.game.miscellaneous.NotifyType;
@@ -20,7 +21,7 @@ public class InfoChatCommand implements IChatCommand {
     @Override
     public boolean execute(final RoomPlayer player, final ChatCommandArguments arguments) {
         player.getSession().sendNotification(NotifyType.STAFF_ALERT,
-        "Powered by the IDK Project (Build " + IDK.BUILD_NUMBER + ") developed by Steve Winfield and Rhinnodanny.");
+                Translations.getTranslation("info_chat_command", IDK.VERSION, IDK.BUILD_NUMBER, "Steve Winfield", "Rhinnodanny."));
         return true;
     }
 

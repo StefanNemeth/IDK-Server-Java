@@ -4,6 +4,7 @@
  */
 package org.stevewinfield.suja.idk.communication.quests.readers;
 
+import org.stevewinfield.suja.idk.Translations;
 import org.stevewinfield.suja.idk.communication.IMessageReader;
 import org.stevewinfield.suja.idk.communication.MessageReader;
 import org.stevewinfield.suja.idk.game.miscellaneous.NotifyType;
@@ -17,7 +18,7 @@ public class GetQuestsListReader implements IMessageReader {
             return;
 
         session.sendNotification(NotifyType.STAFF_ALERT,
-        "Diese Funktion ist derzeit deaktiviert bzw. wurde noch nicht programmiert.");
+        Translations.getTranslation("feature_disabled"));
     }
 
 }

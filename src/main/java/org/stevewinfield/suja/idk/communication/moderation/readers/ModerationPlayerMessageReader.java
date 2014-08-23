@@ -1,6 +1,7 @@
 package org.stevewinfield.suja.idk.communication.moderation.readers;
 
 import org.stevewinfield.suja.idk.Bootloader;
+import org.stevewinfield.suja.idk.Translations;
 import org.stevewinfield.suja.idk.communication.IMessageReader;
 import org.stevewinfield.suja.idk.communication.MessageReader;
 import org.stevewinfield.suja.idk.game.miscellaneous.NotifyType;
@@ -27,7 +28,7 @@ public class ModerationPlayerMessageReader implements IMessageReader {
 
         if (target == null) {
             session.sendNotification(NotifyType.MOD_ALERT,
-            "Die Nachricht konnte nicht versandt werden, da sich der Nutzer nicht im Hotel befindet.");
+            Translations.getTranslation("fail_send_message_user_not_online"));
             return;
         }
 

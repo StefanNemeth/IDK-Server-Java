@@ -5,6 +5,7 @@
 package org.stevewinfield.suja.idk.communication.moderation.readers;
 
 import org.stevewinfield.suja.idk.Bootloader;
+import org.stevewinfield.suja.idk.Translations;
 import org.stevewinfield.suja.idk.communication.IMessageReader;
 import org.stevewinfield.suja.idk.communication.MessageReader;
 import org.stevewinfield.suja.idk.communication.moderation.writers.ModerationRoomInfoWriter;
@@ -23,7 +24,7 @@ public class GetModerationRoomInfoReader implements IMessageReader {
 
         if (info == null) {
             session.sendNotification(NotifyType.MOD_ALERT,
-            "Die Informationen zu diesem Raum konnten nicht geladen werden.");
+            Translations.getTranslation("fail_load_room_information"));
             return;
         }
 

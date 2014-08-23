@@ -9,6 +9,7 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
+import org.stevewinfield.suja.idk.Translations;
 import org.stevewinfield.suja.idk.communication.IMessageReader;
 import org.stevewinfield.suja.idk.communication.MessageReader;
 import org.stevewinfield.suja.idk.communication.moderation.writers.ModerationPlayerInfoWriter;
@@ -47,7 +48,7 @@ public class GetModerationPlayerInfoReader implements IMessageReader {
 
         if (info == null) {
             session.sendNotification(NotifyType.MOD_ALERT,
-            "Die Informationen zu diesem Nutzer konnten nicht geladen werden.");
+            Translations.getTranslation("fail_load_user_information"));
             return;
         }
 
