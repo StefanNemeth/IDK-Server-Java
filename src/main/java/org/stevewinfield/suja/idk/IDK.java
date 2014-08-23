@@ -11,7 +11,10 @@ public class IDK {
     /**
      * Constants
      */
-    public static final String BUILD_NUMBER = "c988ccce";
+    public static String BUILD_NUMBER;
+    public static String VERSION;
+    public static String NAME;
+
     public static final String AUTHOR = "STEVE WINFIELD";
     public static final String XML_POLICY = "<?xml version=\"1.0\"?>\r\n"
     + "<!DOCTYPE cross-domain-policy SYSTEM \"/xml/dtds/cross-domain-policy.dtd\">\r\n" + "<cross-domain-policy>\r\n"

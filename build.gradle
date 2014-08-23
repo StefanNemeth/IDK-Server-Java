@@ -2,14 +2,15 @@ apply plugin: 'java'
 
 ext {
     mainClassName = 'org.stevewinfield.suja.idk.Bootloader' // class to start when JAR is started
+    buildNumber = 'c988ccce'
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 group = 'org.stevewinfield.suja.idk'
-version = '0.1' // could probably be changed to match the build number and reading it in via getClass().getImplementationVersion()
+version = '0.1-SNAPSHOT'
 
 // Java 7
 sourceCompatibility = 1.7
@@ -20,15 +21,15 @@ sourceSets {
 }
 
 dependencies {
-	compile 'com.jolbox:bonecp:0.7.1.RELEASE'
-	compile 'org.magicwerk:brownies-collections:0.9.4'
-	compile 'com.google.guava:guava:14.0.1'
-	compile 'com.googlecode.json-simple:json-simple:1.1.1'
-	compile 'log4j:log4j:1.2.17'
-	compile 'mysql:mysql-connector-java:5.1.25'
-	compile 'io.netty:netty:3.6.6.Final'
-	compile 'org.slf4j:slf4j-api:1.7.5'
-	compile 'org.slf4j:slf4j-nop:1.7.5'
+    compile 'com.jolbox:bonecp:0.7.1.RELEASE'
+    compile 'org.magicwerk:brownies-collections:0.9.4'
+    compile 'com.google.guava:guava:14.0.1'
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
+    compile 'log4j:log4j:1.2.17'
+    compile 'mysql:mysql-connector-java:5.1.25'
+    compile 'io.netty:netty:3.6.6.Final'
+    compile 'org.slf4j:slf4j-api:1.7.5'
+    compile 'org.slf4j:slf4j-nop:1.7.5'
 }
 
 jar {
@@ -39,7 +40,7 @@ jar {
 
 // creates a JAR containing all the javadoc
 task javadocJar(type: Jar, dependsOn: javadoc) {
-	classifier = 'javadoc'
+    classifier = 'javadoc'
     from javadoc.destinationDir
 }
 
@@ -52,7 +53,7 @@ task sourceJar(type: Jar) {
 // contains a runnable JAR containing this project and its dependencies
 task allJar(type: Jar) {
     from sourceSets.main.output
-    from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 
     classifier = 'all'
 
@@ -69,10 +70,10 @@ task allJar(type: Jar) {
 
 // contains a ZIP usable for distributing
 task distZip(type: Zip, dependsOn: processDistResources) {
-	from sourceSets.dist.output
-	from allJar.outputs.files
+    from sourceSets.dist.output
+    from allJar.outputs.files
 
-	classifier = 'dist'
+    classifier = 'dist'
 }
 
 // this task can be called when wanting to create a distribution
@@ -84,15 +85,33 @@ dist.dependsOn sourceJar
 dist.dependsOn allJar
 dist.dependsOn distZip
 
-// this is needed for being able to change the binary name in the .sh and .bat scripts
-def engine = new groovy.text.GStringTemplateEngine()
+import org.apache.tools.ant.filters.ReplaceTokens
 
 processDistResources {
-	from(sourceSets.dist.resources.srcDirs) {
-		include '**/*.sh'
-		include '**/*.bat'
-		filter org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-			binary: allJar.archiveName
-		]
-	}
+    from(sourceSets.dist.resources.srcDirs) {
+        include '**/*.sh'
+        include '**/*.bat'
+        filter ReplaceTokens, tokens: [
+                binary: allJar.archiveName
+        ]
+    }
+
+    inputs.property('archiveName', { allJar.archiveName })
+}
+
+processResources {
+    from(sourceSets.main.resources.srcDirs) {
+        include 'build.properties'
+        filter ReplaceTokens, tokens: [
+                name   : project.name,
+                version: project.version,
+                group  : project.group,
+                build  : project.buildNumber,
+        ]
+    }
+
+    inputs.property('project.name', { project.name })
+    inputs.property('project.version', { project.version })
+    inputs.property('project.group', { project.group })
+    inputs.property('project.buildNumber', { project.buildNumber })
 }

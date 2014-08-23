@@ -54,8 +54,17 @@ public class Bootloader {
     }
 
     public static void main(final String[] args) {
+        Properties buildProperties = new Properties();
+        try {
+            buildProperties.load(Bootloader.class.getResourceAsStream("/build.properties"));
+        } catch (Exception ignored) {
+        }
+        IDK.NAME = buildProperties.getProperty("name", "IDK");
+        IDK.BUILD_NUMBER = buildProperties.getProperty("build", "UNKNOWN");
+        IDK.VERSION = buildProperties.getProperty("version", "0.0.0");
+
         PropertyConfigurator.configure("log4j.properties");
-        logger.info("IDK (Build " + IDK.BUILD_NUMBER + ") is starting.");
+        logger.info(IDK.NAME + " (Version " + IDK.VERSION + ", Build " + IDK.BUILD_NUMBER + ") is starting.");
 
         final Properties pFile = new Properties();
 
@@ -70,7 +79,7 @@ public class Bootloader {
         }
 
         settings = new Settings(pFile);
-        logger.info("Properties file successfully readed.");
+        logger.info("Properties file successfully read.");
 
         storage = new Storage();
 
@@ -94,7 +103,7 @@ public class Bootloader {
         logger.info("Successfully connected!");
 
         if (decodedKey.split("-").length != 3) {
-            logger.error("IDK has broken down.");
+            logger.error(IDK.NAME + " has broken down.");
             return;
         }
 
