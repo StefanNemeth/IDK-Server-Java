@@ -46,7 +46,9 @@ public class NetworkDecoder extends FrameDecoder {
                 
                 ++handledObjects;
             } catch (final Exception e) {
-                // ignore logger
+                if (IDK.DEBUG) {
+                    logger.error("Failed to handle packet", e);
+                }
             }
         }
         
