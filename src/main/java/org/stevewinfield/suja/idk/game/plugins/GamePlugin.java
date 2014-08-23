@@ -30,6 +30,10 @@ public class GamePlugin {
         Bootloader.getGame().getBotManager().addBotInteractor(this, interactorId, obj);
     }
 
+    public String getName() {
+        return name;
+    }
+
     private final String name;
     private final ScriptEngine script;
 }

@@ -4,15 +4,19 @@
  */
 package org.stevewinfield.suja.idk.game.miscellaneous;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.log4j.Logger;
+import org.stevewinfield.suja.idk.game.miscellaneous.commands.InfoChatCommand;
+import org.stevewinfield.suja.idk.game.miscellaneous.commands.PickallChatCommand;
+import org.stevewinfield.suja.idk.game.miscellaneous.commands.caching.RefreshCatalogCommand;
+import org.stevewinfield.suja.idk.game.miscellaneous.commands.caching.RefreshFurnitureCommand;
+import org.stevewinfield.suja.idk.game.miscellaneous.commands.caching.RefreshRoomCommand;
+import org.stevewinfield.suja.idk.game.plugins.GamePlugin;
+import org.stevewinfield.suja.idk.game.plugins.PluginInterfaces;
+import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
 
 import javax.script.Invocable;
-import org.apache.log4j.Logger;
-import org.stevewinfield.suja.idk.game.miscellaneous.commands.*;
-import org.stevewinfield.suja.idk.game.miscellaneous.commands.caching.*;
-import org.stevewinfield.suja.idk.game.plugins.GamePlugin;
-import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChatCommandHandler {
     private static Logger logger = Logger.getLogger(ChatCommandHandler.class);
@@ -28,6 +32,13 @@ public class ChatCommandHandler {
     }
 
     public void addChatCommand(final GamePlugin plugin, final String cmd, final String permissionCode, final String f) {
+        final PluginInterfaces.ChatCommandExecutor executor = ((Invocable) plugin.getScript()).getInterface(plugin.getScript()
+                .get(f), PluginInterfaces.ChatCommandExecutor.class);
+        if (executor == null) {
+            logger.error("Invalid chat command executor for command" + cmd);
+            logger.warn("You didn't set the method execute in " + f);
+            return;
+        }
         commands.put(cmd, new IChatCommand() {
             @Override
             public String getPermissionCode() {
@@ -37,16 +48,7 @@ public class ChatCommandHandler {
             @Override
             public boolean execute(final RoomPlayer player, final ChatCommandArguments arguments) {
                 try {
-                    final Boolean executed = (Boolean) ((Invocable) plugin.getScript()).invokeMethod(plugin.getScript()
-                    .get(f), "execute", player, arguments);
-                    if (executed == null) {
-                        return true;
-                    } else {
-                        return executed;
-                    }
-                } catch (final NoSuchMethodException e) {
-                    logger.warn("You didn't set the method execute in " + f);
-                    return false;
+                    return executor.execute(player, arguments);
                 } catch (final Exception e) {
                     logger.error("Plugin Error", e);
                     return false;

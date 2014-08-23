@@ -4,6 +4,7 @@
  */
 package org.stevewinfield.suja.idk;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -130,7 +131,7 @@ public class Bootloader {
         game = new Game();
         game.getCatalogManager().loadCache();
         pluginManager = new PluginManager();
-        pluginManager.load();
+        pluginManager.load(new File("plugins"));
         game.getBotManager().load();
 
         if (!Bootloader.placeholderNetwork.loadPlugins()) {

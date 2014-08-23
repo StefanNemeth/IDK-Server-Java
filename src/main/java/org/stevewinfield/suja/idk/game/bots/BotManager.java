@@ -4,22 +4,22 @@
  */
 package org.stevewinfield.suja.idk.game.bots;
 
+import org.apache.log4j.Logger;
+import org.magicwerk.brownies.collections.GapList;
+import org.stevewinfield.suja.idk.Bootloader;
+import org.stevewinfield.suja.idk.game.bots.interactors.DefaultBotInteractor;
+import org.stevewinfield.suja.idk.game.miscellaneous.ChatMessage;
+import org.stevewinfield.suja.idk.game.plugins.GamePlugin;
+import org.stevewinfield.suja.idk.game.plugins.PluginInterfaces;
+import org.stevewinfield.suja.idk.game.rooms.RoomInstance;
+import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
+
+import javax.script.Invocable;
+import javax.script.ScriptException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-
-import javax.script.Invocable;
-import javax.script.ScriptException;
-
-import org.apache.log4j.Logger;
-import org.magicwerk.brownies.collections.GapList;
-import org.stevewinfield.suja.idk.Bootloader;
-import org.stevewinfield.suja.idk.game.bots.interactors.*;
-import org.stevewinfield.suja.idk.game.miscellaneous.ChatMessage;
-import org.stevewinfield.suja.idk.game.plugins.GamePlugin;
-import org.stevewinfield.suja.idk.game.rooms.RoomInstance;
-import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
 
 public class BotManager {
     private static Logger logger = Logger.getLogger(BotManager.class);
@@ -89,50 +89,59 @@ public class BotManager {
     }
 
     public void addBotInteractor(final GamePlugin plugin, final int interactorId, final String obj) {
+        final PluginInterfaces.OnLoadedInterface onLoadedInterface = getInterface(plugin, obj, PluginInterfaces.OnLoadedInterface.class);
+        final PluginInterfaces.OnLeftInterface onLeftInterface = getInterface(plugin, obj, PluginInterfaces.OnLeftInterface.class);
+        final PluginInterfaces.OnCycleInterface onCycleInterface = getInterface(plugin, obj, PluginInterfaces.OnCycleInterface.class);
+        final PluginInterfaces.OnPlayerSaysInterface onPlayerSaysInterface = getInterface(plugin, obj, PluginInterfaces.OnPlayerSaysInterface.class);
+
         botInteractors.put(interactorId, new IBotInteractor() {
 
             @Override
             public void onLoaded(final RoomInstance room, final RoomPlayer bot) {
+                if (onLoadedInterface == null) return;
                 try {
-                    ((Invocable) plugin.getScript()).invokeMethod(plugin.getScript().get(obj), "onLoaded", room, bot);
-                } catch (final NoSuchMethodException e) {
-                } catch (final ScriptException e) {
-                    logger.error("Plugin Error", e);
+                    onLoadedInterface.onLoaded(room, bot);
+                } catch (final Throwable t) {
+                    logger.error("Plugin Error", t);
                 }
             }
 
             @Override
             public void onLeft(final RoomInstance room, final RoomPlayer bot) {
+                if (onLeftInterface == null) return;
                 try {
-                    ((Invocable) plugin.getScript()).invokeMethod(plugin.getScript().get(obj), "onLeft", room, bot);
-                } catch (final NoSuchMethodException e) {
-                } catch (final ScriptException e) {
-                    logger.error("Plugin Error", e);
+                    onLeftInterface.onLeft(room, bot);
+                } catch (final Throwable t) {
+                    logger.error("Plugin Error", t);
                 }
             }
 
             @Override
             public void onCycle(final RoomPlayer bot) {
+                if (onCycleInterface == null) return;
                 try {
-                    ((Invocable) plugin.getScript()).invokeMethod(plugin.getScript().get(obj), "onCycle", bot);
-                } catch (final NoSuchMethodException e) {
-                } catch (final ScriptException e) {
-                    logger.error("Plugin Error", e);
+                    onCycleInterface.onCycle(bot);
+                } catch (final Throwable t) {
+                    logger.error("Plugin Error", t);
                 }
             }
 
             @Override
             public void onPlayerSays(final RoomPlayer player, final RoomPlayer bot, final ChatMessage message) {
+                if (onPlayerSaysInterface == null) return;
                 try {
-                    ((Invocable) plugin.getScript()).invokeMethod(plugin.getScript().get(obj), "onPlayerSays", player,
-                    bot, message);
-                } catch (final NoSuchMethodException e) {
-                } catch (final ScriptException e) {
-                    logger.error("Plugin Error", e);
+                    onPlayerSaysInterface.onPlayerSays(player, bot, message);
+                } catch (final Throwable t) {
+                    logger.error("Plugin Error", t);
                 }
             }
 
         });
+    }
+
+    private <T> T getInterface(final GamePlugin plugin, final String obj, Class<T> clazz) {
+        return ((Invocable) plugin.getScript()).getInterface(plugin.getScript()
+                .get(obj), clazz);
     }
 
     private final ConcurrentHashMap<Integer, BotInstance> bots;
