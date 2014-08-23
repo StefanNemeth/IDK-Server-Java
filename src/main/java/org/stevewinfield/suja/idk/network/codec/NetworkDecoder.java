@@ -30,8 +30,11 @@ public class NetworkDecoder extends FrameDecoder {
         while (buffer.readableBytes() > 0) {
             try {
                 final byte testXmlLength = buffer.readByte();
-                if (testXmlLength == 60) {
-                    ctx.getChannel().write(IDK.XML_POLICY);
+                if (testXmlLength != 64) {
+                    if (testXmlLength == 60) {
+                        ctx.getChannel().write(IDK.XML_POLICY);
+                    }
+                    logger.info(testXmlLength);
                     return null;
                 }
                 
@@ -46,9 +49,7 @@ public class NetworkDecoder extends FrameDecoder {
                 
                 ++handledObjects;
             } catch (final Exception e) {
-                if (IDK.DEBUG) {
-                    logger.error("Failed to handle packet", e);
-                }
+                logger.error("Failed to handle packet", e);
             }
         }
         
