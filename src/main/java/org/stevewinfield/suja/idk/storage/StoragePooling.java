@@ -75,5 +75,6 @@ public class StoragePooling {
         storageDrivers = new HashMap<>();
         registerStorageDriver(new MySQLStorageDriver());
         registerStorageDriver(new HSQLDBStorageDriver());
+        registerStorageDriver(new PostgreStorageSQLDriver());
     }
 }

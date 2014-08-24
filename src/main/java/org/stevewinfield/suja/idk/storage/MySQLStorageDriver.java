@@ -16,7 +16,10 @@ public class MySQLStorageDriver implements StorageDriver {
 
     @Override
     public String getConnectionString() {
-        return "jdbc:mysql://" + Bootloader.getSettings().getProperty("idk.mysql.host") + "/" + Bootloader.getSettings().getProperty("idk.mysql.database");
+        return "jdbc:mysql://" +
+                Bootloader.getSettings().getProperty("idk.mysql.host") + ":" +
+                Bootloader.getSettings().getProperty("idk.mysql.port", "3306") + "/" +
+                Bootloader.getSettings().getProperty("idk.mysql.database");
     }
 
     @Override
