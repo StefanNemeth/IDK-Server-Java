@@ -21,7 +21,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class FriendRequestAcceptReader implements IMessageReader {
-    private static Logger logger = Logger.getLogger(FriendRequestAcceptReader.class);
+    private static final Logger logger = Logger.getLogger(FriendRequestAcceptReader.class);
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
@@ -35,7 +35,7 @@ public class FriendRequestAcceptReader implements IMessageReader {
             amount = 50;
         }
 
-        final List<Session> newFriends = new GapList<Session>();
+        final List<Session> newFriends = new GapList<>();
         final String updateString = "UPDATE player_friends SET is_request=0 WHERE player_acc_id=" + session.getPlayerInstance().getInformation().getId();
         String whereString = "";
 
@@ -66,13 +66,13 @@ public class FriendRequestAcceptReader implements IMessageReader {
                             }
                         } else if (userInfo.getInt("stream_enabled") == 1) {
                             session.getPlayerMessenger().onStatusChanged(playerId, false);
-                            final GapList<Integer> friends = new GapList<Integer>();
+                            final GapList<Integer> friends = new GapList<>();
                             final ResultSet row = Bootloader.getStorage().queryParams("SELECT player_acc_id, player_req_id, is_request  FROM player_friends WHERE player_req_id = " + playerId + " OR player_acc_id = " + playerId + " ORDER BY id").executeQuery();
                             while (row.next()) {
                                 if (row.getInt("is_request") == 1) {
                                     continue;
                                 }
-                                int mId = 0;
+                                int mId;
                                 if (row.getInt("player_acc_id") != playerId) {
                                     mId = row.getInt("player_acc_id");
                                 } else {
@@ -80,7 +80,21 @@ public class FriendRequestAcceptReader implements IMessageReader {
                                 }
                                 friends.add(mId);
                             }
-                            new FriendStream(playerId, friends).broadcastEvent(playerId, userInfo.getString("nickname"), userInfo.getString("figurecode"), userInfo.getString("gender").toLowerCase() == "m" ? PlayerInformation.MALE_GENDER : PlayerInformation.FEMALE_GENDER, FriendStreamEventType.FRIEND_MADE, FriendStreamLinkType.FRIEND_REQUEST, new String[]{session.getPlayerInstance().getInformation().getId() + "", session.getPlayerInstance().getInformation().getPlayerName()});
+                            new FriendStream(playerId, friends)
+                                    .broadcastEvent(
+                                            playerId,
+                                            userInfo.getString("nickname"),
+                                            userInfo.getString("figurecode"),
+                                            userInfo.getString("gender").toLowerCase().equals("m") ?
+                                                    PlayerInformation.MALE_GENDER :
+                                                    PlayerInformation.FEMALE_GENDER,
+                                            FriendStreamEventType.FRIEND_MADE,
+                                            FriendStreamLinkType.FRIEND_REQUEST,
+                                            new String[]{
+                                                    session.getPlayerInstance().getInformation().getId() + "",
+                                                    session.getPlayerInstance().getInformation().getPlayerName()
+                                            }
+                                    );
                         }
                         session.getFriendStream().addFriend(playerId);
                     }
@@ -91,7 +105,7 @@ public class FriendRequestAcceptReader implements IMessageReader {
             }
         }
 
-        if (whereString != "") {
+        if (!whereString.equals("")) {
             Bootloader.getStorage().executeQuery(updateString + " AND (" + whereString.substring(4) + ")");
         }
 

@@ -134,8 +134,8 @@ public class RoomPlayer implements ISerialize {
         this.chat(message, ChatType.SAY);
     }
 
-    public void chat(final String message, final int shouting) {
-        room.getRoomTask().offerChatMessageAdd(new ChatMessage(this, message, shouting));
+    public void chat(final String message, final int chatType) {
+        room.getRoomTask().offerChatMessageAdd(new ChatMessage(this, message, chatType));
     }
 
     public RoomPlayer(final int virtualId, final int roomId, final RoomInstance room, final Vector3 position, final int rotation) {
@@ -143,7 +143,7 @@ public class RoomPlayer implements ISerialize {
         this.roomId = roomId;
         this.room = room;
         this.position = position;
-        this.statusMap = new LinkedHashMap<String, String>();
+        this.statusMap = new LinkedHashMap<>();
         this.headRotation = rotation;
         this.rotation = rotation;
         this.goalRotation = -1;
@@ -356,21 +356,29 @@ public class RoomPlayer implements ISerialize {
 
     public void onCycle() {
         if (this.stepIsSetted()) {
-            if ((this.room.getInformation().getModel().getDoorPosition().getX() == this.getSettedPosition().getX() && this.room.getInformation().getModel().getDoorPosition().getY() == this.getSettedPosition().getY()) || (this.gettingKicked && ++this.passedTilesKick >= 5)) {
+            if ((this.room.getInformation().getModel().getDoorPosition().getX() == this.getSettedPosition().getX() &&
+                    this.room.getInformation().getModel().getDoorPosition().getY() == this.getSettedPosition().getY()) ||
+                    (this.gettingKicked && ++this.passedTilesKick >= 5)) {
                 room.removePlayerFromRoom(session, true, this.gettingKicked);
                 return;
             }
             this.setPosition(this.getSettedPosition());
             this.setStepSetted(false);
             final RoomItem highestItem = room.getTopItem(this.getPosition().getX(), this.getPosition().getY());
-            if (highestItem == null || (highestItem != null && this.floorItem != highestItem)) {
+            if (highestItem == null || (this.floorItem != highestItem)) {
                 if (this.floorItem != null) {
-                    this.floorItem.onPlayerWalksOff(this, floorItem.getBase().getInteractor() != FurnitureInteractor.WF_PLATE && floorItem.getBase().getInteractor() != FurnitureInteractor.BATTLE_BANZAI_PUCK);
+                    this.floorItem.onPlayerWalksOff(
+                            this,
+                            floorItem.getBase().getInteractor() != FurnitureInteractor.WF_PLATE && floorItem.getBase().getInteractor() != FurnitureInteractor.BATTLE_BANZAI_PUCK
+                    );
                     this.floorItem = null;
                 }
                 if (highestItem != null) {
                     this.floorItem = highestItem;
-                    highestItem.onPlayerWalksOn(this, highestItem.getBase().getInteractor() != FurnitureInteractor.WF_PLATE && highestItem.getBase().getInteractor() != FurnitureInteractor.BATTLE_BANZAI_PUCK);
+                    highestItem.onPlayerWalksOn(
+                            this,
+                            highestItem.getBase().getInteractor() != FurnitureInteractor.WF_PLATE && highestItem.getBase().getInteractor() != FurnitureInteractor.BATTLE_BANZAI_PUCK
+                    );
                 }
             }
         }
@@ -409,7 +417,16 @@ public class RoomPlayer implements ISerialize {
             boolean updateMap = false;
 
             if (!this.isRollerEvent) {
-                Node l = (this.getPosition().getX() == this.getGoalPosition().getX() && this.getPosition().getY() == this.getGoalPosition().getY()) ? null : Pathfinder.getPathInArray(room.getGamemap().getTileStates(), room.getGamemap().getTileHeights(), this.getPosition().getVector2(), this.getGoalPosition(), this.walkingBlocked);
+                Node l = (this.getPosition().getX() == this.getGoalPosition().getX() &&
+                        this.getPosition().getY() == this.getGoalPosition().getY()) ?
+                        null :
+                        Pathfinder.getPathInArray(
+                                room.getGamemap().getTileStates(),
+                                room.getGamemap().getTileHeights(),
+                                this.getPosition().getVector2(),
+                                this.getGoalPosition(),
+                                this.walkingBlocked
+                        );
 
                 if (l != null) {
                     while (l.getParent() != null && l.getParent().getParent() != null) {
@@ -445,8 +462,9 @@ public class RoomPlayer implements ISerialize {
                 } else if (this.getGoalRotation() != -1) {
                     this.setGoalRotation(-1);
                 }
-                int state = 0;
-                if ((state = room.getGamemap().getTileState(this.getPosition().getX(), this.getPosition().getY())) == TileState.SITABLE || state == (TileState.SITABLE | TileState.PLAYER) || state == (TileState.SITABLE | TileState.BLOCKED)) {
+                int state;
+                if ((state = room.getGamemap().getTileState(this.getPosition().getX(), this.getPosition().getY())) == TileState.SITABLE ||
+                        state == (TileState.SITABLE | TileState.PLAYER) || state == (TileState.SITABLE | TileState.BLOCKED)) {
                     RoomItem highestItem = null;
                     for (final RoomItem item : room.getRoomItemsForTile(this.getPosition().getVector2())) {
                         if ((highestItem == null || item.getAbsoluteHeight() > highestItem.getAbsoluteHeight()) && item.getBase().isSitable()) {
@@ -457,7 +475,8 @@ public class RoomPlayer implements ISerialize {
                         this.setRotation(highestItem.getRotation());
                         this.addStatus("sit", String.valueOf(highestItem.getBase().getHeight()));
                     }
-                } else if ((state = room.getGamemap().getTileState(this.getPosition().getX(), this.getPosition().getY())) == TileState.LAYABLE || state == (TileState.LAYABLE | TileState.PLAYER) || state == (TileState.LAYABLE | TileState.BLOCKED)) {
+                } else if ((state = room.getGamemap().getTileState(this.getPosition().getX(), this.getPosition().getY())) == TileState.LAYABLE ||
+                        state == (TileState.LAYABLE | TileState.PLAYER) || state == (TileState.LAYABLE | TileState.BLOCKED)) {
                     final RoomItem highestItem = room.getTopItem(getPosition().getX(), getPosition().getY());
                     if (highestItem != null) {
                         if (highestItem.getRotation() == 2) {
@@ -486,7 +505,7 @@ public class RoomPlayer implements ISerialize {
                     this.removeStatus("mv");
                 }
                 final RoomItem highestItem = room.getTopItem(nextX, nextY);
-                if (highestItem == null || (highestItem != null && this.floorItem != highestItem)) {
+                if (highestItem == null || (this.floorItem != highestItem)) {
                     if (this.floorItem != null) {
                         if (this.floorItem.getBase().getEffectId() > 0) {
                             this.applyEffect(this.effectCache > 0 ? this.effectCache : 0);
@@ -537,10 +556,10 @@ public class RoomPlayer implements ISerialize {
         if (this.isBot()) {
             if (this.botInstance.isMovingEnabled() && this.botMoveCycles-- == 0) {
                 final Vector2 position = this.getPosition().getVector2();
-                final GapList<Vector2> randomTiles = new GapList<Vector2>();
+                final GapList<Vector2> randomTiles = new GapList<>();
 
                 for (final Vector2 vector : Pathfinder.DIRECTIONS) {
-                    int state = 0;
+                    int state;
                     if (((state = this.getRoom().getGamemap().getTileState(position.getX() + vector.getX(), position.getY() + vector.getY())) == TileState.OPEN || state == TileState.SITABLE) && (room.getInformation().getModel().getDoorPosition().getX() != (position.getX() + vector.getX()) || room.getInformation().getModel().getDoorPosition().getY() != position.getY() + vector.getY())) {
                         randomTiles.add(new Vector2(position.getX() + vector.getX(), position.getY() + vector.getY()));
                     }

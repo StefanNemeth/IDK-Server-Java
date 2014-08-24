@@ -79,7 +79,15 @@ public class OpenBoxReader implements IMessageReader {
         room.removeItem(box, session);
         session.writeMessage(new GiftOpenedWriter(item.getBaseItem()));
 
-        session.getPlayerInstance().getInventory().addItem(item.getBaseItem(), session, item.getAmount(), (box.getTermFlags().length > 4 ? box.getTermFlags()[4] : ""), item.getSecondaryData(), null);
+        session.getPlayerInstance().getInventory()
+                .addItem(
+                        item.getBaseItem(),
+                        session,
+                        item.getAmount(),
+                        (box.getTermFlags().length > 4 ? box.getTermFlags()[4] : ""),
+                        item.getSecondaryData(),
+                        null
+                );
 
         Bootloader.getStorage().executeQuery("DELETE FROM items WHERE id=" + boxId);
     }

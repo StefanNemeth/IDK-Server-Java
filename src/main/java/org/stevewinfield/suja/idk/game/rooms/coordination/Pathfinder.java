@@ -66,9 +66,9 @@ public class Pathfinder {
 
     public static Node getPathInArray(final int[][] field, final double[][] heights, final Vector2 start, final Vector2 goal, final boolean override) {
         final double startHeight = heights[start.getX()][start.getY()];
-        ArrayList<Node> openList = new ArrayList<Node>();
-        ArrayList<Node> closedList = new ArrayList<Node>();
-        ConcurrentHashMap<Node, Double> fVals = new ConcurrentHashMap<Node, Double>();
+        ArrayList<Node> openList = new ArrayList<>();
+        ArrayList<Node> closedList = new ArrayList<>();
+        ConcurrentHashMap<Node, Double> fVals = new ConcurrentHashMap<>();
 
         final Node stn = new Node(null, start.getX(), start.getY());
         addToList(stn, openList, fVals);
@@ -76,7 +76,7 @@ public class Pathfinder {
         while (!openList.isEmpty()) {
             final Node q = getLeastF(openList);
             openList.remove(q);
-            final LinkedList<Node> successors = new LinkedList<Node>();
+            final LinkedList<Node> successors = new LinkedList<>();
             final int qx = q.x;
             final int qy = q.y;
 
@@ -103,9 +103,6 @@ public class Pathfinder {
 
             for (final Node n : successors) {
                 if (n.x == goal.getX() && n.y == goal.getY()) {
-                    closedList = null;
-                    openList = null;
-                    fVals = null;
                     return n;
                 }
                 boolean add = true;
@@ -118,9 +115,6 @@ public class Pathfinder {
             }
             addToList(q, closedList, fVals);
         }
-        closedList = null;
-        openList = null;
-        fVals = null;
         return null;
     }
 

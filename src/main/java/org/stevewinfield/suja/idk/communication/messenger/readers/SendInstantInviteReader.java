@@ -21,7 +21,7 @@ public class SendInstantInviteReader implements IMessageReader {
         }
 
         final int amount = reader.readInteger();
-        final List<Integer> playerIds = new GapList<Integer>();
+        final List<Integer> playerIds = new GapList<>();
 
         for (int i = 0; i < amount; i++) {
             playerIds.add(reader.readInteger());

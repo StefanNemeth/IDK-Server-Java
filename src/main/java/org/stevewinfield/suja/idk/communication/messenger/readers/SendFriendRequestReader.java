@@ -18,7 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class SendFriendRequestReader implements IMessageReader {
-    private static Logger logger = Logger.getLogger(SendFriendRequestReader.class);
+    private static final Logger logger = Logger.getLogger(SendFriendRequestReader.class);
 
     @Override
     public void parse(final Session session, final MessageReader reader) {

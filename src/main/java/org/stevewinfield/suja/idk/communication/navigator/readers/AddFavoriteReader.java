@@ -15,7 +15,7 @@ import org.stevewinfield.suja.idk.network.sessions.Session;
 import java.sql.SQLException;
 
 public class AddFavoriteReader implements IMessageReader {
-    private static Logger logger = Logger.getLogger(AddFavoriteReader.class);
+    private static final Logger logger = Logger.getLogger(AddFavoriteReader.class);
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
@@ -33,7 +33,11 @@ public class AddFavoriteReader implements IMessageReader {
         session.writeMessage(new NavigatorFavoriteRoomsChangedWriter(roomId, true));
 
         try {
-            Bootloader.getStorage().queryParams("INSERT INTO player_room_favorites (player_id, room_id) VALUES (" + session.getPlayerInstance().getInformation().getId() + ", " + roomId + ")").execute();
+            Bootloader.getStorage()
+                    .queryParams("INSERT INTO player_room_favorites (player_id, room_id) VALUES (" +
+                                    session.getPlayerInstance().getInformation().getId() +
+                                    ", " + roomId + ")"
+                    ).execute();
         } catch (final SQLException e) {
             logger.error("SQL Exception", e);
         }

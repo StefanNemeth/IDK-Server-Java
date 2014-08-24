@@ -17,7 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SetPlayerMottoReader implements IMessageReader {
-    private static Logger logger = Logger.getLogger(SetPlayerMottoReader.class);
+    private static final Logger logger = Logger.getLogger(SetPlayerMottoReader.class);
 
     @Override
     public void parse(final Session session, final MessageReader reader) {

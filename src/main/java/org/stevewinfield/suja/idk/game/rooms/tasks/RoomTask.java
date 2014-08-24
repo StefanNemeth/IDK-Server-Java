@@ -37,12 +37,12 @@ public class RoomTask extends ServerTask {
 
     public RoomTask(final RoomInstance room) {
         this.room = room;
-        this.playersToAdd = new ArrayBlockingQueue<RoomPlayer>(1024);
-        this.playersToRemove = new ArrayBlockingQueue<RoomPlayer>(1024);
-        this.roomMessageWriters = new ArrayBlockingQueue<MessageWriter>(1024);
-        this.chatMessages = new ArrayBlockingQueue<ChatMessage>(1024);
-        this.itemCycleRequests = new ArrayBlockingQueue<RoomItem>(1024);
-        this.wiredItemDelay = new ArrayBlockingQueue<WiredDelayEvent>(1024);
+        this.playersToAdd = new ArrayBlockingQueue<>(1024);
+        this.playersToRemove = new ArrayBlockingQueue<>(1024);
+        this.roomMessageWriters = new ArrayBlockingQueue<>(1024);
+        this.chatMessages = new ArrayBlockingQueue<>(1024);
+        this.itemCycleRequests = new ArrayBlockingQueue<>(1024);
+        this.wiredItemDelay = new ArrayBlockingQueue<>(1024);
         this.updates = 0;
         this.emptyRoomCounter = 0;
         this.canceled = false;
@@ -117,8 +117,8 @@ public class RoomTask extends ServerTask {
         if (this.room.getInformation().getTotalPlayers() == 0) {
             this.emptyRoomCounter++;
         }
-        final GapList<MessageWriter> messages = new GapList<MessageWriter>();
-        final List<RoomPlayer> updatedPlayers = new GapList<RoomPlayer>();
+        final GapList<MessageWriter> messages = new GapList<>();
+        final List<RoomPlayer> updatedPlayers = new GapList<>();
         for (final RoomPlayer player : room.getRoomPlayers().values()) {
             player.onCycle();
             if (player.needsUpdate()) {
@@ -129,7 +129,7 @@ public class RoomTask extends ServerTask {
         while (!this.chatMessages.isEmpty()) {
             this.room.onPlayerChat(this.chatMessages.poll());
         }
-        final List<RoomItem> toCycle = new GapList<RoomItem>();
+        final List<RoomItem> toCycle = new GapList<>();
         while (!itemCycleRequests.isEmpty()) {
             toCycle.add(itemCycleRequests.poll());
         }
@@ -165,7 +165,7 @@ public class RoomTask extends ServerTask {
             this.room.onPlayerEnters(player);
         }
         room.getWiredHandler().onTriggerPeriodically();
-        final GapList<WiredDelayEvent> reAdd = new GapList<WiredDelayEvent>();
+        final GapList<WiredDelayEvent> reAdd = new GapList<>();
         while (!this.wiredItemDelay.isEmpty()) {
             final WiredDelayEvent delayEvent = this.wiredItemDelay.poll();
             delayEvent.getAction().onHandle(delayEvent.getPlayer(), delayEvent);

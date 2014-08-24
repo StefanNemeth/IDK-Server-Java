@@ -12,13 +12,13 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class SessionManager {
-    private static Logger logger = Logger.getLogger(SessionManager.class);
+    private static final Logger logger = Logger.getLogger(SessionManager.class);
 
     public SessionManager(final int maxConnections) {
         this.maxConnections = maxConnections;
         this.activeSessions = 0;
-        this.sessions = new ConcurrentHashMap<Integer, Session>();
-        this.authenticatedSessions = new ConcurrentHashMap<Integer, Session>();
+        this.sessions = new ConcurrentHashMap<>();
+        this.authenticatedSessions = new ConcurrentHashMap<>();
         logger.info("Session Manager ready (Max. " + maxConnections + " sessions).");
     }
 

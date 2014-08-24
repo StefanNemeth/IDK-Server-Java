@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RoomModel {
-    private static Logger logger = Logger.getLogger(RoomModel.class);
+    private static final Logger logger = Logger.getLogger(RoomModel.class);
 
     public String getName() {
         return name;

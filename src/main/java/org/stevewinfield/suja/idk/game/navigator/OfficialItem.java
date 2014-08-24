@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OfficialItem {
-    private static Logger logger = Logger.getLogger(OfficialItem.class);
+    private static final Logger logger = Logger.getLogger(OfficialItem.class);
 
     // getters
     public int getId() {

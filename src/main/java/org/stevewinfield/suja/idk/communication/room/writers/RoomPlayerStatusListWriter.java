@@ -28,7 +28,7 @@ public class RoomPlayerStatusListWriter extends MessageWriter {
             final StringBuilder statusList = new StringBuilder("/");
 
             for (final Entry<String, String> status : player.getStatusMap().entrySet()) {
-                statusList.append(status.getKey() + ' ' + status.getValue() + '/');
+                statusList.append(status.getKey()).append(' ').append(status.getValue()).append('/');
             }
 
             super.push(statusList.toString() + "/");

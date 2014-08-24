@@ -26,7 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class AuthenticatePlayerReader implements IMessageReader {
-    private static Logger logger = Logger.getLogger(AuthenticatePlayerReader.class);
+    private static final Logger logger = Logger.getLogger(AuthenticatePlayerReader.class);
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
@@ -54,7 +54,7 @@ public class AuthenticatePlayerReader implements IMessageReader {
         }
 
         queue.push(new AvailabilityStatusWriter());
-        queue.push(new InfoFeedEnableMessageWriter(true)); // todo
+        queue.push(new InfoFeedEnableMessageWriter(true)); // TODO
         queue.push(new ActivityPointsWriter(session.getPlayerInstance().getInformation().getPixelsBalance(), session.getPlayerInstance().getInformation().getShellsBalance()));
 
         final long timestamp = Bootloader.getTimestamp();
@@ -75,7 +75,7 @@ public class AuthenticatePlayerReader implements IMessageReader {
         queue.push(new SubscriptionInfoWriter("club_habbo", days, (session.getPlayerInstance().getSubscriptionManager().getBaseLevel() != ClubSubscriptionLevel.NONE && days > 5 ? 2 : 0), (session.getPlayerInstance().getSubscriptionManager().getBaseLevel() == ClubSubscriptionLevel.VIP), session.getPlayerInstance().getSubscriptionManager().getBaseLevel() == ClubSubscriptionLevel.NONE, IDK.CATA_CLUB_OFFER_PRICE_REGULAR, IDK.CATA_CLUB_OFFER_PRICE_NOW));
 
         if (session.getPlayerInstance().getInformation().isStreamEnabled()) {
-            final List<FriendStreamEventData> events = new ArrayList<FriendStreamEventData>(session.getFriendStream().getEvents());
+            final List<FriendStreamEventData> events = new ArrayList<>(session.getFriendStream().getEvents());
             Collections.reverse(events);
 
             queue.push(new FriendStreamEventWriter(events));

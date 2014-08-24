@@ -18,7 +18,11 @@ public class ToggleFriendStreamReader implements IMessageReader {
         }
 
         session.getPlayerInstance().getInformation().setStreamEnabled(reader.readBytes(1)[0] == 'A');
-        Bootloader.getStorage().executeQuery("UPDATE players SET stream_enabled=" + (session.getPlayerInstance().getInformation().isStreamEnabled() ? 1 : 0) + " WHERE id=" + session.getPlayerInstance().getInformation().getId());
+        Bootloader.getStorage()
+                .executeQuery("UPDATE players SET stream_enabled="
+                                + (session.getPlayerInstance().getInformation().isStreamEnabled() ? 1 : 0)
+                                + " WHERE id=" + session.getPlayerInstance().getInformation().getId()
+                );
     }
 
 }

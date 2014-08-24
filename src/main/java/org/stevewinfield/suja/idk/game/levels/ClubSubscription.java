@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ClubSubscription {
-    private static Logger logger = Logger.getLogger(ClubSubscription.class);
+    private static final Logger logger = Logger.getLogger(ClubSubscription.class);
 
     // getters
     public int getPlayerId() {
@@ -92,7 +92,15 @@ public class ClubSubscription {
         baseLevel = ClubSubscriptionLevel.NONE;
         created = 0;
         expire = 0;
-        Bootloader.getStorage().executeQuery("UPDATE player_subscriptions SET past_time_hc=" + hcTime + ", past_time_vip=" + vipTime + ", subscription_level=0, timestamp_created=0, timestamp_expire=0 WHERE player_id=" + this.playerId);
+        Bootloader.getStorage()
+                .executeQuery("UPDATE player_subscriptions SET " +
+                                "past_time_hc=" + hcTime + ", " +
+                                "past_time_vip=" + vipTime + ", " +
+                                "subscription_level=0, " +
+                                "timestamp_created=0, " +
+                                "timestamp_expire=0 " +
+                                "WHERE player_id=" + this.playerId
+                );
     }
 
     public void set(final ResultSet row) {
@@ -137,9 +145,18 @@ public class ClubSubscription {
         this.baseLevel = level;
 
         if (Bootloader.getStorage().entryExists("SELECT player_id FROM player_subscriptions WHERE player_id=" + this.playerId)) {
-            Bootloader.getStorage().executeQuery("UPDATE player_subscriptions SET subscription_level=" + level + ", timestamp_expire=" + expire + (saveClubTime ? ", past_time_hc=" + (int) this.hcTime : "") + " WHERE player_id=" + this.playerId);
+            Bootloader.getStorage().executeQuery(
+                    "UPDATE player_subscriptions SET " +
+                            "subscription_level=" + level + ", " +
+                            "timestamp_expire=" + expire +
+                            (saveClubTime ? ", past_time_hc=" + (int) this.hcTime : "") + " " +
+                            "WHERE player_id=" + this.playerId
+            );
         } else {
-            Bootloader.getStorage().executeQuery("INSERT INTO player_subscriptions (player_id, subscription_level, timestamp_created, timestamp_expire) VALUES (" + this.playerId + ", " + this.baseLevel + ", '" + this.created + "', '" + this.expire + "')");
+            Bootloader.getStorage().executeQuery(
+                    "INSERT INTO player_subscriptions (player_id, subscription_level, timestamp_created, timestamp_expire) " +
+                            "VALUES (" + this.playerId + ", " + this.baseLevel + ", '" + this.created + "', '" + this.expire + "')"
+            );
         }
     }
 

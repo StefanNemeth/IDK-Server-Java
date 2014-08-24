@@ -87,7 +87,7 @@ public class Gamemap {
         for (int y = 0; y < this.heightmap.getSizeY(); y++) {
             for (int x = 0; x < this.heightmap.getSizeX(); x++) {
                 if (x == this.model.getDoorPosition().getX() && y == this.model.getDoorPosition().getY()) {
-                    relativeMap.append((int) this.model.getDoorPosition().getAltitude() + "");
+                    relativeMap.append((int) this.model.getDoorPosition().getAltitude()).append("");
                     continue;
                 }
                 if (this.floorMap[x][y] == TileState.CLOSED) {

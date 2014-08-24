@@ -34,7 +34,16 @@ public class ModerationPlayerMessageReader implements IMessageReader {
         }
 
         target.sendNotification(NotifyType.MOD_ALERT, message);
-        Bootloader.getGame().getModerationManager().logAction(session.getPlayerInstance().getInformation().getId(), "Sent a message to " + target.getPlayerInstance().getInformation().getPlayerName() + " (ID: " + target.getPlayerInstance().getInformation().getId() + "): \"" + message.replace("\"", "'") + "\"");
+        Bootloader.getGame().getModerationManager()
+                .logAction(
+                        session.getPlayerInstance().getInformation().getId(),
+                        "Sent a message to " +
+                                target.getPlayerInstance().getInformation().getPlayerName() +
+                                " (ID: " + target.getPlayerInstance().getInformation().getId() +
+                                "): \"" +
+                                message.replace("\"", "'") +
+                                "\""
+                );
     }
 
 }

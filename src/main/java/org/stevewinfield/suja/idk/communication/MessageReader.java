@@ -83,7 +83,6 @@ public class MessageReader {
     public void dispose() {
         try {
             MessageReaderFactory.objectCallback(this);
-            this.finalize();
         } catch (final Throwable e) {
             e.printStackTrace();
         }

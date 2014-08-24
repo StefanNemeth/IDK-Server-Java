@@ -11,7 +11,7 @@ import org.stevewinfield.suja.idk.IDK;
 import org.stevewinfield.suja.idk.network.sessions.Session;
 
 public class ConnectionHandler extends SimpleChannelHandler {
-    private static Logger logger = Logger.getLogger(ConnectionHandler.class);
+    private static final Logger logger = Logger.getLogger(ConnectionHandler.class);
 
     @Override
     public void channelOpen(final ChannelHandlerContext ctnx, final ChannelStateEvent e) {
@@ -48,7 +48,6 @@ public class ConnectionHandler extends SimpleChannelHandler {
         if (Bootloader.getSessionManager().hasSession(ctx.getChannel())) {
             if (!(e.getMessage() instanceof Integer)) {
                 ctx.getChannel().close();
-                return;
             }
         }
     }

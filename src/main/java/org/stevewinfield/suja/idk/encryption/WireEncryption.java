@@ -22,9 +22,7 @@ public class WireEncryption {
         wf[0] = (byte) (wf[0] | numBytes << 3 | negativeMask);
 
         final byte[] bzData = new byte[numBytes];
-        for (int x = 0; x < numBytes; ++x) {
-            bzData[x] = wf[x];
-        }
+        System.arraycopy(wf, 0, bzData, 0, numBytes);
 
         return bzData;
     }
@@ -37,7 +35,7 @@ public class WireEncryption {
 
     public static int[] decode(final byte[] raw) {
         try {
-            int pos = 0, v = 0;
+            int pos = 0, v;
             final boolean negative = (raw[pos] & 4) == 4;
             final int totalBytes = raw[pos] >> 3 & 7;
             v = raw[pos] & 3;
@@ -49,7 +47,7 @@ public class WireEncryption {
                 pos++;
             }
 
-            if (negative == true) {
+            if (negative) {
                 v *= -1;
             }
             return new int[]{totalBytes, v};

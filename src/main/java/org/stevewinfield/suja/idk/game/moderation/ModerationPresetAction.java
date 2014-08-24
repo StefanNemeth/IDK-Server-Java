@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ModerationPresetAction {
-    private static Logger logger = Logger.getLogger(ModerationPresetAction.class);
+    private static final Logger logger = Logger.getLogger(ModerationPresetAction.class);
 
     public int getId() {
         return id;
@@ -38,7 +38,7 @@ public class ModerationPresetAction {
     }
 
     public ModerationPresetAction() {
-        this.subItems = new ConcurrentHashMap<Integer, ModerationPresetAction>();
+        this.subItems = new ConcurrentHashMap<>();
         this.caption = "";
         this.message = "";
     }

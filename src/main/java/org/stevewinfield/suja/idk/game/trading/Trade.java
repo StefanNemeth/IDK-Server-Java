@@ -35,8 +35,8 @@ public class Trade {
     public Trade(final int a, final int b) {
         this.playerOne = a;
         this.playerTwo = b;
-        this.offersPlayerOne = new ConcurrentHashMap<Integer, PlayerItem>();
-        this.offersPlayerTwo = new ConcurrentHashMap<Integer, PlayerItem>();
+        this.offersPlayerOne = new ConcurrentHashMap<>();
+        this.offersPlayerTwo = new ConcurrentHashMap<>();
     }
 
     public boolean offerItem(final int playerId, final PlayerItem item) {
@@ -56,7 +56,7 @@ public class Trade {
 
         if (playerId == playerOne) {
             for (final PlayerItem target : offersPlayerOne.values()) {
-                if (target.getBase().getId() == target.getBase().getId() && target.getBase().isInventoryStackable()) {
+                if (target.getBase().isInventoryStackable()) {
                     addStack = false;
                     break;
                 }
@@ -67,7 +67,7 @@ public class Trade {
             }
         } else {
             for (final PlayerItem target : offersPlayerTwo.values()) {
-                if (target.getBase().getId() == target.getBase().getId() && target.getBase().isInventoryStackable()) {
+                if (target.getBase().isInventoryStackable()) {
                     addStack = false;
                     break;
                 }

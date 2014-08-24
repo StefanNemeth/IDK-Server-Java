@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FurnitureManager {
-    private static Logger logger = Logger.getLogger(FurnitureManager.class);
+    private static final Logger logger = Logger.getLogger(FurnitureManager.class);
 
     public Furniture getFurniture(final int furniId) {
         return this.furnitures.containsKey(furniId) ? furnitures.get(furniId) : null;
@@ -35,14 +35,14 @@ public class FurnitureManager {
 
     public FurnitureManager() {
         this.loadCache();
-        this.interactors = new ConcurrentHashMap<Integer, IFurnitureInteractor>();
+        this.interactors = new ConcurrentHashMap<>();
         this.putInteractors();
         logger.info(this.interactors.size() + " Furni-Interactor(s) loaded.");
     }
 
     public void loadCache() {
-        this.furnitures = new ConcurrentHashMap<Integer, Furniture>();
-        this.furnitureExchanges = new ConcurrentHashMap<Integer, FurnitureExchange>();
+        this.furnitures = new ConcurrentHashMap<>();
+        this.furnitureExchanges = new ConcurrentHashMap<>();
         try {
             ResultSet row = Bootloader.getStorage().queryParams("SELECT * FROM furnitures").executeQuery();
             while (row.next()) {

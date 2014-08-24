@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 
 public class FriendStream {
-    private static Logger logger = Logger.getLogger(FriendStream.class);
+    private static final Logger logger = Logger.getLogger(FriendStream.class);
 
     public Collection<FriendStreamEventData> getEvents() {
         return events.values();
@@ -35,11 +35,11 @@ public class FriendStream {
     public FriendStream(final int playerId, final GapList<Integer> friends) {
         this.playerId = playerId;
         this.friends = friends;
-        this.events = new LinkedHashMap<Integer, FriendStreamEventData>();
+        this.events = new LinkedHashMap<>();
     }
 
     public FriendStream() {
-        this.events = new LinkedHashMap<Integer, FriendStreamEventData>();
+        this.events = new LinkedHashMap<>();
     }
 
     public void load(final int playerId, final GapList<Integer> friends) {
@@ -55,7 +55,7 @@ public class FriendStream {
 
         this.playerId = playerId;
         this.friends = friends;
-        this.events = new LinkedHashMap<Integer, FriendStreamEventData>();
+        this.events = new LinkedHashMap<>();
         try {
             final ResultSet set = Bootloader.getStorage().queryParams("SELECT * FROM friendstream_events " + queryData).executeQuery();
             while (set.next()) {
@@ -72,7 +72,13 @@ public class FriendStream {
     }
 
     public void broadcastEvent(final Session session, final int eventType, final int linkType, final String[] eventData) {
-        this.broadcastEvent(session.getPlayerInstance().getInformation().getId(), session.getPlayerInstance().getInformation().getPlayerName(), session.getPlayerInstance().getInformation().getAvatar(), session.getPlayerInstance().getInformation().getGender(), eventType, linkType, eventData);
+        this.broadcastEvent(
+                session.getPlayerInstance().getInformation().getId(),
+                session.getPlayerInstance().getInformation().getPlayerName(),
+                session.getPlayerInstance().getInformation().getAvatar(),
+                session.getPlayerInstance().getInformation().getGender(),
+                eventType, linkType, eventData
+        );
     }
 
     public void broadcastEvent(final int playerId, final String name, final String avatar, final int gender, final int eventType, final int linkType, final String[] eventData) {
@@ -86,7 +92,14 @@ public class FriendStream {
             data = data.substring(1);
         }
         try {
-            final PreparedStatement std = Bootloader.getStorage().queryParams("INSERT INTO friendstream_events (player_id, player_name, player_avatar, player_gender, event_type, timestamp, link_type, event_data) VALUES" + "(" + playerId + ", ?, ?, '" + (gender == PlayerInformation.MALE_GENDER ? "m" : "f") + "', " + eventType + ", '" + timestamp + "', " + linkType + ", ?)");
+            final PreparedStatement std = Bootloader.getStorage()
+                    .queryParams("INSERT INTO friendstream_events " +
+                                    "(player_id, player_name, player_avatar, player_gender, event_type, timestamp, link_type, event_data) " +
+                                    "VALUES" + "(" + playerId + ", ?, ?, '" +
+                                    (gender == PlayerInformation.MALE_GENDER ? "m" : "f") +
+                                    "', " + eventType + ", '" + timestamp +
+                                    "', " + linkType + ", ?)"
+                    );
             std.setString(1, name);
             std.setString(2, avatar);
             std.setString(3, data);
@@ -98,7 +111,7 @@ public class FriendStream {
         }
         final FriendStreamEventData event = new FriendStreamEventData(itemId, playerId, name, gender, avatar, eventType, timestamp, linkType, eventData);
         for (final Integer i : this.friends) {
-            Session friend = null;
+            Session friend;
             if (!Bootloader.getSessionManager().hasAuthenticatedSession(i) || !(friend = Bootloader.getSessionManager().getAuthenticatedSession(i)).isAuthenticated()) {
                 continue;
             }

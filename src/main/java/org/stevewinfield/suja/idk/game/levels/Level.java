@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class Level {
-    private static Logger logger = Logger.getLogger(Level.class);
+    private static final Logger logger = Logger.getLogger(Level.class);
 
     // getters
     public int getId() {
@@ -33,7 +33,7 @@ public class Level {
 
     public Level(final int id) {
         this.id = 0;
-        this.rights = new GapList<LevelRight>();
+        this.rights = new GapList<>();
         this.name = "User";
         this.badgeCode = "";
     }

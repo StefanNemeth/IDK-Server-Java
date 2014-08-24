@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BotInstance {
-    private static Logger logger = Logger.getLogger(BotInstance.class);
+    private static final Logger logger = Logger.getLogger(BotInstance.class);
 
     public int getId() {
         return id;
@@ -74,8 +74,8 @@ public class BotInstance {
         this.avatar = "";
         this.mission = "";
         this.startPosition = new Vector3(0, 0, 0);
-        this.phrases = new GapList<BotPhrase>();
-        this.keywordReactions = new ConcurrentHashMap<String, BotKeywordReaction>();
+        this.phrases = new GapList<>();
+        this.keywordReactions = new ConcurrentHashMap<>();
     }
 
     public void set(final ResultSet row, final ConcurrentHashMap<Integer, IBotInteractor> interactors) {
@@ -84,7 +84,7 @@ public class BotInstance {
             this.startRoomId = row.getInt("start_room_id");
             this.botName = row.getString("nickname");
             this.avatar = row.getString("figurecode");
-            this.gender = row.getString("gender").toUpperCase() == "F" ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
+            this.gender = row.getString("gender").toUpperCase().equals("F") ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
             this.mission = row.getString("motto");
             this.startRotation = row.getInt("start_rotation");
             this.startPosition = new Vector3(row.getInt("start_position_x"), row.getInt("start_position_y"), row.getDouble("start_position_altitude"));

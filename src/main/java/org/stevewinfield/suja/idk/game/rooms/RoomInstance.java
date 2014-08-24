@@ -40,7 +40,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RoomInstance {
-    private static Logger logger = Logger.getLogger(RoomInstance.class);
+    private static final Logger logger = Logger.getLogger(RoomInstance.class);
 
     public RoomInformation getInformation() {
         return information;
@@ -88,18 +88,18 @@ public class RoomInstance {
 
     public RoomInstance() {
         this.information = new RoomInformation();
-        this.votes = new GapList<Integer>();
+        this.votes = new GapList<>();
         this.roomTask = new RoomTask(this);
-        this.roomPlayers = new ConcurrentHashMap<Integer, RoomPlayer>();
-        this.roomItems = new ConcurrentHashMap<Integer, RoomItem>();
-        this.topRoomItems = new ConcurrentHashMap<Integer, GapList<RoomItem>>();
-        this.rights = new GapList<Integer>();
-        this.itemsToRemove = new GapList<Integer>();
-        this.itemsToAdd = new GapList<Integer>();
-        this.itemsToUpdate = new GapList<Integer>();
+        this.roomPlayers = new ConcurrentHashMap<>();
+        this.roomItems = new ConcurrentHashMap<>();
+        this.topRoomItems = new ConcurrentHashMap<>();
+        this.rights = new GapList<>();
+        this.itemsToRemove = new GapList<>();
+        this.itemsToAdd = new GapList<>();
+        this.itemsToUpdate = new GapList<>();
         this.tradeManager = new TradeManager();
         this.wiredHandler = new WiredHandler(this);
-        this.topRoomPlayers = new ConcurrentHashMap<Integer, GapList<RoomPlayer>>();
+        this.topRoomPlayers = new ConcurrentHashMap<>();
 
         /**
          * Add room task to Thread Pool
@@ -163,7 +163,7 @@ public class RoomInstance {
             this.gameMap = new Gamemap(this.information.getModel(), this.information.getModel().getHeightMap(), this.roomItems.values());
             for (int y = 0; y < this.information.getModel().getHeightMap().getSizeY(); y++) {
                 for (int x = 0; x < this.information.getModel().getHeightMap().getSizeX(); x++) {
-                    final GapList<RoomItem> items = new GapList<RoomItem>();
+                    final GapList<RoomItem> items = new GapList<>();
                     for (final RoomItem item : this.roomItems.values()) {
                         if (item == null) {
                             continue;
@@ -225,7 +225,7 @@ public class RoomInstance {
                 team.getGate().update(false, true);
             }
         }
-        Trade trade = null;
+        Trade trade;
         if ((trade = this.tradeManager.getTrade(player.getPlayerInformation().getId())) != null) {
             tradeManager.stopTrade(player.getPlayerInformation().getId());
 
@@ -253,7 +253,7 @@ public class RoomInstance {
     }
 
     public MessageWriter getStatusUpdates(final boolean all) {
-        final List<RoomPlayer> updatedPlayers = new GapList<RoomPlayer>();
+        final List<RoomPlayer> updatedPlayers = new GapList<>();
         for (final RoomPlayer player : this.roomPlayers.values()) {
             if (!all) {
                 if (!player.needsUpdate()) {
@@ -273,7 +273,7 @@ public class RoomInstance {
 
     public boolean giveRights(final RoomPlayer player) {
         if (player.isBot() || this.rights.contains(player.getPlayerInformation().getId())) {
-            return true;
+            return true; // TODO: Should be false??
         }
         this.rights.add(player.getPlayerInformation().getId());
         player.addStatus("flatctrl", "");
@@ -299,7 +299,7 @@ public class RoomInstance {
     }
 
     public void onPlayerEnters(final RoomPlayer player) {
-        final List<RoomPlayer> playersToDisplay = new GapList<RoomPlayer>();
+        final List<RoomPlayer> playersToDisplay = new GapList<>();
         final QueuedMessageWriter queue = new QueuedMessageWriter();
         if (this.hasRights(player.getSession())) {
             player.addStatus("flatctrl", this.hasRights(player.getSession(), true) ? "useradmin" : "");
@@ -329,7 +329,15 @@ public class RoomInstance {
 
         queue.push(new RoomPlayerObjectListWriter(playersToDisplay));
         queue.push(new RoomWallsStatusWriter(information.wallsHidden(), information.getWallThickness(), information.getFloorThickness()));
-        queue.push(new RoomInfoRightsWriter((information.getRoomType() == RoomType.PRIVATE), information.getId(), information.getOwnerId() == player.getSession().getPlayerInstance().getInformation().getId() || player.getSession().getPlayerInstance().hasRight("any_room_owner"), ""));
+        queue.push(
+                new RoomInfoRightsWriter(
+                        (information.getRoomType() == RoomType.PRIVATE),
+                        information.getId(),
+                        information.getOwnerId() == player.getSession().getPlayerInstance().getInformation().getId()
+                                || player.getSession().getPlayerInstance().hasRight("any_room_owner"),
+                        ""
+                )
+        );
         queue.push(new RoomInfoWriter(this));
 
         final MessageWriter updates = this.getStatusUpdates(true);
@@ -372,7 +380,14 @@ public class RoomInstance {
         this.writeMessage(chatWriter, null);
         if (!message.getSender().isBot()) {
             for (final RoomPlayer player : this.roomPlayers.values()) {
-                if (player.isBot() && player.getBotInstance().getInteractor() != null && Heightmap.getDistance(message.getSender().getPosition().getX(), message.getSender().getPosition().getY(), player.getPosition().getX(), player.getPosition().getY()) < 10) {
+                if (player.isBot() &&
+                        player.getBotInstance().getInteractor() != null &&
+                        Heightmap.getDistance(
+                                message.getSender().getPosition().getX(),
+                                message.getSender().getPosition().getY(),
+                                player.getPosition().getX(),
+                                player.getPosition().getY()
+                        ) < 10) {
                     if (message.getChatType() == ChatType.SHOUT && new Random().nextInt(10) % 2 == 0) {
                         player.chat(IDK.BOTS_SHOUT_RESPONSES[new Random().nextInt(IDK.BOTS_SHOUT_RESPONSES.length)], ChatType.SHOUT);
                         continue;
@@ -407,7 +422,12 @@ public class RoomInstance {
         if (this.roomTask.isCanceled()) {
             this.roomTask.setCanceled(false);
         }
-        this.roomTask.offerRoomPlayerAdd(new RoomPlayer(virtualPlayerId++, session, this.information.getId(), this, this.information.getModel().getDoorPosition(), this.information.getModel().getDoorRotation()));
+        this.roomTask.offerRoomPlayerAdd(
+                new RoomPlayer(
+                        virtualPlayerId++, session, this.information.getId(), this,
+                        this.information.getModel().getDoorPosition(), this.information.getModel().getDoorRotation()
+                )
+        );
         session.setLoadingRoomId(information.getId());
         session.setRoomJoined(true);
     }
@@ -442,7 +462,7 @@ public class RoomInstance {
 
     public void removeItem(final RoomItem item, final Session session) {
         final boolean isFloorItem = !item.getBase().getType().equals(FurnitureType.WALL);
-        final GapList<RoomPlayer> toUpdate = new GapList<RoomPlayer>();
+        final GapList<RoomPlayer> toUpdate = new GapList<>();
         if (isFloorItem) {
             for (final Vector2 posAct : item.getAffectedTiles()) {
                 RoomItem oldHighest = null;
@@ -451,9 +471,9 @@ public class RoomInstance {
                         oldHighest = yitem;
                     }
                 }
-                RoomItem checkItem = null;
-                int oldState = 0;
-                double oldAltitude = 0;
+                RoomItem checkItem;
+                int oldState;
+                double oldAltitude;
                 if (oldHighest != null) {
                     oldState = oldHighest.getState();
                     oldAltitude = oldHighest.getBase().isLayable() || oldHighest.getBase().isSitable() ? oldHighest.getPosition().getAltitude() : oldHighest.getAbsoluteHeight();
@@ -552,7 +572,7 @@ public class RoomInstance {
             }
             itemsToAdd.add(item.getItemId());
             if (setUpdate) {
-                itemsToUpdate.add(new Integer(item.getItemId()));
+                itemsToUpdate.add(item.getItemId());
             }
             this.writeMessage(new RoomWallItemPlacedWriter(item), session);
             item.getInteractor().onLoaded(this, item);
@@ -596,18 +616,22 @@ public class RoomInstance {
         final int oldY = item.getPosition().getY();
         final int oldRot = item.getRotation();
         final double oldAlt = item.getPosition().getAltitude();
-        final GapList<RoomPlayer> toUpdate = new GapList<RoomPlayer>();
+        final GapList<RoomPlayer> toUpdate = new GapList<>();
         RoomItem setItem = null;
         item.setPosition(new Vector3(position.getX(), position.getY(), 0), rotation);
         final List<Vector2> newPos = item.getAffectedTiles();
         item.setPosition(new Vector3(oldX, oldY, oldAlt), oldRot);
         for (final Vector2 posAct : newPos) {
-            if (posAct.getX() > information.getModel().getHeightMap().getSizeX() || posAct.getY() > information.getModel().getHeightMap().getSizeY() || gameMap.getTileState(posAct.getX(), posAct.getY()) == TileState.CLOSED) {
+            if (posAct.getX() > information.getModel().getHeightMap().getSizeX() ||
+                    posAct.getY() > information.getModel().getHeightMap().getSizeY() ||
+                    gameMap.getTileState(posAct.getX(), posAct.getY()) == TileState.CLOSED) {
                 return false;
             }
             final GapList<RoomPlayer> players = this.getRoomPlayersForTile(posAct);
             if (players.size() > 0) {
-                if (onlyChangeRot && (item.getState() == TileState.SITABLE || item.getState() == (TileState.SITABLE | TileState.PLAYER) || item.getState() == (TileState.SITABLE | TileState.BLOCKED))) {
+                if (onlyChangeRot && (item.getState() == TileState.SITABLE ||
+                        item.getState() == (TileState.SITABLE | TileState.PLAYER) ||
+                        item.getState() == (TileState.SITABLE | TileState.BLOCKED))) {
                     for (final RoomPlayer player : players) {
                         if (!toUpdate.contains(player)) {
                             toUpdate.add(player);
@@ -621,13 +645,15 @@ public class RoomInstance {
             for (final RoomItem xitem : items) {
                 if (xitem.getItemId() != item.getItemId()) {
                     if (rollerId < 0) {
-                        if (!xitem.getBase().isStackable() || (item.getInteractorId() == FurnitureInteractor.ROLLER && onlyChangeRot && xitem.getPosition().getAltitude() >= item.getPosition().getAltitude())) {
+                        if (!xitem.getBase().isStackable() || (item.getInteractorId() == FurnitureInteractor.ROLLER &&
+                                onlyChangeRot && xitem.getPosition().getAltitude() >= item.getPosition().getAltitude())) {
                             return false;
                         }
                         if (setItem == null || xitem.getAbsoluteHeight() > setItem.getAbsoluteHeight()) {
                             setItem = xitem;
                         }
-                    } else if (xitem.getPosition().getAltitude() <= rollerItemAltitude && (setItem == null || xitem.getPosition().getAltitude() >= setItem.getPosition().getAltitude())) {
+                    } else if (xitem.getPosition().getAltitude() <= rollerItemAltitude && (setItem == null ||
+                            xitem.getPosition().getAltitude() >= setItem.getPosition().getAltitude())) {
                         setItem = xitem;
                     }
 
@@ -645,9 +671,9 @@ public class RoomInstance {
                         oldHighest = yitem;
                     }
                 }
-                RoomItem checkItem = null;
-                int oldState = 0;
-                double oldAltitude = 0;
+                RoomItem checkItem;
+                int oldState;
+                double oldAltitude;
                 if (oldHighest != null) {
                     oldState = oldHighest.getState();
                     oldAltitude = oldHighest.getBase().isLayable() || oldHighest.getBase().isSitable() ? oldHighest.getPosition().getAltitude() : oldHighest.getAbsoluteHeight();
@@ -679,7 +705,8 @@ public class RoomInstance {
             }
         }
         if (setItem != null) {
-            newAltitude = (rollerId > -1 && setItem.getInteractorId() != FurnitureInteractor.ROLLER && setItem.getAbsoluteHeight() > rollerItemAltitude) ? setItem.getPosition().getAltitude() : setItem.getAbsoluteHeight();
+            newAltitude = (rollerId > -1 && setItem.getInteractorId() != FurnitureInteractor.ROLLER && setItem.getAbsoluteHeight() > rollerItemAltitude)
+                    ? setItem.getPosition().getAltitude() : setItem.getAbsoluteHeight();
         }
         if (onlyChangeRot && newAltitude < oldAlt) {
             newAltitude = oldAlt;
@@ -712,7 +739,7 @@ public class RoomInstance {
             }
             itemsToAdd.add(item.getItemId());
             if (setUpdate) {
-                itemsToUpdate.add(new Integer(item.getItemId()));
+                itemsToUpdate.add(item.getItemId());
             }
             this.writeMessage(new RoomFloorItemPlacedWriter(item), session);
             item.getInteractor().onLoaded(this, item);
@@ -755,7 +782,7 @@ public class RoomInstance {
             if (highestItem != null) {
                 if (state == TileState.SITABLE || state == (TileState.SITABLE | TileState.PLAYER) || state == (TileState.SITABLE | TileState.BLOCKED)) {
                     for (final RoomItem item : this.getRoomItemsForTile(player.getPosition().getVector2())) {
-                        if ((highestItem == null || item.getAbsoluteHeight() > highestItem.getAbsoluteHeight()) && item.getBase().isSitable()) {
+                        if ((item.getAbsoluteHeight() > highestItem.getAbsoluteHeight()) && item.getBase().isSitable()) {
                             highestItem = item;
                         }
                     }
@@ -763,7 +790,10 @@ public class RoomInstance {
                     player.addStatus("sit", String.valueOf(highestItem.getBase().getHeight()));
                 }
                 final boolean oxi = state == TileState.SITABLE || state == TileState.LAYABLE;
-                this.getGamemap().updateTile(player.getPosition().getVector2(), this.getInformation().blockingDisabled() ? (TileState.PLAYER | (oxi ? state : 0)) : (TileState.BLOCKED | (oxi ? state : 0)));
+                this.getGamemap().updateTile(
+                        player.getPosition().getVector2(),
+                        this.getInformation().blockingDisabled() ? (TileState.PLAYER | (oxi ? state : 0)) : (TileState.BLOCKED | (oxi ? state : 0))
+                );
                 player.setFloorItem(highestItem);
                 highestItem.onPlayerWalksOn(player, true);
             }
@@ -772,9 +802,11 @@ public class RoomInstance {
     }
 
     public GapList<RoomPlayer> getRoomPlayersForTile(final Vector2 pos) {
-        final GapList<RoomPlayer> players = new GapList<RoomPlayer>();
+        final GapList<RoomPlayer> players = new GapList<>();
         for (final RoomPlayer player : roomPlayers.values()) {
-            if (player.getPosition().getX() == pos.getX() && player.getPosition().getY() == pos.getY() || (player.stepIsSetted() && player.getSettedPosition().getX() == pos.getX() && player.getSettedPosition().getY() == pos.getY())) {
+            if (player.getPosition().getX() == pos.getX() &&
+                    player.getPosition().getY() == pos.getY() ||
+                    (player.stepIsSetted() && player.getSettedPosition().getX() == pos.getX() && player.getSettedPosition().getY() == pos.getY())) {
                 players.add(player);
             }
         }
@@ -792,7 +824,7 @@ public class RoomInstance {
     public void save() {
         final StringBuilder removeQuery = new StringBuilder();
         for (final Integer removeItem : this.itemsToRemove) {
-            removeQuery.append(" OR item_id=" + removeItem);
+            removeQuery.append(" OR item_id=").append(removeItem);
         }
         if (removeQuery.length() > 0) {
             Bootloader.getStorage().executeQuery("DELETE FROM room_items WHERE " + removeQuery.toString().substring(4));
@@ -803,15 +835,21 @@ public class RoomInstance {
             if (this.roomItems.get(addItem).getBase().getInteractor() == FurnitureInteractor.TELEPORTER) {
                 Bootloader.getGame().getRoomManager().getTeleporterCache().remove(addItem);
             }
-            insertQuery.append(" ,(" + addItem + ", " + this.information.getId() + ", " + this.roomItems.get(addItem).getPosition().getX() + ", " + this.roomItems.get(addItem).getPosition().getY() + ", " + this.roomItems.get(addItem).getRotation() + ", " + String.valueOf(this.roomItems.get(addItem).getPosition().getAltitude()) + ", " + "'" + this.roomItems.get(addItem).getWallPosition() + "')");
+            insertQuery.append(" ,(")
+                    .append(addItem).append(", ").append(this.information.getId()).append(", ")
+                    .append(this.roomItems.get(addItem).getPosition().getX()).append(", ")
+                    .append(this.roomItems.get(addItem).getPosition().getY()).append(", ")
+                    .append(this.roomItems.get(addItem).getRotation()).append(", ")
+                    .append(String.valueOf(this.roomItems.get(addItem).getPosition().getAltitude()))
+                    .append(", ").append("'").append(this.roomItems.get(addItem).getWallPosition()).append("')");
         }
         final StringBuilder updateQuery = new StringBuilder();
-        List<String> flagList = new GapList<String>();
+        List<String> flagList = new GapList<>();
         for (final Integer updateItem : this.itemsToUpdate) {
             if (!this.roomItems.containsKey(updateItem)) {
                 continue;
             }
-            updateQuery.append(" ,(" + updateItem + ", ?)");
+            updateQuery.append(" ,(").append(updateItem).append(", ?)");
             String flags = this.roomItems.get(updateItem).getFlags();
             if (this.roomItems.get(updateItem).getTermFlags() != null) {
                 flags = "";
@@ -822,7 +860,8 @@ public class RoomInstance {
             flagList.add(flags);
         }
         if (insertQuery.length() > 0) {
-            Bootloader.getStorage().executeQuery("REPLACE INTO room_items (item_id, room_id, position_x, position_y, rotation, position_altitude, wall_position) VALUES " + insertQuery.toString().substring(2));
+            Bootloader.getStorage().executeQuery("REPLACE INTO room_items (item_id, room_id, position_x, position_y, rotation, position_altitude, wall_position) " +
+                    "VALUES " + insertQuery.toString().substring(2));
         }
         if (updateQuery.length() > 0) {
             final PreparedStatement pn = Bootloader.getStorage().queryParams("REPLACE INTO item_flags (item_id, flag) VALUES " + updateQuery.toString().substring(2));
@@ -835,7 +874,6 @@ public class RoomInstance {
                 logger.error("SQL Exception", ex);
             }
             flagList.clear();
-            flagList = null;
         }
         this.itemsToAdd.clear();
         this.itemsToUpdate.clear();
@@ -855,7 +893,7 @@ public class RoomInstance {
     }
 
     public GapList<RoomItem> getFloorItems() {
-        final GapList<RoomItem> items = new GapList<RoomItem>();
+        final GapList<RoomItem> items = new GapList<>();
         for (final RoomItem item : this.roomItems.values()) {
             if (item != null && !item.getBase().getType().equals(FurnitureType.WALL)) {
                 items.add(item);
@@ -865,7 +903,7 @@ public class RoomInstance {
     }
 
     public GapList<RoomItem> getWallItems() {
-        final GapList<RoomItem> items = new GapList<RoomItem>();
+        final GapList<RoomItem> items = new GapList<>();
         for (final RoomItem item : this.roomItems.values()) {
             if (item != null && item.getBase().getType().equals(FurnitureType.WALL)) {
                 items.add(item);

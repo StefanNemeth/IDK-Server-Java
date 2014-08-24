@@ -52,7 +52,7 @@ public class FriendRemoveReader implements IMessageReader {
             }
         }
 
-        if (where != "") {
+        if (!where.equals("")) {
             Bootloader.getStorage().executeQuery(query + where.substring(4));
         }
 

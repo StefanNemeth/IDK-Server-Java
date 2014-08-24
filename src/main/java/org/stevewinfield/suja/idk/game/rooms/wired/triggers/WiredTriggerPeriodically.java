@@ -12,7 +12,7 @@ import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
 import org.stevewinfield.suja.idk.game.rooms.wired.WiredTrigger;
 
 public class WiredTriggerPeriodically extends WiredTrigger {
-    private static Logger logger = Logger.getLogger(WiredTriggerPeriodically.class);
+    private static final Logger logger = Logger.getLogger(WiredTriggerPeriodically.class);
 
     public WiredTriggerPeriodically(final RoomInstance room, final RoomItem item, final String[] data) {
         this.room = room;

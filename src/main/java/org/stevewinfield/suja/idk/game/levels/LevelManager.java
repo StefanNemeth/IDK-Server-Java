@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class LevelManager {
-    private static Logger logger = Logger.getLogger(LevelManager.class);
+    private static final Logger logger = Logger.getLogger(LevelManager.class);
 
     // getters
     public Level getLevel(final int levelId) {
@@ -30,8 +30,8 @@ public class LevelManager {
     }
 
     public LevelManager() {
-        this.levels = new ConcurrentHashMap<Integer, Level>();
-        this.specialRights = new ConcurrentHashMap<String, List<LevelRight>>();
+        this.levels = new ConcurrentHashMap<>();
+        this.specialRights = new ConcurrentHashMap<>();
 
         try {
             int highestLevel = 0;

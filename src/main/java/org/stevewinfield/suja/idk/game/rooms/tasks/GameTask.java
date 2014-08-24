@@ -14,19 +14,19 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class GameTask {
-    protected RoomInstance room;
+    protected final RoomInstance room;
     protected boolean running;
     protected boolean paused;
     protected boolean ended;
     protected int flexInteger;
-    protected List<RoomItem> gameItems;
-    protected ConcurrentHashMap<Integer, GameTeam> gameTeams;
+    protected final List<RoomItem> gameItems;
+    protected final ConcurrentHashMap<Integer, GameTeam> gameTeams;
 
     public GameTask(final RoomInstance room) {
         this.room = room;
         this.ended = true;
-        this.gameItems = new GapList<RoomItem>();
-        this.gameTeams = new ConcurrentHashMap<Integer, GameTeam>();
+        this.gameItems = new GapList<>();
+        this.gameTeams = new ConcurrentHashMap<>();
     }
 
     public int getFlexInteger() {

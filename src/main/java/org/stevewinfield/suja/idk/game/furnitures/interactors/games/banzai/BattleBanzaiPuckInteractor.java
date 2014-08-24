@@ -30,7 +30,7 @@ public class BattleBanzaiPuckInteractor extends DefaultInteractor {
         }
 
         if (true) {
-            // Buggy.
+            // TODO: Buggy.
             return;
         }
 
@@ -114,7 +114,6 @@ public class BattleBanzaiPuckInteractor extends DefaultInteractor {
                 boolean end = false;
 
                 if (item.getRoom().getGamemap().getTileState(checkX, checkY) != TileState.OPEN) {
-                    end = true;
                     break;
                 } else {
 
@@ -152,7 +151,7 @@ public class BattleBanzaiPuckInteractor extends DefaultInteractor {
         super.onPlayerWalksOn(player, item);
 
         if (true) {
-            // Buggy.
+            // TODO: Buggy.
             return;
         }
 

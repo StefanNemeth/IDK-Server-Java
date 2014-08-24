@@ -14,7 +14,7 @@ import org.stevewinfield.suja.idk.game.rooms.wired.WiredManager;
 import org.stevewinfield.suja.idk.game.rooms.wired.WiredTrigger;
 
 public class WiredTriggerStateChanged extends WiredTrigger {
-    private static Logger logger = Logger.getLogger(WiredTriggerStateChanged.class);
+    private static final Logger logger = Logger.getLogger(WiredTriggerStateChanged.class);
 
     public WiredTriggerStateChanged(final RoomInstance room, final RoomItem item, final String[] data) {
         this.room = room;
@@ -34,7 +34,7 @@ public class WiredTriggerStateChanged extends WiredTrigger {
 
     @Override
     public void set(final String[] obj) {
-        this.items = new GapList<Integer>();
+        this.items = new GapList<>();
         try {
             if (obj.length > 0 && obj[0].length() > 0) {
                 for (final String furni : obj[0].split(",")) {

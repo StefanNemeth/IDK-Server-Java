@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.Random;
 
 public class Furniture {
-    private static Logger logger = Logger.getLogger(Furniture.class);
+    private static final Logger logger = Logger.getLogger(Furniture.class);
 
     public int getId() {
         return id;

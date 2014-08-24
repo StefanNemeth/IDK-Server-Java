@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class BotKeywordReaction {
-    private static Logger logger = Logger.getLogger(BotKeywordReaction.class);
+    private static final Logger logger = Logger.getLogger(BotKeywordReaction.class);
 
     public int getBotId() {
         return botId;

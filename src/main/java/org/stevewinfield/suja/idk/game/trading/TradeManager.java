@@ -12,7 +12,7 @@ public class TradeManager {
     }
 
     public TradeManager() {
-        this.tradeSessions = new ConcurrentHashMap<Integer, Trade>();
+        this.tradeSessions = new ConcurrentHashMap<>();
     }
 
     public boolean initiateTrade(final int a, final int b) {

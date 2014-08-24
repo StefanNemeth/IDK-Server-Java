@@ -30,7 +30,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class CatalogManager {
-    private static Logger logger = Logger.getLogger(CatalogManager.class);
+    private static final Logger logger = Logger.getLogger(CatalogManager.class);
 
     public LinkedHashMap<Integer, CatalogPage> getCatalogPages() {
         return catalogPages;
@@ -57,7 +57,7 @@ public class CatalogManager {
     }
 
     public CatalogManager() {
-        this.catalogPages = new LinkedHashMap<Integer, CatalogPage>();
+        this.catalogPages = new LinkedHashMap<>();
         this.catalogPages.put(-1, new CatalogPage());
     }
 
@@ -66,12 +66,12 @@ public class CatalogManager {
     }
 
     public void loadCache() {
-        this.catalogPages = new LinkedHashMap<Integer, CatalogPage>();
-        this.catalogClubOffers = new LinkedHashMap<Integer, CatalogClubOffer>();
-        this.catalogClubGifts = new LinkedHashMap<String, CatalogClubGift>();
-        this.catalogModernGiftItems = new LinkedHashMap<Integer, Furniture>();
-        this.catalogDefaultGiftItems = new GapList<Furniture>();
-        this.catalogRecyclerRewards = new LinkedHashMap<Integer, GapList<Integer>>();
+        this.catalogPages = new LinkedHashMap<>();
+        this.catalogClubOffers = new LinkedHashMap<>();
+        this.catalogClubGifts = new LinkedHashMap<>();
+        this.catalogModernGiftItems = new LinkedHashMap<>();
+        this.catalogDefaultGiftItems = new GapList<>();
+        this.catalogRecyclerRewards = new LinkedHashMap<>();
         this.catalogPages.put(-1, new CatalogPage());
         int itemsLoaded = 0;
         try {
@@ -140,7 +140,7 @@ public class CatalogManager {
     }
 
     public List<CatalogPage> getSubPages(final int pageId) {
-        final List<CatalogPage> pages = new GapList<CatalogPage>();
+        final List<CatalogPage> pages = new GapList<>();
         for (final CatalogPage page : this.catalogPages.values()) {
             if (page.getParentId() == pageId && page.isVisible()) {
                 pages.add(page);
@@ -230,7 +230,7 @@ public class CatalogManager {
                 session.writeMessage(new GiftReceiverNotFoundWriter());
                 return;
             }
-            Furniture base = null;
+            Furniture base;
             if (this.catalogModernGiftItems.containsKey(giftColor)) {
                 base = this.catalogModernGiftItems.get(giftColor);
                 coinsPrice += IDK.CATA_GIFTS_MODERN_PRICE;
@@ -245,7 +245,7 @@ public class CatalogManager {
                 final Session target = Bootloader.getSessionManager().getAuthenticatedSession(targetId);
                 final String extraData = " " + targetMessage + (char) 10 + giftBox + (char) 10 + giftRibbon + (char) 10 + item.getId() + (char) 10 + flags.replace("" + (char) 10, "");
                 if (target == null) {
-                    int lastItem = 0;
+                    int lastItem;
                     Bootloader.getStorage().executeQuery("INSERT INTO items (base_item, special_interactor) VALUES (" + base.getId() + ", -1)");
                     Bootloader.getStorage().executeQuery("INSERT INTO player_items (item_id, player_id) VALUES (" + (lastItem = Bootloader.getStorage().readLastId("items")) + ", " + targetId + ")");
                     final PreparedStatement ps = Bootloader.getStorage().queryParams("INSERT INTO item_flags (item_id, flag) VALUES (" + lastItem + ", ?)");

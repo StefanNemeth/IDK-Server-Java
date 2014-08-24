@@ -42,7 +42,9 @@ public class RoomPlayerChatReader implements IMessageReader {
         if (message.startsWith(":") && message.length() > 1) {
             final String command = message.substring(1).split(" ")[0].toLowerCase();
             final String args = message.length() > (1 + command.length()) ? message.substring(2 + command.length()) : "";
-            if (Bootloader.getGame().getChatCommandHandler().commandExists(command) && session.getPlayerInstance().hasRight(Bootloader.getGame().getChatCommandHandler().getCommand(command).getPermissionCode()) && Bootloader.getGame().getChatCommandHandler().getCommand(command).execute(session.getRoomPlayer(), new ChatCommandArguments(args, shouting))) {
+            if (Bootloader.getGame().getChatCommandHandler().commandExists(command) &&
+                    session.getPlayerInstance().hasRight(Bootloader.getGame().getChatCommandHandler().getCommand(command).getPermissionCode()) &&
+                    Bootloader.getGame().getChatCommandHandler().getCommand(command).execute(session.getRoomPlayer(), new ChatCommandArguments(args, shouting))) {
                 return;
             }
         }

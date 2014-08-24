@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class FurnitureExchange {
-    private static Logger logger = Logger.getLogger(FurnitureExchange.class);
+    private static final Logger logger = Logger.getLogger(FurnitureExchange.class);
 
     public int getFurniId() {
         return furniId;

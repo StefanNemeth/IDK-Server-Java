@@ -13,7 +13,12 @@ public class WiredActionToggleFurniInteractor extends WiredInteractor {
 
     @Override
     public MessageWriter getWiredDialog(final RoomItem item) {
-        return new WiredActionToggleFurniWriter(item, item.getTermFlags().length > 0 ? item.getTermFlags()[0] : "", item.getTermFlags().length > 1 ? Integer.valueOf(item.getTermFlags()[1]) : 0);
+        return new WiredActionToggleFurniWriter(item,
+                item.getTermFlags().length > 0 ?
+                        item.getTermFlags()[0] :
+                        "",
+                item.getTermFlags().length > 1 ? Integer.valueOf(item.getTermFlags()[1]) : 0
+        );
     }
 
 }

@@ -8,7 +8,7 @@ import java.util.Comparator;
 import java.util.Map;
 
 public class PopularTagsListHelper implements Comparator<String> {
-    Map<String, Integer> base;
+    final Map<String, Integer> base;
 
     public PopularTagsListHelper(final Map<String, Integer> base) {
         this.base = base;

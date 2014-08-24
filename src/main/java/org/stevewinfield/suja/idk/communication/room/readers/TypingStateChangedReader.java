@@ -26,7 +26,12 @@ public class TypingStateChangedReader implements IMessageReader {
             return;
         }
 
-        room.writeMessage(new RoomPlayerTypingWriter(session.getRoomPlayer().getVirtualId(), reader.getMessageId() == OperationCodes.getIncomingOpCode("RoomPlayerStartTyping")), session);
+        room.writeMessage(new RoomPlayerTypingWriter(
+                        session.getRoomPlayer().getVirtualId(),
+                        reader.getMessageId() == OperationCodes.getIncomingOpCode("RoomPlayerStartTyping")
+                ),
+                session
+        );
     }
 
 }

@@ -60,7 +60,7 @@ public class RoomApplyDecorationReader implements IMessageReader {
         }
 
         room.getInformation().setDecoration(key, item.getFlags());
-        room.writeMessage(new RoomDecorationWriter(new AbstractMap.SimpleEntry<String, String>(key, item.getFlags())), session);
+        room.writeMessage(new RoomDecorationWriter(new AbstractMap.SimpleEntry<>(key, item.getFlags())), session);
         Bootloader.getStorage().executeQuery("UPDATE rooms SET decorations='" + updateData + "' WHERE id=" + room.getInformation().getId());
 
         session.getPlayerInstance().getInventory().removeItem(itemId, session);

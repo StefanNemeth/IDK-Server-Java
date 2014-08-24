@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CatalogClubGift implements ISerialize {
-    private static Logger logger = Logger.getLogger(CatalogClubGift.class);
+    private static final Logger logger = Logger.getLogger(CatalogClubGift.class);
 
     public int getId() {
         return id;

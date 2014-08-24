@@ -18,16 +18,16 @@ import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RoomManager {
-    private static Logger logger = Logger.getLogger(RoomManager.class);
+    private static final Logger logger = Logger.getLogger(RoomManager.class);
 
     public ConcurrentHashMap<Integer, Integer> getTeleporterCache() {
         return this.teleporterCache;
     }
 
     public RoomManager() {
-        this.roomModels = new ConcurrentHashMap<String, RoomModel>();
-        this.roomCategories = new ConcurrentHashMap<Integer, RoomCategory>();
-        this.teleporterCache = new ConcurrentHashMap<Integer, Integer>();
+        this.roomModels = new ConcurrentHashMap<>();
+        this.roomCategories = new ConcurrentHashMap<>();
+        this.teleporterCache = new ConcurrentHashMap<>();
         try {
             final ResultSet models = Bootloader.getStorage().queryParams("SELECT * FROM room_models").executeQuery();
             while (models.next()) {
@@ -42,8 +42,8 @@ public class RoomManager {
                 category.set(categories);
                 roomCategories.put(categories.getInt("id"), category);
             }
-            final SortedSet<Integer> keys = new TreeSet<Integer>(roomCategories.keySet());
-            final GapList<RoomCategory> cats = new GapList<RoomCategory>();
+            final SortedSet<Integer> keys = new TreeSet<>(roomCategories.keySet());
+            final GapList<RoomCategory> cats = new GapList<>();
             for (final int key : keys) {
                 cats.add(roomCategories.get(key));
             }
@@ -52,7 +52,7 @@ public class RoomManager {
         } catch (final SQLException e) {
             logger.error("SQL Exception", e);
         }
-        this.loadedRoomInstances = new ConcurrentHashMap<Integer, RoomInstance>();
+        this.loadedRoomInstances = new ConcurrentHashMap<>();
     }
 
     public RoomModel getRoomModel(final String modelId) {
@@ -77,7 +77,14 @@ public class RoomManager {
         }
         RoomInformation info = null;
         try {
-            final ResultSet row = Bootloader.getStorage().queryParams("SELECT rooms.*, nickname FROM rooms, players WHERE rooms.id=" + roomId + " AND players.id=owner_id ORDER BY name ASC LIMIT 1").executeQuery();
+            final ResultSet row = Bootloader.getStorage()
+                    .queryParams(
+                            "SELECT rooms.*, nickname FROM rooms, players " +
+                                    "WHERE rooms.id=" + roomId + " " +
+                                    "AND players.id=owner_id " +
+                                    "ORDER BY name ASC " +
+                                    "LIMIT 1"
+                    ).executeQuery();
             if (row.next()) {
                 info = new RoomInformation();
                 info.set(row);
@@ -95,7 +102,14 @@ public class RoomManager {
         }
         RoomInstance instance = null;
         try {
-            final ResultSet row = Bootloader.getStorage().queryParams("SELECT rooms.*, nickname FROM rooms, players WHERE rooms.id=" + roomId + " AND players.id=owner_id ORDER BY name ASC LIMIT 1").executeQuery();
+            final ResultSet row = Bootloader.getStorage()
+                    .queryParams(
+                            "SELECT rooms.*, nickname FROM rooms, players " +
+                                    "WHERE rooms.id=" + roomId + " " +
+                                    "AND players.id=owner_id " +
+                                    "ORDER BY name ASC " +
+                                    "LIMIT 1"
+                    ).executeQuery();
             if (row.next()) {
                 instance = new RoomInstance();
                 instance.load(row);

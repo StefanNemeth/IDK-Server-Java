@@ -21,7 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class EditRoomReader implements IMessageReader {
-    private static Logger logger = Logger.getLogger(EditRoomReader.class);
+    private static final Logger logger = Logger.getLogger(EditRoomReader.class);
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
@@ -61,7 +61,7 @@ public class EditRoomReader implements IMessageReader {
 
         int categoryId = reader.readInteger();
         boolean tradingEnabled = false;
-        RoomCategory category = null;
+        RoomCategory category;
 
         if ((category = Bootloader.getGame().getRoomManager().getRoomCategory(categoryId)) == null) {
             categoryId = 1;
@@ -120,7 +120,20 @@ public class EditRoomReader implements IMessageReader {
         }
 
         try {
-            final PreparedStatement std = Bootloader.getStorage().queryParams("UPDATE rooms SET name=?, description=?, access_type=" + accessType + ", password=?, max_players=" + roomUserLimit + ", category_id=" + categoryId + ", allow_pets=" + (allowPets ? 1 : 0) + ", allow_pets_eating=" + (allowPetsEating ? 1 : 0) + ", hide_walls=" + (hideWalls ? 1 : 0) + ", wall_thickness=" + wallThickness + ", floor_thickness=" + floorThickness + ", disable_blocking=" + (disableBlocking ? 1 : 0) + ", tags=? WHERE id=" + room.getInformation().getId());
+            final PreparedStatement std = Bootloader.getStorage()
+                    .queryParams(
+                            "UPDATE rooms SET name=?, description=?, " +
+                                    "access_type=" + accessType + ", " +
+                                    "password=?, max_players=" + roomUserLimit + ", " +
+                                    "category_id=" + categoryId + ", " +
+                                    "allow_pets=" + (allowPets ? 1 : 0) + ", " +
+                                    "allow_pets_eating=" + (allowPetsEating ? 1 : 0) + ", " +
+                                    "hide_walls=" + (hideWalls ? 1 : 0) + ", " +
+                                    "wall_thickness=" + wallThickness + ", " +
+                                    "floor_thickness=" + floorThickness + ", " +
+                                    "disable_blocking=" + (disableBlocking ? 1 : 0) + ", " +
+                                    "tags=? WHERE id=" + room.getInformation().getId()
+                    );
             std.setString(1, roomTitle);
             std.setString(2, roomDescription);
             std.setString(3, roomPassword);
@@ -132,18 +145,24 @@ public class EditRoomReader implements IMessageReader {
             return;
         }
 
-        final Session owner = room.getInformation().getOwnerId() == session.getPlayerInstance().getInformation().getId() ? session : Bootloader.getSessionManager().getAuthenticatedSession(room.getInformation().getOwnerId());
+        final Session owner = room.getInformation().getOwnerId() == session.getPlayerInstance().getInformation().getId() ?
+                session :
+                Bootloader.getSessionManager().getAuthenticatedSession(room.getInformation().getOwnerId());
 
         if (owner != null) {
             for (final RoomInformation info : owner.getPlayerInstance().getRooms()) {
                 if (info.getId() == room.getInformation().getId()) {
-                    info.set(roomTitle, roomDescription, tags, accessType, roomPassword, roomUserLimit, categoryId, allowPets, allowPetsEating, hideWalls, wallThickness, floorThickness, disableBlocking, tradingEnabled);
+                    info.set(roomTitle, roomDescription, tags, accessType, roomPassword, roomUserLimit,
+                            categoryId, allowPets, allowPetsEating, hideWalls,
+                            wallThickness, floorThickness, disableBlocking, tradingEnabled);
                     break;
                 }
             }
         }
 
-        room.getInformation().set(roomTitle, roomDescription, tags, accessType, roomPassword, roomUserLimit, categoryId, allowPets, allowPetsEating, hideWalls, wallThickness, floorThickness, disableBlocking, tradingEnabled);
+        room.getInformation().set(roomTitle, roomDescription, tags, accessType, roomPassword, roomUserLimit,
+                categoryId, allowPets, allowPetsEating, hideWalls,
+                wallThickness, floorThickness, disableBlocking, tradingEnabled);
 
         final MessageWriter wallStatus = new RoomWallsStatusWriter(hideWalls, wallThickness, floorThickness);
         final MessageWriter roomInfo = new RoomInfoWriter(room, false, false);
@@ -164,7 +183,12 @@ public class EditRoomReader implements IMessageReader {
             for (final RoomPlayer player : room.getRoomPlayers().values()) {
                 if (player.getCurrentTileState() > -1) {
                     final boolean oxi = player.getCurrentTileState() == TileState.SITABLE || player.getCurrentTileState() == TileState.LAYABLE;
-                    room.getGamemap().updateTile(player.getPosition().getVector2(), disableBlocking ? (TileState.PLAYER | (oxi ? player.getCurrentTileState() : 0)) : (TileState.BLOCKED | (oxi ? player.getCurrentTileState() : 0)));
+                    room.getGamemap().updateTile(
+                            player.getPosition().getVector2(),
+                            disableBlocking ?
+                                    (TileState.PLAYER | (oxi ? player.getCurrentTileState() : 0)) :
+                                    (TileState.BLOCKED | (oxi ? player.getCurrentTileState() : 0))
+                    );
                 }
             }
         }

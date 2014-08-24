@@ -25,7 +25,7 @@ public class GetPopularTagsReader implements IMessageReader {
         }
 
         final List<RoomInformation> topRooms = Bootloader.getGame().getNavigatorListManager().getNavigatorLists().get(-1).getRooms();
-        final ConcurrentHashMap<String, Integer> tags = new ConcurrentHashMap<String, Integer>();
+        final ConcurrentHashMap<String, Integer> tags = new ConcurrentHashMap<>();
 
         for (final RoomInformation roomInfo : topRooms) {
             if (roomInfo == null) {
@@ -44,7 +44,7 @@ public class GetPopularTagsReader implements IMessageReader {
             }
         }
 
-        final TreeMap<String, Integer> sortedTags = new TreeMap<String, Integer>(new PopularTagsListHelper(tags));
+        final TreeMap<String, Integer> sortedTags = new TreeMap<>(new PopularTagsListHelper(tags));
         sortedTags.putAll(tags);
 
         session.writeMessage(new NavigatorPopularTagListWriter(sortedTags));

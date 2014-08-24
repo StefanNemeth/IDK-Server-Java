@@ -30,7 +30,7 @@ public class PickallChatCommand implements IChatCommand {
             return false;
         }
 
-        final List<RoomItem> items = new GapList<RoomItem>();
+        final List<RoomItem> items = new GapList<>();
 
         for (final RoomItem item : room.getRoomItems().values()) {
             if (item.getInteractorId() == FurnitureInteractor.POST_IT) {

@@ -31,7 +31,12 @@ public class RespectPlayerReader implements IMessageReader {
             return;
         }
 
-        room.writeMessage(new RoomPlayerRespectedWriter(targetSession.getPlayerInstance().getInformation().getId(), targetSession.getPlayerInstance().getInformation().getRespectPoints() + 1), session);
+        room.writeMessage(new RoomPlayerRespectedWriter(
+                        targetSession.getPlayerInstance().getInformation().getId(),
+                        targetSession.getPlayerInstance().getInformation().getRespectPoints() + 1
+                ),
+                session
+        );
 
         session.getPlayerInstance().getInformation().decrementAvailableRespects();
         targetSession.getPlayerInstance().getInformation().incrementRespectPoints();

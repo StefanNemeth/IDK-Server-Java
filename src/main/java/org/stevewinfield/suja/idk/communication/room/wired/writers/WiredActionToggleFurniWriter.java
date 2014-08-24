@@ -9,13 +9,13 @@ import org.magicwerk.brownies.collections.GapList;
 import org.stevewinfield.suja.idk.game.rooms.RoomItem;
 
 public class WiredActionToggleFurniWriter extends RoomWiredEffectWriter {
-    private static Logger logger = Logger.getLogger(WiredActionToggleFurniWriter.class);
+    private static final Logger logger = Logger.getLogger(WiredActionToggleFurniWriter.class);
 
     public WiredActionToggleFurniWriter(final RoomItem item, final String furnis, final int delay) {
         super.push(false);
         super.push(5);
 
-        final GapList<Integer> items = new GapList<Integer>();
+        final GapList<Integer> items = new GapList<>();
 
         if (furnis.length() > 0) {
             try {

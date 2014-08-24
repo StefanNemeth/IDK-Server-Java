@@ -20,7 +20,7 @@ public class WiredHandler {
     }
 
     public WiredHandler(final RoomInstance room) {
-        this.stack = new ConcurrentHashMap<Vector2, ConcurrentHashMap<Integer, IWiredItem>>();
+        this.stack = new ConcurrentHashMap<>();
     }
 
     public void addItem(final Vector2 position, final IWiredItem item) {
@@ -50,7 +50,9 @@ public class WiredHandler {
         final RoomInstance room = item.getRoom();
 
         for (final RoomItem checkWired : room.getRoomItems().values()) {
-            if (WiredManager.isWiredItem(checkWired.getBase()) && this.getStack().containsKey(checkWired.getPosition().getVector2()) && this.getStack().get(checkWired.getPosition().getVector2()).get(checkWired.getItemId()) instanceof IWiredItem) {
+            if (WiredManager.isWiredItem(checkWired.getBase()) &&
+                    this.getStack().containsKey(checkWired.getPosition().getVector2()) &&
+                    this.getStack().get(checkWired.getPosition().getVector2()).get(checkWired.getItemId()) != null) {
                 final IWiredItem wiredItem = this.getStack().get(checkWired.getPosition().getVector2()).get(checkWired.getItemId());
                 if (wiredItem != null && wiredItem.getItems() != null && wiredItem.getItems().contains(item.getItemId())) {
                     String furniString = "";

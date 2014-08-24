@@ -19,11 +19,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CreateRoomReader implements IMessageReader {
-    private static Logger logger = Logger.getLogger(CreateRoomReader.class);
+    private static final Logger logger = Logger.getLogger(CreateRoomReader.class);
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || (session.getPlayerInstance().getRooms().size() >= IDK.NAV_MAX_ROOMS_PER_PLAYER && !session.getPlayerInstance().hasRight("unlimited_rooms"))) {
+        if (!session.isAuthenticated() ||
+                (session.getPlayerInstance().getRooms().size() >= IDK.NAV_MAX_ROOMS_PER_PLAYER &&
+                        !session.getPlayerInstance().hasRight("unlimited_rooms"))) {
             return;
         }
 
@@ -34,9 +36,13 @@ public class CreateRoomReader implements IMessageReader {
             return;
         }
 
-        int id = 0;
+        int id;
         try {
-            final PreparedStatement std = Bootloader.getStorage().queryParams("INSERT INTO rooms (owner_id, name, description, model_name) VALUES (" + session.getPlayerInstance().getInformation().getId() + ", ?, '', ?)");
+            final PreparedStatement std = Bootloader.getStorage()
+                    .queryParams("INSERT INTO rooms (owner_id, name, description, model_name) VALUES (" +
+                                    session.getPlayerInstance().getInformation().getId() +
+                                    ", ?, '', ?)"
+                    );
             std.setString(1, roomName);
             std.setString(2, modelName);
             std.execute();

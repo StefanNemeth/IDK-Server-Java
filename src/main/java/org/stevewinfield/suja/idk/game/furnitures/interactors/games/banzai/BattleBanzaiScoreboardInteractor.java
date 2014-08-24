@@ -12,7 +12,7 @@ import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
 import org.stevewinfield.suja.idk.game.rooms.tasks.GameTask;
 
 public class BattleBanzaiScoreboardInteractor extends DefaultInteractor {
-    protected int teamId;
+    protected final int teamId;
     protected GameTask game;
 
     public BattleBanzaiScoreboardInteractor(final int teamId) {

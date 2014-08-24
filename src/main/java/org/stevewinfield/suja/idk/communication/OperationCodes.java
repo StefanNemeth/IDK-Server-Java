@@ -5,7 +5,6 @@
 package org.stevewinfield.suja.idk.communication;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -19,7 +18,7 @@ public class OperationCodes {
         return Short.valueOf(outgoingOpCodes.getProperty(key, "0"));
     }
 
-    public static void loadCodes() throws FileNotFoundException, IOException {
+    public static void loadCodes() throws IOException {
         incomingOpCodes = new Properties();
         outgoingOpCodes = new Properties();
 

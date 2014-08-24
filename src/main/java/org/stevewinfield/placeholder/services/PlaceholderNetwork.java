@@ -26,7 +26,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 public class PlaceholderNetwork {
-    private static Logger logger = Logger.getLogger(PlaceholderNetwork.class);
+    private static final Logger logger = Logger.getLogger(PlaceholderNetwork.class);
 
     public boolean isAuthenticated() {
         return authenticated;
@@ -187,9 +187,9 @@ public class PlaceholderNetwork {
     }
 
     private final char SLASH = 47;
-    private String prefix;
-    private String salt;
-    private String uniqueKey;
+    private final String prefix;
+    private final String salt;
+    private final String uniqueKey;
 
     private boolean authenticated;
     private boolean connected;

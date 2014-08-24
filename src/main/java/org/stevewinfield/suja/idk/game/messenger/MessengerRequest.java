@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MessengerRequest implements ISerialize {
-    private static Logger logger = Logger.getLogger(MessengerRequest.class);
+    private static final Logger logger = Logger.getLogger(MessengerRequest.class);
 
     // getters
     public int getRequestPlayerId() {

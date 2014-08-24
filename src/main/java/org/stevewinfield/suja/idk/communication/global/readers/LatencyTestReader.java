@@ -14,7 +14,7 @@ public class LatencyTestReader implements IMessageReader {
     @Override
     public void parse(final Session session, final MessageReader reader) {
         /**
-         * Todo: Better way
+         * TODO: Better way
          */
         final MessageWriter w = new MessageWriter((short) 354);
         w.push(reader.readInteger());

@@ -15,7 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SetPlayerFigureReader implements IMessageReader {
-    private static Logger logger = Logger.getLogger(SetPlayerFigureReader.class);
+    private static final Logger logger = Logger.getLogger(SetPlayerFigureReader.class);
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
@@ -23,7 +23,7 @@ public class SetPlayerFigureReader implements IMessageReader {
             return;
         }
 
-        // TODO verfify via regex..
+        // TODO verify via regex..
 
         String gender = reader.readUTF().toLowerCase();
         final String figure = InputFilter.filterString(reader.readUTF());
@@ -32,7 +32,7 @@ public class SetPlayerFigureReader implements IMessageReader {
             return;
         }
 
-        if (gender != "m" && gender != "f") {
+        if (!gender.equals("m") && !gender.equals("f")) {
             gender = "m";
         }
 

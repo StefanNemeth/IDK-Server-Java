@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CatalogPage implements ISerialize {
-    private static Logger logger = Logger.getLogger(CatalogPage.class);
+    private static final Logger logger = Logger.getLogger(CatalogPage.class);
 
     // getters
     public int getId() {
@@ -77,7 +77,7 @@ public class CatalogPage implements ISerialize {
         this.layout = "";
         this.layoutStrings = new String[0];
         this.contentStrings = new String[0];
-        this.items = new HashMap<Integer, CatalogItem>();
+        this.items = new HashMap<>();
     }
 
     public void set(final ResultSet row) {

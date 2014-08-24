@@ -16,7 +16,7 @@ import org.stevewinfield.suja.idk.encryption.Base64Encryption;
 import org.stevewinfield.suja.idk.network.sessions.Session;
 
 public class NetworkDecoder extends FrameDecoder {
-    private static Logger logger = Logger.getLogger(NetworkDecoder.class);
+    private static final Logger logger = Logger.getLogger(NetworkDecoder.class);
 
     @Override
     protected Object decode(final ChannelHandlerContext ctx, final Channel channel, final ChannelBuffer buffer) {

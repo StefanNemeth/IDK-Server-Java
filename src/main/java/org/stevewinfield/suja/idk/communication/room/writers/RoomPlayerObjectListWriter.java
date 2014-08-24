@@ -23,7 +23,7 @@ public class RoomPlayerObjectListWriter extends MessageWriter {
     }
 
     public RoomPlayerObjectListWriter(final RoomPlayer player) {
-        this(new GapList<RoomPlayer>(player));
+        this(new GapList<>(player));
     }
 
 }

@@ -18,7 +18,13 @@ public class CheckCanCreateRoomReader implements IMessageReader {
             return;
         }
 
-        session.writeMessage(new RoomCanCreateResultWriter(session.getPlayerInstance().getRooms().size() >= IDK.NAV_MAX_ROOMS_PER_PLAYER && !session.getPlayerInstance().hasRight("unlimited_rooms"), IDK.NAV_MAX_ROOMS_PER_PLAYER));
+        session.writeMessage(
+                new RoomCanCreateResultWriter(
+                        session.getPlayerInstance().getRooms().size() >= IDK.NAV_MAX_ROOMS_PER_PLAYER &&
+                                !session.getPlayerInstance().hasRight("unlimited_rooms"),
+                        IDK.NAV_MAX_ROOMS_PER_PLAYER
+                )
+        );
     }
 
 }

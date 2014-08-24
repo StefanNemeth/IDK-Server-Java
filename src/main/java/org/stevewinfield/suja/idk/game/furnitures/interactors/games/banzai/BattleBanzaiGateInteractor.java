@@ -12,7 +12,7 @@ import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
 import org.stevewinfield.suja.idk.game.rooms.tasks.GameTask;
 
 public class BattleBanzaiGateInteractor extends DefaultInteractor {
-    protected int teamId;
+    protected final int teamId;
     protected GameTask game;
 
     public BattleBanzaiGateInteractor(final int teamId) {

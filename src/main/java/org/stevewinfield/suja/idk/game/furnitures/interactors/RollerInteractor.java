@@ -100,32 +100,38 @@ public class RollerInteractor extends DefaultInteractor {
                         }
                     }
 
-                    /*
-                     * if (item.getRotation() == 2 && (roller.getRotation() == 2
-                     * || roller.getRotation() == 6)) { x = roller.getRotation()
-                     * == 2 ? x + (roller.getBase().getWidth() - 1) : x -
-                     * (roller.getBase().getWidth() - 1);
-                     * 
-                     * //x = roller.getRotation() == 2 ? x +
-                     * (roller.getBase().getLength() - 1) : x -
-                     * (item.getBase().getLength() - 1);
-                     * //System.out.println("ITEM ROTATION: " +
-                     * item.getRotation()); //System.out.println("ITEM WIDTH: "
-                     * + item.getBase().getWidth());
-                     * //System.out.println("ITEM LENGTH: " +
-                     * item.getBase().getLength()); } else
-                     * if((item.getRotation() == 2 || item.getRotation() == 6)
-                     * && (roller.getRotation() == 4 || roller.getRotation() ==
-                     * 0)) { System.out.println("ROLLER ROTATION: " +
-                     * roller.getRotation());
-                     * System.out.println("ITEM ROTATION: " +
-                     * item.getRotation()); System.out.println("ITEM WIDTH: " +
-                     * item.getBase().getWidth());
-                     * System.out.println("ITEM LENGTH: " +
-                     * item.getBase().getLength()); y = roller.getRotation() ==
-                     * 4 ? y + (roller.getBase().getWidth() - 1) : y -
-                     * (roller.getBase().getWidth() - 1); }
-                     */
+
+                    // don't know what this was doing
+                    //if (item.getRotation() == 2 && (roller.getRotation() == 2
+                    //        || roller.getRotation() == 6)) {
+                    //    x = roller.getRotation()
+                    //            == 2 ? x + (roller.getBase().getWidth() - 1) : x -
+                    //            (roller.getBase().getWidth() - 1);
+                    //
+                    //    //x = roller.getRotation() == 2 ? x +
+                    //    (roller.getBase().getLength() - 1):x -
+                    //            (item.getBase().getLength() - 1);
+                    //    //System.out.println("ITEM ROTATION: " +
+                    //    item.getRotation()); //System.out.println("ITEM WIDTH: "
+                    //    +item.getBase().getWidth());
+                    //    //System.out.println("ITEM LENGTH: " +
+                    //    item.getBase().getLength());
+                    //} else if ((item.getRotation() == 2 || item.getRotation() == 6)
+                    //        && (roller.getRotation() == 4 || roller.getRotation() ==
+                    //        0)) {
+                    //    System.out.println("ROLLER ROTATION: " +
+                    //            roller.getRotation());
+                    //    System.out.println("ITEM ROTATION: " +
+                    //            item.getRotation());
+                    //    System.out.println("ITEM WIDTH: " +
+                    //            item.getBase().getWidth());
+                    //    System.out.println("ITEM LENGTH: " +
+                    //            item.getBase().getLength());
+                    //    y = roller.getRotation() ==
+                    //            4 ? y + (roller.getBase().getWidth() - 1) : y -
+                    //            (roller.getBase().getWidth() - 1);
+                    //}
+
 
                     if (item.getItemId() != roller.getItemId() && item.getPosition().getAltitude() > roller.getPosition().getAltitude()) {
                         if (!room.setFloorItem(null, item, new Vector2(x, y), item.getRotation(), false, roller.getItemId(), roller.getAbsoluteHeight()) || items.size() > 1) {

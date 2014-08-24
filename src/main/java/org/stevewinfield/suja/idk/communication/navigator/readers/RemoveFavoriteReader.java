@@ -14,7 +14,7 @@ import org.stevewinfield.suja.idk.network.sessions.Session;
 import java.sql.SQLException;
 
 public class RemoveFavoriteReader implements IMessageReader {
-    private static Logger logger = Logger.getLogger(RemoveFavoriteReader.class);
+    private static final Logger logger = Logger.getLogger(RemoveFavoriteReader.class);
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
@@ -32,7 +32,11 @@ public class RemoveFavoriteReader implements IMessageReader {
         session.writeMessage(new NavigatorFavoriteRoomsChangedWriter(roomId, false));
 
         try {
-            Bootloader.getStorage().queryParams("DELETE FROM player_room_favorites WHERE player_id=" + session.getPlayerInstance().getInformation().getId() + " AND room_id=" + roomId).execute();
+            Bootloader.getStorage()
+                    .queryParams("DELETE FROM player_room_favorites WHERE player_id=" +
+                                    session.getPlayerInstance().getInformation().getId() +
+                                    " AND room_id=" + roomId
+                    ).execute();
         } catch (final SQLException e) {
             logger.error("SQL Exception", e);
         }

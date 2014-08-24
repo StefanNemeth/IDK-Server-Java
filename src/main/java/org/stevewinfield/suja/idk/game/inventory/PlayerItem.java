@@ -17,7 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PlayerItem implements ISerialize {
-    private static Logger logger = Logger.getLogger(PlayerItem.class);
+    private static final Logger logger = Logger.getLogger(PlayerItem.class);
 
     // getters
     public int getItemId() {

@@ -22,8 +22,8 @@ public class ModerationToolWriter extends MessageWriter {
         super(OperationCodes.getOutgoingOpCode("ModerationTool"));
         super.push(-1);
 
-        final List<ModerationPresetMessage> playerPresetMessages = new GapList<ModerationPresetMessage>();
-        final List<ModerationPresetMessage> roomPresetMessages = new GapList<ModerationPresetMessage>();
+        final List<ModerationPresetMessage> playerPresetMessages = new GapList<>();
+        final List<ModerationPresetMessage> roomPresetMessages = new GapList<>();
 
         for (final ModerationPresetMessage presetMessage : presetMessages) {
             if (presetMessage.getType() == ModerationPresetMessageType.ROOM_MESSAGE) {

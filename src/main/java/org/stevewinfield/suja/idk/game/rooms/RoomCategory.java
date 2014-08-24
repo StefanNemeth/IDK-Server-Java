@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RoomCategory {
-    private static Logger logger = Logger.getLogger(RoomCategory.class);
+    private static final Logger logger = Logger.getLogger(RoomCategory.class);
 
     // getters
     public int getId() {

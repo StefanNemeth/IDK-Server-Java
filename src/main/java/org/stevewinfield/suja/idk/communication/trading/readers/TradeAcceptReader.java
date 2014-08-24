@@ -26,9 +26,11 @@ public class TradeAcceptReader implements IMessageReader {
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
-        Trade trade = null;
+        Trade trade;
 
-        if (room == null || (trade = room.getTradeManager().getTrade(session.getPlayerInstance().getInformation().getId())) == null || !trade.acceptTrade(session.getPlayerInstance().getInformation().getId())) {
+        if (room == null ||
+                (trade = room.getTradeManager().getTrade(session.getPlayerInstance().getInformation().getId())) == null ||
+                !trade.acceptTrade(session.getPlayerInstance().getInformation().getId())) {
             return;
         }
 

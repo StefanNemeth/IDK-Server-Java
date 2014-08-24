@@ -26,7 +26,7 @@ public class ChatCommandArguments {
     }
 
     public int readInteger() {
-        int val = 0;
+        int val;
         try {
             val = Integer.valueOf(message[pointer]);
             pointer++;

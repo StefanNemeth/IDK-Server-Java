@@ -17,7 +17,9 @@ public class ExchangeInteractor extends DefaultInteractor {
     public void onTrigger(final RoomPlayer player, final RoomItem item, final int request, final boolean hasRights) {
         super.onTrigger(player, item, request, hasRights);
 
-        if (player == null || (player.getRoom().hasRights(player.getSession(), true) && item.getBase().hasRightCheck()) || !Bootloader.getGame().getFurnitureManager().getFurnitureExchanges().containsKey(item.getBase().getId())) {
+        if (player == null ||
+                (player.getRoom().hasRights(player.getSession(), true) && item.getBase().hasRightCheck()) ||
+                !Bootloader.getGame().getFurnitureManager().getFurnitureExchanges().containsKey(item.getBase().getId())) {
             return;
         }
 
@@ -34,7 +36,12 @@ public class ExchangeInteractor extends DefaultInteractor {
             } else {
                 player.getSession().getPlayerInstance().getInformation().setShells(exchange.getChangeExtra());
             }
-            player.getSession().writeMessage(new ActivityPointsWriter(player.getSession().getPlayerInstance().getInformation().getPixelsBalance(), player.getSession().getPlayerInstance().getInformation().getShellsBalance()));
+            player.getSession().writeMessage(
+                    new ActivityPointsWriter(
+                            player.getSession().getPlayerInstance().getInformation().getPixelsBalance(),
+                            player.getSession().getPlayerInstance().getInformation().getShellsBalance()
+                    )
+            );
         }
 
         player.getSession().getPlayerInstance().getInformation().updateCurrencies();

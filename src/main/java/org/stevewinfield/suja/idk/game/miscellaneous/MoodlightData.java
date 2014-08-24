@@ -68,7 +68,7 @@ public class MoodlightData {
         boolean enabled = false;
         int currentPreset = 1;
 
-        final Map<Integer, MoodlightPreset> presets = new ConcurrentHashMap<Integer, MoodlightPreset>();
+        final Map<Integer, MoodlightPreset> presets = new ConcurrentHashMap<>();
 
         for (int i = 1; i <= 3; i++) {
             presets.put(i, new MoodlightPreset("#000000", false, 255));
@@ -111,7 +111,6 @@ public class MoodlightData {
             case "#E759DE":
             case "#F2F851":
                 return true;
-
             default:
                 return false;
         }

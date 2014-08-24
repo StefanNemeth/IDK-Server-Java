@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PluginManager {
-    private static Logger logger = Logger.getLogger(PluginManager.class);
+    private static final Logger logger = Logger.getLogger(PluginManager.class);
 
     public GamePlugin getPlugin(final String name) {
         return this.plugins.containsKey(name) ? this.plugins.get(name) : null;
@@ -91,17 +91,19 @@ public class PluginManager {
         try {
             Thread.currentThread().setContextClassLoader(urlClassLoader);
 
-            this.plugins = new ConcurrentHashMap<String, GamePlugin>();
+            this.plugins = new ConcurrentHashMap<>();
             this.factory = new ScriptEngineManager();
 
             final File[] jars = pluginDir.listFiles();
 
             try {
-                for (final File f : jars) {
-                    final String name = f.getName();
-                    final FileReader reader = new FileReader(f);
-                    this.addPlugin(name, reader, true);
-                    reader.close();
+                if (jars != null) {
+                    for (final File f : jars) {
+                        final String name = f.getName();
+                        final FileReader reader = new FileReader(f);
+                        this.addPlugin(name, reader, true);
+                        reader.close();
+                    }
                 }
             } catch (final Exception e) {
                 logger.error("Loading plugins failed.", e);
@@ -123,7 +125,7 @@ public class PluginManager {
 
     private static URL[] buildClassPath(String... directories) {
         try {
-            final List<URL> classPath = new ArrayList<URL>();
+            final List<URL> classPath = new ArrayList<>();
             for (String directory : directories) {
                 File directoryFile = new File(directory);
                 if (!directoryFile.exists()) {

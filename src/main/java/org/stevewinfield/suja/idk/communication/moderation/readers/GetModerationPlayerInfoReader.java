@@ -18,7 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class GetModerationPlayerInfoReader implements IMessageReader {
-    private static Logger logger = Logger.getLogger(GetModerationPlayerInfoReader.class);
+    private static final Logger logger = Logger.getLogger(GetModerationPlayerInfoReader.class);
 
     @Override
     public void parse(final Session session, final MessageReader reader) {

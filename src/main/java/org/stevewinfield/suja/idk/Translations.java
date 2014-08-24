@@ -1,7 +1,6 @@
 package org.stevewinfield.suja.idk;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -12,7 +11,7 @@ public class Translations {
         return String.format(translations.get(key), args);
     }
 
-    public static void loadTranslations() throws FileNotFoundException, IOException {
+    public static void loadTranslations() throws IOException {
         translations = new ConcurrentHashMap<>();
         Properties translationsPropertiesFile = new Properties();
         translationsPropertiesFile.load(new FileInputStream("translations.properties"));

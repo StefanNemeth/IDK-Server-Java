@@ -45,7 +45,10 @@ public class SaveStickyReader implements IMessageReader {
 
         final RoomItem item = room.getRoomItems().get(itemId);
 
-        if (item.getInteractorId() != FurnitureInteractor.POST_IT || item.getTermFlags() == null || item.getTermFlags().length < 3 || (!hasRights && Integer.valueOf(item.getTermFlags()[2]) != session.getPlayerInstance().getInformation().getId())) {
+        if (item.getInteractorId() != FurnitureInteractor.POST_IT ||
+                item.getTermFlags() == null ||
+                item.getTermFlags().length < 3 ||
+                (!hasRights && Integer.valueOf(item.getTermFlags()[2]) != session.getPlayerInstance().getInformation().getId())) {
             return;
         }
 
@@ -65,7 +68,8 @@ public class SaveStickyReader implements IMessageReader {
         }
 
         if (!hasRights) {
-            text += "\n-----\n" + session.getPlayerInstance().getInformation().getPlayerName() + "\n" + new SimpleDateFormat(IDK.SYSTEM_DATE_FORMAT + " " + IDK.SYSTEM_TIME_FORMAT).format(new Date());
+            text += "\n-----\n" + session.getPlayerInstance().getInformation().getPlayerName() + "\n" +
+                    new SimpleDateFormat(IDK.SYSTEM_DATE_FORMAT + " " + IDK.SYSTEM_TIME_FORMAT).format(new Date());
             buyIdString = "-1";
             Bootloader.getGame().getAchievementManager().progressAchievement(session, "ACH_NotesLeft", 1);
         }

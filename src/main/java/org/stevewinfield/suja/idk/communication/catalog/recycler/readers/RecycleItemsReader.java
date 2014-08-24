@@ -57,8 +57,8 @@ public class RecycleItemsReader implements IMessageReader {
             return;
         }
 
-        final GapList<Integer> itemTypes = new GapList<Integer>();
-        final GapList<Integer> items = new GapList<Integer>();
+        final GapList<Integer> itemTypes = new GapList<>();
+        final GapList<Integer> items = new GapList<>();
 
         for (int i = 0; i < amount; i++) {
             final int itemId = reader.readInteger();

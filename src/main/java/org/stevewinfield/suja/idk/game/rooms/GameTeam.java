@@ -30,7 +30,7 @@ public class GameTeam {
 
     public GameTeam(final int id, final RoomItem gate, final RoomItem scoreBoard) {
         this.id = id;
-        this.players = new ConcurrentHashMap<Integer, RoomPlayer>();
+        this.players = new ConcurrentHashMap<>();
         this.gate = gate;
         this.scoreBoard = scoreBoard;
     }

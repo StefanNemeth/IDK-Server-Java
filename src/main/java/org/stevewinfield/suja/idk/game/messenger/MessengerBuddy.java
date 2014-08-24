@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class MessengerBuddy implements ISerialize {
-    private static Logger logger = Logger.getLogger(MessengerBuddy.class);
+    private static final Logger logger = Logger.getLogger(MessengerBuddy.class);
 
     // getters
     public int getPlayerId() {

@@ -21,7 +21,7 @@ public class ItemActivateExchangeReader implements IMessageReader {
         }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
-        RoomItem item = null;
+        RoomItem item;
 
         if (room == null || (item = room.getRoomItems().get(reader.readInteger())) == null || item.getInteractorId() != FurnitureInteractor.EXCHANGE) {
             return;

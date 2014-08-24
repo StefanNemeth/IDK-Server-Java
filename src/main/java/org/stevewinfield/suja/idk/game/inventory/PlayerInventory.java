@@ -28,14 +28,14 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerInventory {
-    private static Logger logger = Logger.getLogger(PlayerInventory.class);
+    private static final Logger logger = Logger.getLogger(PlayerInventory.class);
 
     public Collection<PlayerItem> getItems() {
         return this.items.values();
     }
 
     public GapList<PlayerItem> getFloorItems() {
-        final GapList<PlayerItem> list = new GapList<PlayerItem>();
+        final GapList<PlayerItem> list = new GapList<>();
         for (final PlayerItem item : this.items.values()) {
             if (!item.getBase().getType().equals(FurnitureType.WALL)) {
                 list.add(item);
@@ -45,7 +45,7 @@ public class PlayerInventory {
     }
 
     public GapList<PlayerItem> getWallItems() {
-        final GapList<PlayerItem> list = new GapList<PlayerItem>();
+        final GapList<PlayerItem> list = new GapList<>();
         for (final PlayerItem item : this.items.values()) {
             if (item.getBase().getType().equals(FurnitureType.WALL)) {
                 list.add(item);
@@ -55,10 +55,10 @@ public class PlayerInventory {
     }
 
     public PlayerInventory() {
-        this.items = new ConcurrentHashMap<Integer, PlayerItem>();
-        this.itemsToAdd = new GapList<Integer>();
-        this.itemsToRemove = new GapList<Integer>();
-        this.itemsToUpdate = new GapList<Integer>();
+        this.items = new ConcurrentHashMap<>();
+        this.itemsToAdd = new GapList<>();
+        this.itemsToRemove = new GapList<>();
+        this.itemsToUpdate = new GapList<>();
     }
 
     public boolean hasItem(final int itemId) {
@@ -120,8 +120,8 @@ public class PlayerInventory {
                 break;
         }
 
-        final List<PlayerItem> floorItems = new GapList<PlayerItem>();
-        final List<PlayerItem> wallItems = new GapList<PlayerItem>();
+        final List<PlayerItem> floorItems = new GapList<>();
+        final List<PlayerItem> wallItems = new GapList<>();
 
         if (WiredManager.isWiredItem(baseItem)) {
             flags = "";
@@ -208,15 +208,15 @@ public class PlayerInventory {
         final StringBuilder removeQuery = new StringBuilder();
         final StringBuilder addQuery = new StringBuilder();
         final StringBuilder updateQuery = new StringBuilder();
-        List<String> flagList = new GapList<String>();
+        List<String> flagList = new GapList<>();
         for (final Integer removeItem : this.itemsToRemove) {
-            removeQuery.append(" OR item_id=" + removeItem);
+            removeQuery.append(" OR item_id=").append(removeItem);
         }
         for (final Integer addItem : this.itemsToAdd) {
-            addQuery.append(" ,(" + addItem + ", " + playerId + ")");
+            addQuery.append(" ,(").append(addItem).append(", ").append(playerId).append(")");
         }
         for (final Integer updateItem : this.itemsToUpdate) {
-            updateQuery.append(" ,(" + updateItem + ", ?)");
+            updateQuery.append(" ,(").append(updateItem).append(", ?)");
             flagList.add(this.items.get(updateItem).getFlags());
         }
         if (addQuery.length() > 0) {
@@ -236,7 +236,6 @@ public class PlayerInventory {
                 logger.error("SQL Exception", ex);
             }
             flagList.clear();
-            flagList = null;
         }
         this.itemsToUpdate.clear();
         this.itemsToAdd.clear();

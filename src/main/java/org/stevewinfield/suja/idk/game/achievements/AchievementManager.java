@@ -19,14 +19,14 @@ import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AchievementManager {
-    private static Logger logger = Logger.getLogger(AchievementManager.class);
+    private static final Logger logger = Logger.getLogger(AchievementManager.class);
 
     public ConcurrentHashMap<String, Achievement> getAchievements() {
         return achievements;
     }
 
     public AchievementManager() {
-        this.achievements = new ConcurrentHashMap<String, Achievement>();
+        this.achievements = new ConcurrentHashMap<>();
         try {
             int achievementsLoaded = 0;
             int achievemntLevelsLoaded = 0;
@@ -40,7 +40,6 @@ public class AchievementManager {
                 }
             }
             row = Bootloader.getStorage().queryParams("SELECT * FROM achievement_levels ORDER BY id").executeQuery();
-            final int i = 1;
             while (row.next()) {
                 Achievement ach = null;
                 for (final Achievement entry : this.achievements.values()) {
@@ -56,7 +55,7 @@ public class AchievementManager {
                 achievemntLevelsLoaded++;
             }
             row.close();
-            final GapList<String> toRemove = new GapList<String>();
+            final GapList<String> toRemove = new GapList<>();
             for (final Achievement achievement : this.achievements.values()) {
                 if (achievement.getLevelCount() < 1) {
                     toRemove.add(achievement.getGroupName());
@@ -113,8 +112,6 @@ public class AchievementManager {
             newLevel++;
             newTarget++;
 
-            newProgress = 0;
-
             if (newTarget > achievement.getLevelCount()) {
                 newTarget = achievement.getLevelCount();
             }
@@ -131,7 +128,7 @@ public class AchievementManager {
 
             session.writeMessage(new AchievementProgressWriter(achievement, newTarget, achievement.getLevels().get(newTarget), achievement.getLevelCount(), playerAchievement));
 
-            session.getFriendStream().broadcastEvent(session, FriendStreamEventType.GET_ACHIVEMENT_BADGE, 0, new String[]{achievement.getGroupName() + newLevel});
+            session.getFriendStream().broadcastEvent(session, FriendStreamEventType.GET_ACHIEVEMENT_BADGE, 0, new String[]{achievement.getGroupName() + newLevel});
             return true;
         }
         playerAchievement = session.getPlayerInstance().setAchievement(achievement.getId(), newLevel, progressAmount);

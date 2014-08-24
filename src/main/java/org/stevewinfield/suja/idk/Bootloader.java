@@ -31,7 +31,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 
 public class Bootloader {
-    private static Logger logger = Logger.getLogger(Bootloader.class);
+    private static final Logger logger = Logger.getLogger(Bootloader.class);
 
     public static Settings getSettings() {
         return settings;
@@ -165,7 +165,7 @@ public class Bootloader {
 
                 @Override
                 public void run() {
-                    final GapList<Entry<String, String>> parameters = new GapList<Entry<String, String>>();
+                    final GapList<Entry<String, String>> parameters = new GapList<>();
                     if (Bootloader.placeholderNetwork.analyticsPing(parameters)) {
                         Bootloader.getStorage().executeQuery("UPDATE idk_settings SET `value`='" + Bootloader.getSessionManager().getActiveSessionCount() + "' WHERE `key`='system.user.online'");
                         return;

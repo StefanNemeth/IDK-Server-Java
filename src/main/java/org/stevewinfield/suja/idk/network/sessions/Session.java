@@ -34,7 +34,7 @@ import java.sql.SQLException;
 import java.util.Map.Entry;
 
 public class Session {
-    private static Logger logger = Logger.getLogger(Session.class);
+    private static final Logger logger = Logger.getLogger(Session.class);
 
     // getters
     public int getId() {
@@ -181,7 +181,11 @@ public class Session {
             } else if (room.hasRights(this)) {
                 queue.push(new RoomRightsWriter());
             }
-            queue.push(new RoomRatingInfoWriter(this.playerInstance.getInformation().getId() == room.getInformation().getOwnerId() || room.getVotes().contains(playerInstance.getInformation().getId()) ? room.getInformation().getScore() : -1));
+            queue.push(new RoomRatingInfoWriter(
+                            this.playerInstance.getInformation().getId() == room.getInformation().getOwnerId() ||
+                                    room.getVotes().contains(playerInstance.getInformation().getId()) ? room.getInformation().getScore() : -1
+                    )
+            );
         }
         this.writeMessage(queue);
     }
@@ -191,10 +195,27 @@ public class Session {
             return;
         }
 
-        this.writeMessage(new PlayerInfoUpdateWriter(-1, this.playerInstance.getInformation().getAvatar(), this.playerInstance.getInformation().getGender(), this.playerInstance.getInformation().getMission(), this.playerInstance.getInformation().getScore()));
+        this.writeMessage(
+                new PlayerInfoUpdateWriter(
+                        -1,
+                        this.playerInstance.getInformation().getAvatar(),
+                        this.playerInstance.getInformation().getGender(),
+                        this.playerInstance.getInformation().getMission(),
+                        this.playerInstance.getInformation().getScore()
+                )
+        );
 
         if (this.isInRoom()) {
-            this.roomPlayer.getRoom().writeMessage(new PlayerInfoUpdateWriter(this.roomPlayer.getVirtualId(), this.playerInstance.getInformation().getAvatar(), this.playerInstance.getInformation().getGender(), this.playerInstance.getInformation().getMission(), this.playerInstance.getInformation().getScore()), null);
+            this.roomPlayer.getRoom().writeMessage(
+                    new PlayerInfoUpdateWriter(
+                            this.roomPlayer.getVirtualId(),
+                            this.playerInstance.getInformation().getAvatar(),
+                            this.playerInstance.getInformation().getGender(),
+                            this.playerInstance.getInformation().getMission(),
+                            this.playerInstance.getInformation().getScore()
+                    ),
+                    null
+            );
         }
     }
 
@@ -218,7 +239,7 @@ public class Session {
                 Bootloader.getSessionManager().makeAuthenticatedSession(this.playerInstance.getInformation().getId(), this);
                 this.playerMessenger = new Messenger(this, this.playerInstance.getInformation());
                 this.friendStream = new FriendStream();
-                final GapList<Integer> friends = new GapList<Integer>();
+                final GapList<Integer> friends = new GapList<>();
                 for (final Integer id : playerMessenger.getBuddies().keySet()) {
                     friends.add(id);
                 }
@@ -239,21 +260,21 @@ public class Session {
         this.getChannel().disconnect();
     }
 
-    public void sendNotification(final int notifyType, final String message, final String url) {
+    public void sendNotification(final NotifyType notifyType, final String message, final String url) {
         switch (notifyType) {
-            case NotifyType.MOD_ALERT:
+            case MOD_ALERT:
                 this.writeMessage(new ModeratorNotificationWriter(message, url));
                 return;
-            case NotifyType.STAFF_ALERT:
+            case STAFF_ALERT:
                 this.writeMessage(new StaffNotificationWriter(message, url));
                 return;
-            case NotifyType.MULTI_ALERT:
+            case MULTI_ALERT:
                 this.writeMessage(new MultiNotificationWriter(message));
                 break;
         }
     }
 
-    public void sendNotification(final int notifyType, final String message) {
+    public void sendNotification(final NotifyType notifyType, final String message) {
         this.sendNotification(notifyType, message, "");
     }
 
@@ -312,18 +333,16 @@ public class Session {
                 for (final PlayerAchievement achievement : this.playerInstance.getAchievements().values()) {
 
                     if (achievement.toInsert()) {
-                        insertAchievementQuery.append(", (" + playerInstance.getInformation().getId() + ", " + achievement.getAchievementId() + ", " + achievement.getLevel() + ", " + achievement.getProgress() + ")");
+                        insertAchievementQuery.append(", (").append(playerInstance.getInformation().getId()).append(", ").append(achievement.getAchievementId()).append(", ").append(achievement.getLevel()).append(", ").append(achievement.getProgress()).append(")");
                     } else if (achievement.toUpdate()) {
-                        updateAchievementQuery.append(", (" + achievement.getId() + ", " + playerInstance.getInformation().getId() + ", " + achievement.getAchievementId() + ", " + achievement.getLevel() + ", " + achievement.getProgress() + ")");
+                        updateAchievementQuery.append(", (").append(achievement.getId()).append(", ").append(playerInstance.getInformation().getId()).append(", ").append(achievement.getAchievementId()).append(", ").append(achievement.getLevel()).append(", ").append(achievement.getProgress()).append(")");
                     }
                 }
                 if (insertAchievementQuery.length() > 0) {
                     Bootloader.getStorage().executeQuery("INSERT INTO player_achievements (player_id, achievement_id, level, progress) VALUES " + insertAchievementQuery.toString().substring(2));
-                    insertAchievementQuery = null;
                 }
                 if (updateAchievementQuery.length() > 0) {
                     Bootloader.getStorage().executeQuery("REPLACE INTO player_achievements (id, player_id, achievement_id, level, progress) VALUES " + updateAchievementQuery.toString().substring(2));
-                    updateAchievementQuery = null;
                 }
                 this.playerInstance.getInventory().save(this.playerInstance.getInformation().getId());
                 if (this.isInRoom()) {

@@ -17,7 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class NavigatorOfficialRoomsWriter extends MessageWriter {
-    private static Logger logger = Logger.getLogger(NavigatorOfficialRoomsWriter.class);
+    private static final Logger logger = Logger.getLogger(NavigatorOfficialRoomsWriter.class);
 
     public static void serializeItem(final MessageWriter writer, final OfficialItem item) {
         RoomInformation instance = null;
@@ -40,7 +40,7 @@ public class NavigatorOfficialRoomsWriter extends MessageWriter {
             }
         }
 
-        int type = 3;
+        int type;
 
         if (item.isCategory()) {
             type = 4;

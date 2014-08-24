@@ -44,7 +44,7 @@ public class QueuedMessageWriter {
 
     public String getDebugString() {
         final ChannelBuffer bodeh = body.duplicate();
-        return new String(bodeh.toString(Charset.defaultCharset()));
+        return bodeh.toString(Charset.defaultCharset());
     }
 
     private ChannelBuffer body;

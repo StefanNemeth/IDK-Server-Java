@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PerformNavigatorSearchReader implements IMessageReader {
-    private static Logger logger = Logger.getLogger(PerformNavigatorSearchReader.class);
+    private static final Logger logger = Logger.getLogger(PerformNavigatorSearchReader.class);
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
@@ -32,8 +32,8 @@ public class PerformNavigatorSearchReader implements IMessageReader {
             return;
         }
 
-        final ConcurrentHashMap<Integer, RoomInformation> results = new ConcurrentHashMap<Integer, RoomInformation>();
-        List<RoomInformation> sortedResult = new GapList<RoomInformation>();
+        final ConcurrentHashMap<Integer, RoomInformation> results = new ConcurrentHashMap<>();
+        List<RoomInformation> sortedResult = new GapList<>();
         String query = InputFilter.filterString(reader.readUTF()).trim().toLowerCase();
 
         if (query.length() > 64) {
@@ -44,7 +44,10 @@ public class PerformNavigatorSearchReader implements IMessageReader {
             final int searchCategoryId = Bootloader.getGame().getNavigatorListManager().getSearchCategory(query);
             for (final RoomInstance instance : Bootloader.getGame().getRoomManager().getLoadedRoomInstances()) {
                 if (!query.startsWith("owner:")) {
-                    if (!instance.getInformation().getOwnerName().toLowerCase().equals(query) && (!instance.getInformation().getName().toLowerCase().startsWith(query)) && (searchCategoryId == -1 || instance.getInformation().getCategoryId() == searchCategoryId)) {
+                    if (!instance.getInformation().getOwnerName().toLowerCase().equals(query) &&
+                            (!instance.getInformation().getName().toLowerCase().startsWith(query)) &&
+                            (searchCategoryId == -1 ||
+                                    instance.getInformation().getCategoryId() == searchCategoryId)) {
                         final String[] tags = instance.getInformation().getSearchableTags();
                         boolean found = false;
                         for (final String tag : tags) {
@@ -64,7 +67,14 @@ public class PerformNavigatorSearchReader implements IMessageReader {
             }
 
             if (results.size() < 50) {
-                final PreparedStatement searchResults = Bootloader.getStorage().queryParams("SELECT rooms.*, nickname FROM rooms, players WHERE players.id=owner_id AND (nickname = ? " + (!query.startsWith("owner:") ? ("OR name LIKE ? OR tags LIKE ? OR tags LIKE ? OR tags = ?" + (searchCategoryId > -1 ? " OR category_id=" + searchCategoryId : "")) : "") + ") LIMIT 50");
+                final PreparedStatement searchResults = Bootloader.getStorage()
+                        .queryParams("SELECT rooms.*, nickname FROM rooms, players WHERE players.id=owner_id AND (nickname = ? " +
+                                        (!query.startsWith("owner:") ?
+                                                ("OR name LIKE ? OR tags LIKE ? OR tags LIKE ? OR tags = ?" +
+                                                        (searchCategoryId > -1 ? " OR category_id=" + searchCategoryId : "")
+                                                ) : ""
+                                        ) + ") LIMIT 50"
+                        );
                 try {
                     searchResults.setString(1, query.startsWith("owner:") ? query.substring(6) : query);
                     if (!query.startsWith("owner:")) {
@@ -88,7 +98,7 @@ public class PerformNavigatorSearchReader implements IMessageReader {
                 }
             }
 
-            sortedResult = new GapList<RoomInformation>(results.values());
+            sortedResult = new GapList<>(results.values());
             Collections.sort(sortedResult, new NavigatorListHelper(query));
 
             if (sortedResult.size() > 50) {

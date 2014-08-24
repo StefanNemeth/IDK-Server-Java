@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PlayerAchievement {
-    private static Logger logger = Logger.getLogger(PlayerAchievement.class);
+    private static final Logger logger = Logger.getLogger(PlayerAchievement.class);
 
     public int getId() {
         return id;

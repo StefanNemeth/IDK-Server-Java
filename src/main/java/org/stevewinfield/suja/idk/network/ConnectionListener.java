@@ -15,7 +15,7 @@ import org.stevewinfield.suja.idk.threadpools.WorkerTasks;
 import java.net.InetSocketAddress;
 
 public class ConnectionListener {
-    private static Logger logger = Logger.getLogger(ConnectionListener.class);
+    private static final Logger logger = Logger.getLogger(ConnectionListener.class);
 
     private final NioServerSocketChannelFactory factory;
     private final ServerBootstrap bootstrap;

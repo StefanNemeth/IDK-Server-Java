@@ -8,11 +8,11 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class MessageReaderFactory {
-    private static final Queue<MessageReader> freeObjects = new LinkedList<MessageReader>();
+    private static final Queue<MessageReader> freeObjects = new LinkedList<>();
 
     public static MessageReader getMessageReader(final short messageId, final byte[] body) {
         if (freeObjects.size() > 0) {
-            MessageReader reader = null;
+            MessageReader reader;
 
             synchronized (freeObjects) {
                 reader = freeObjects.poll();

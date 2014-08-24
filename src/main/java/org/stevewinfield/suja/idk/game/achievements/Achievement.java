@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Achievement {
-    private static Logger logger = Logger.getLogger(Achievement.class);
+    private static final Logger logger = Logger.getLogger(Achievement.class);
 
     // getters
     public int getId() {
@@ -38,7 +38,7 @@ public class Achievement {
         this.id = 0;
         this.groupName = "";
         this.category = "";
-        this.levels = new ConcurrentHashMap<Integer, AchievementLevel>();
+        this.levels = new ConcurrentHashMap<>();
     }
 
     public void set(final ResultSet row) {

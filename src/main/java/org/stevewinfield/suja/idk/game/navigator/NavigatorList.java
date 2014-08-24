@@ -41,7 +41,7 @@ public class NavigatorList {
 
     public NavigatorList(final int id) {
         this.id = id;
-        this.rooms = new ArrayList<RoomInformation>();
+        this.rooms = new ArrayList<>();
         this.size = 0;
         this.lowestPlayers = 0;
         this.updates = 0;

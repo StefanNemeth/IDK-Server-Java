@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PlayerInformation {
-    private static Logger logger = Logger.getLogger(PlayerInformation.class);
+    private static final Logger logger = Logger.getLogger(PlayerInformation.class);
 
     public static final int MALE_GENDER = 0;
     public static final int FEMALE_GENDER = 1;
@@ -128,7 +128,7 @@ public class PlayerInformation {
             this.playerName = row.getString("nickname");
             this.email = row.getString("email");
             this.avatar = row.getString("figurecode");
-            this.gender = row.getString("gender").toUpperCase() == "F" ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
+            this.gender = row.getString("gender").toUpperCase().equals("F") ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
             this.mission = row.getString("motto");
             this.level = Bootloader.getGame().getLevelManager().getLevel(row.getInt("level"));
             this.creditsBalance = row.getInt("credits_balance");
@@ -163,7 +163,7 @@ public class PlayerInformation {
 
     public void setFigure(final String avatar, final String gender) {
         this.avatar = avatar;
-        this.gender = gender == "f" ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
+        this.gender = gender.equals("f") ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
     }
 
     public void setMotto(final String motto) {

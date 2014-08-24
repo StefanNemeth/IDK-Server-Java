@@ -117,7 +117,7 @@ public class BattleBanzaiTask extends GameTask {
         }
 
         if ((goX != 0 || goY != 0) && triggerItem.getPosition().getX() == x && triggerItem.getPosition().getY() == y) {
-            return new LinkedList<RoomItem>();
+            return new LinkedList<>();
         }
 
         final RoomInstance room = triggerItem.getRoom();
@@ -144,10 +144,20 @@ public class BattleBanzaiTask extends GameTask {
                 List<RoomItem> foundPatches = null;
                 if (currentDirection != i && currentDirection != -1) {
                     if (turns > 0) {
-                        foundPatches = BattleBanzaiTask.buildBanzaiRectangle(triggerItem, nextX, nextY, (nextXStep == 0) ? (goX * -1) : (nextXStep * -1), (nextYStep == 0) ? (goY * -1) : (nextYStep * -1), i, (turns - 1), teamId);
+                        foundPatches = BattleBanzaiTask.buildBanzaiRectangle(
+                                triggerItem, nextX, nextY,
+                                (nextXStep == 0) ? (goX * -1) : (nextXStep * -1),
+                                (nextYStep == 0) ? (goY * -1) : (nextYStep * -1),
+                                i, (turns - 1), teamId
+                        );
                     }
                 } else {
-                    foundPatches = BattleBanzaiTask.buildBanzaiRectangle(triggerItem, nextX, nextY, (nextXStep == 0) ? goX : (nextXStep * -1), (nextYStep == 0) ? goY : (nextYStep * -1), i, turns, teamId);
+                    foundPatches = BattleBanzaiTask.buildBanzaiRectangle(
+                            triggerItem, nextX, nextY,
+                            (nextXStep == 0) ? goX : (nextXStep * -1),
+                            (nextYStep == 0) ? goY : (nextYStep * -1),
+                            i, turns, teamId
+                    );
                 }
                 if (foundPatches != null) {
                     foundPatches.add(item);
@@ -173,7 +183,11 @@ public class BattleBanzaiTask extends GameTask {
             return;
         }
 
-        if ((state < 5 && player.getEffectId() != RoomPlayerEffect.BANZAI_PINK) || (state < 8 && state > 5 && player.getEffectId() != RoomPlayerEffect.BANZAI_GREEN) || (state < 11 && state > 8 && player.getEffectId() != RoomPlayerEffect.BANZAI_BLUE) || (state < 13 && state > 11 && player.getEffectId() != RoomPlayerEffect.BANZAI_ORANGE)) {
+        if ((state < 5 &&
+                player.getEffectId() != RoomPlayerEffect.BANZAI_PINK) ||
+                (state < 8 && state > 5 && player.getEffectId() != RoomPlayerEffect.BANZAI_GREEN) ||
+                (state < 11 && state > 8 && player.getEffectId() != RoomPlayerEffect.BANZAI_BLUE) ||
+                (state < 13 && state > 11 && player.getEffectId() != RoomPlayerEffect.BANZAI_ORANGE)) {
             state = 0;
         }
 

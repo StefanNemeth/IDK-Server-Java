@@ -23,7 +23,7 @@ public class DefaultInteractor implements IFurnitureInteractor {
     public void onPlace(final RoomPlayer player, final RoomItem item) {
         for (final Vector2 posAct : item.getAffectedTiles()) {
             final GapList<RoomItem> list = item.getRoom().getRoomItemsForTile(posAct);
-            int size = 0;
+            int size;
             if ((size = list.size()) > 1) {
                 final RoomItem w = list.get(size - 2);
                 if (w.getInteractorId() == FurnitureInteractor.ROLLER) {

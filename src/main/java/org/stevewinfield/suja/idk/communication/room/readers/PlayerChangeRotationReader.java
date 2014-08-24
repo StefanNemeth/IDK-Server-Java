@@ -30,7 +30,10 @@ public class PlayerChangeRotationReader implements IMessageReader {
         final RoomPlayer player = session.getRoomPlayer();
         final Vector2 targetPosition = new Vector2(reader.readInteger(), reader.readInteger());
 
-        if ((targetPosition.getX() == player.getPosition().getX() && targetPosition.getY() == player.getPosition().getY()) || player.getStatusMap().containsKey("sit") || player.getStatusMap().containsKey("lay")) {
+        if ((targetPosition.getX() == player.getPosition().getX() &&
+                targetPosition.getY() == player.getPosition().getY()) ||
+                player.getStatusMap().containsKey("sit") ||
+                player.getStatusMap().containsKey("lay")) {
             return;
         }
 

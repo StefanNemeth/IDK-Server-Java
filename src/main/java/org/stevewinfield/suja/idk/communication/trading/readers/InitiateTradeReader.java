@@ -40,7 +40,12 @@ public class InitiateTradeReader implements IMessageReader {
             return;
         }
 
-        final MessageWriter tradeInitiated = new TradeInitiatedWriter(session.getRoomPlayer().getPlayerInformation().getId(), session.getRoomPlayer().getPlayerInformation().canTrade(), target.getPlayerInformation().getId(), target.getPlayerInformation().canTrade()); // TODO: can trade?
+        final MessageWriter tradeInitiated = new TradeInitiatedWriter(
+                session.getRoomPlayer().getPlayerInformation().getId(),
+                session.getRoomPlayer().getPlayerInformation().canTrade(),
+                target.getPlayerInformation().getId(),
+                target.getPlayerInformation().canTrade()
+        ); // TODO: can trade?
 
         session.writeMessage(tradeInitiated);
         target.getSession().writeMessage(tradeInitiated);

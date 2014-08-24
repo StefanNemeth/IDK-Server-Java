@@ -18,7 +18,7 @@ import org.stevewinfield.suja.idk.game.rooms.wired.WiredManager;
 import java.util.List;
 
 public class WiredActionToggleFurni extends WiredAction {
-    private static Logger logger = Logger.getLogger(WiredActionToggleFurni.class);
+    private static final Logger logger = Logger.getLogger(WiredActionToggleFurni.class);
 
     public WiredActionToggleFurni(final RoomInstance room, final RoomItem item, final String[] data) {
         this.room = room;
@@ -48,7 +48,7 @@ public class WiredActionToggleFurni extends WiredAction {
 
     @Override
     public void set(final String[] obj) {
-        this.items = new GapList<Integer>();
+        this.items = new GapList<>();
         this.delay = 0;
         try {
             if (obj.length > 0 && obj[0].length() > 0) {

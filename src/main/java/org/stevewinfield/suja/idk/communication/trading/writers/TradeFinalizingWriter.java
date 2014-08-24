@@ -11,7 +11,6 @@ public class TradeFinalizingWriter extends MessageWriter {
 
     public TradeFinalizingWriter() {
         super(OperationCodes.getOutgoingOpCode("TradeFinalizing"));
-
     }
 
 }

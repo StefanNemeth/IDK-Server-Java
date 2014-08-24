@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CatalogClubOffer {
-    private static Logger logger = Logger.getLogger(CatalogClubOffer.class);
+    private static final Logger logger = Logger.getLogger(CatalogClubOffer.class);
 
     // getters
     public int getId() {
@@ -39,11 +39,6 @@ public class CatalogClubOffer {
 
     public int getLengthMonths() {
         int correctedLength = length;
-
-        if (false) // upgrade? nop
-        {
-            correctedLength += 31;
-        }
 
         return (int) Math.ceil(correctedLength / 31);
     }

@@ -24,7 +24,7 @@ public class TradeTakeBackReader implements IMessageReader {
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
-        Trade trade = null;
+        Trade trade;
 
         if (room == null || (trade = room.getTradeManager().getTrade(session.getPlayerInstance().getInformation().getId())) == null || !trade.takeBackItem(session.getPlayerInstance().getInformation().getId(), reader.readInteger())) {
             return;

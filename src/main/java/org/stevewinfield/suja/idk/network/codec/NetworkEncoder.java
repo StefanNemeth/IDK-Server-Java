@@ -16,7 +16,7 @@ import org.stevewinfield.suja.idk.communication.QueuedMessageWriter;
 import java.nio.charset.Charset;
 
 public class NetworkEncoder extends SimpleChannelHandler {
-    private static Logger logger = Logger.getLogger(NetworkDecoder.class);
+    private static final Logger logger = Logger.getLogger(NetworkDecoder.class);
 
     @Override
     public void writeRequested(final ChannelHandlerContext ctx, final MessageEvent e) {
@@ -29,8 +29,6 @@ public class NetworkEncoder extends SimpleChannelHandler {
             } else if (e.getMessage() instanceof QueuedMessageWriter) {
                 final QueuedMessageWriter msg = (QueuedMessageWriter) e.getMessage();
                 Channels.write(ctx, e.getFuture(), msg.getBytes());
-
-                return;
             }
         } catch (final Exception ex) {
             logger.error(ex.getMessage(), ex);

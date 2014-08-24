@@ -19,11 +19,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChatCommandHandler {
-    private static Logger logger = Logger.getLogger(ChatCommandHandler.class);
+    private static final Logger logger = Logger.getLogger(ChatCommandHandler.class);
     private final Map<String, IChatCommand> commands;
 
     public ChatCommandHandler() {
-        commands = new HashMap<String, IChatCommand>();
+        commands = new HashMap<>();
         commands.put("pickall", new PickallChatCommand());
         commands.put("info", new InfoChatCommand());
         commands.put("refresh_catalog", new RefreshCatalogCommand());

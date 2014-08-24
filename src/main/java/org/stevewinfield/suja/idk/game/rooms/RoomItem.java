@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RoomItem implements ISerialize {
-    private static Logger logger = Logger.getLogger(RoomItem.class);
+    private static final Logger logger = Logger.getLogger(RoomItem.class);
 
     public int getItemId() {
         return itemId;
@@ -71,7 +71,7 @@ public class RoomItem implements ISerialize {
     }
 
     public List<Vector2> getAffectedTiles() {
-        final List<Vector2> list = new GapList<Vector2>();
+        final List<Vector2> list = new GapList<>();
         if (this.rotation == 0 || this.rotation == 2 || this.rotation == 4 || this.rotation == 6) {
             for (int i = 0; i < this.getBase().getWidth(); i++) {
                 final int x = this.rotation == 0 || this.rotation == 4 ? this.getPosition().getX() + i : this.getPosition().getX();
@@ -91,7 +91,7 @@ public class RoomItem implements ISerialize {
     }
 
     public int getFlagsState() {
-        int x = 0;
+        int x;
 
         try {
             x = Integer.valueOf(this.flags);
@@ -140,7 +140,7 @@ public class RoomItem implements ISerialize {
         this.walkable = false;
         this.termCycles = 0;
         this.wallPosition = "";
-        this.interactingPlayers = new ConcurrentHashMap<Integer, Integer>();
+        this.interactingPlayers = new ConcurrentHashMap<>();
     }
 
     public RoomItem(final RoomInstance room, final int itemId, final Furniture base, final int interactorId, final String flags) {
@@ -151,14 +151,20 @@ public class RoomItem implements ISerialize {
         this.interactor = Bootloader.getGame().getFurnitureManager().getInteractor(interactorId);
         this.position = new Vector3();
         this.flags = flags;
-        this.interactingPlayers = new ConcurrentHashMap<Integer, Integer>();
+        this.interactingPlayers = new ConcurrentHashMap<>();
         this.walkable = (this.base.getInteractor() == FurnitureInteractor.GATE && this.flags.equals("1")) || this.base.isWalkable();
         this.termCycles = 0;
         this.loadTermFlags();
     }
 
     private void loadTermFlags() {
-        if (WiredManager.isWiredItem(base) || this.getBase().getInteractor() == FurnitureInteractor.POST_IT || this.getBase().getInteractor() == FurnitureInteractor.MOODLIGHT || this.getBase().getInteractor() == FurnitureInteractor.FIREWORK || this.getBase().isGift() || this.getBase().getId() == IDK.CATA_RECYCLER_BOX_ID || this.getBase().getInteractor() == FurnitureInteractor.TELEPORTER) {
+        if (WiredManager.isWiredItem(base) ||
+                this.getBase().getInteractor() == FurnitureInteractor.POST_IT ||
+                this.getBase().getInteractor() == FurnitureInteractor.MOODLIGHT ||
+                this.getBase().getInteractor() == FurnitureInteractor.FIREWORK ||
+                this.getBase().isGift() ||
+                this.getBase().getId() == IDK.CATA_RECYCLER_BOX_ID ||
+                this.getBase().getInteractor() == FurnitureInteractor.TELEPORTER) {
             this.termFlags = flags.split("" + (char) 10);
             this.flags = "";
         }
@@ -318,13 +324,16 @@ public class RoomItem implements ISerialize {
             return false;
         }
         if (ignoreItemRotation) {
-            if (rotation != -1 && rotation != this.getFrontRotation(pos.getVector2())) {
-                return false;
-            }
-            if (this.getPosition().getX() == pos.getX() && this.getPosition().getY() == pos.getY()) {
-                return true;
-            }
-            return (pos.getX() == this.getPosition().getX() && pos.getY() == this.getPosition().getY() + 1) || (pos.getX() == this.getPosition().getX() - 1 && pos.getY() == this.getPosition().getY() + 1) || (pos.getX() == this.getPosition().getX() - 1 && pos.getY() == this.getPosition().getY()) || (pos.getX() == this.getPosition().getX() + 1 && pos.getY() == this.getPosition().getY() + 1) || (pos.getX() == this.getPosition().getX() && pos.getY() == this.getPosition().getY() - 1) || (pos.getX() == this.getPosition().getX() + 1 && pos.getY() == this.getPosition().getY() - 1) || (pos.getX() == this.getPosition().getX() + 1 && pos.getY() == this.getPosition().getY()) || (pos.getX() == this.getPosition().getX() - 1 && pos.getY() == this.getPosition().getY() - 1);
+            return !(rotation != -1 && rotation != this.getFrontRotation(pos.getVector2())) &&
+                    (this.getPosition().getX() == pos.getX() && this.getPosition().getY() == pos.getY() ||
+                            (pos.getX() == this.getPosition().getX() && pos.getY() == this.getPosition().getY() + 1) ||
+                            (pos.getX() == this.getPosition().getX() - 1 && pos.getY() == this.getPosition().getY() + 1) ||
+                            (pos.getX() == this.getPosition().getX() - 1 && pos.getY() == this.getPosition().getY()) ||
+                            (pos.getX() == this.getPosition().getX() + 1 && pos.getY() == this.getPosition().getY() + 1) ||
+                            (pos.getX() == this.getPosition().getX() && pos.getY() == this.getPosition().getY() - 1) ||
+                            (pos.getX() == this.getPosition().getX() + 1 && pos.getY() == this.getPosition().getY() - 1) ||
+                            (pos.getX() == this.getPosition().getX() + 1 && pos.getY() == this.getPosition().getY()) ||
+                            (pos.getX() == this.getPosition().getX() - 1 && pos.getY() == this.getPosition().getY() - 1));
         }
 
         if (rotation != -1 && rotation != this.getFrontRotation()) {
@@ -336,9 +345,11 @@ public class RoomItem implements ISerialize {
         }
 
         if (this.rotation == 2 || this.rotation == 6) {
-            return pos.getX() == (this.rotation == 2 ? this.getPosition().getX() + 1 : this.getPosition().getX() - 1) && pos.getY() >= this.getPosition().getY() && pos.getY() < this.getPosition().getY() + this.getBase().getWidth();
+            return pos.getX() == (this.rotation == 2 ? this.getPosition().getX() + 1 : this.getPosition().getX() - 1) &&
+                    pos.getY() >= this.getPosition().getY() && pos.getY() < this.getPosition().getY() + this.getBase().getWidth();
         } else {
-            return pos.getY() == (this.rotation == 4 ? this.getPosition().getY() + 1 : this.getPosition().getY() - 1) && pos.getX() >= this.getPosition().getX() && pos.getX() < this.getPosition().getX() + this.getBase().getLength();
+            return pos.getY() == (this.rotation == 4 ? this.getPosition().getY() + 1 : this.getPosition().getY() - 1) &&
+                    pos.getX() >= this.getPosition().getX() && pos.getX() < this.getPosition().getX() + this.getBase().getLength();
         }
 
     }

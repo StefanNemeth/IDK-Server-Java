@@ -17,7 +17,7 @@ import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Messenger {
-    private static Logger logger = Logger.getLogger(Messenger.class);
+    private static final Logger logger = Logger.getLogger(Messenger.class);
 
     // getters
     public PlayerInformation getPlayerInformation() {
@@ -70,11 +70,13 @@ public class Messenger {
     public Messenger(final Session session, final PlayerInformation info) {
         this.session = session;
         this.player = info;
-        this.buddies = new ConcurrentHashMap<Integer, MessengerBuddy>();
-        this.onlineBuddies = new ConcurrentHashMap<Integer, MessengerBuddy>();
-        this.requests = new ConcurrentHashMap<Integer, MessengerRequest>();
+        this.buddies = new ConcurrentHashMap<>();
+        this.onlineBuddies = new ConcurrentHashMap<>();
+        this.requests = new ConcurrentHashMap<>();
         try {
-            final ResultSet row = Bootloader.getStorage().queryParams("SELECT * FROM player_friends WHERE player_req_id = " + this.player.getId() + " OR player_acc_id = " + this.player.getId() + " ORDER BY id").executeQuery();
+            final ResultSet row = Bootloader.getStorage().queryParams(
+                    "SELECT * FROM player_friends WHERE player_req_id = " + this.player.getId() + " OR player_acc_id = " + this.player.getId() + " ORDER BY id"
+            ).executeQuery();
             while (row.next()) {
                 if (row.getInt("is_request") == 1) {
                     if (row.getInt("player_req_id") != player.getId() && !this.requests.containsKey(row.getInt("player_req_id"))) {
@@ -84,14 +86,16 @@ public class Messenger {
                     }
                     continue;
                 }
-                int playerId = 0;
+                int playerId;
                 if (row.getInt("player_acc_id") != player.getId()) {
                     playerId = row.getInt("player_acc_id");
                 } else {
                     playerId = row.getInt("player_req_id");
                 }
                 if (playerId > 0 && !this.buddies.containsKey(playerId)) {
-                    final ResultSet userInfo = Bootloader.getStorage().queryParams("SELECT id, nickname, figurecode, motto FROM players WHERE id = " + playerId).executeQuery();
+                    final ResultSet userInfo = Bootloader.getStorage().queryParams(
+                            "SELECT id, nickname, figurecode, motto FROM players WHERE id = " + playerId
+                    ).executeQuery();
                     if (userInfo.next()) {
                         final MessengerBuddy buddy = new MessengerBuddy();
                         buddy.set(userInfo);

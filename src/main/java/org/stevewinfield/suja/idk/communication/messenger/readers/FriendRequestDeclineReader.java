@@ -35,7 +35,7 @@ public class FriendRequestDeclineReader implements IMessageReader {
             }
         }
 
-        if (whereString != "") {
+        if (!whereString.equals("")) {
             Bootloader.getStorage().executeQuery(updateString + " AND (" + whereString.substring(4) + ")");
         }
     }

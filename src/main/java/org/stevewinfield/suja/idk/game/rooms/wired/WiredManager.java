@@ -16,7 +16,13 @@ import org.stevewinfield.suja.idk.game.rooms.wired.triggers.*;
 import java.util.List;
 
 public class WiredManager {
-    public static final List<Integer> WIRED_FURNIS = Ints.asList(FurnitureInteractor.WF_TRG_SAYS, FurnitureInteractor.WF_ACT_SHOW_MESSAGE, FurnitureInteractor.WF_ACT_TOGGLE_FURNI, FurnitureInteractor.WF_TRG_ENTER_ROOM, FurnitureInteractor.WF_TRG_WALKS_ON_FURNI, FurnitureInteractor.WF_TRG_WALKS_OFF_FURNI, FurnitureInteractor.WF_TRG_STATE_CHANGED, FurnitureInteractor.WF_TRG_PERIODICALLY, FurnitureInteractor.WF_TRG_GAME_ENDS, FurnitureInteractor.WF_TRG_GAME_STARTS);
+    public static final List<Integer> WIRED_FURNIS = Ints.asList(
+            FurnitureInteractor.WF_TRG_SAYS, FurnitureInteractor.WF_ACT_SHOW_MESSAGE,
+            FurnitureInteractor.WF_ACT_TOGGLE_FURNI, FurnitureInteractor.WF_TRG_ENTER_ROOM,
+            FurnitureInteractor.WF_TRG_WALKS_ON_FURNI, FurnitureInteractor.WF_TRG_WALKS_OFF_FURNI,
+            FurnitureInteractor.WF_TRG_STATE_CHANGED, FurnitureInteractor.WF_TRG_PERIODICALLY,
+            FurnitureInteractor.WF_TRG_GAME_ENDS, FurnitureInteractor.WF_TRG_GAME_STARTS
+    );
 
     public static IWiredItem getInstance(final RoomItem item, final RoomInstance room, final String[] data) {
         switch (item.getInteractorId()) {

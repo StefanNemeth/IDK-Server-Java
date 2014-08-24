@@ -21,13 +21,18 @@ public class TriggerRoomItemReader implements IMessageReader {
         }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
-        RoomItem item = null;
+        RoomItem item;
 
         if (room == null || (item = room.getRoomItems().get(reader.readInteger())) == null) {
             return;
         }
 
-        item.getInteractor().onTrigger(session.getRoomPlayer(), item, reader.getMessageId() == OperationCodes.getIncomingOpCode("ItemClearDice") ? 1 : reader.readInteger(), room.hasRights(session));
+        item.getInteractor().onTrigger(
+                session.getRoomPlayer(),
+                item,
+                reader.getMessageId() == OperationCodes.getIncomingOpCode("ItemClearDice") ? 1 : reader.readInteger(),
+                room.hasRights(session)
+        );
     }
 
 }

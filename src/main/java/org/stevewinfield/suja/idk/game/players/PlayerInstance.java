@@ -20,7 +20,7 @@ import java.util.Calendar;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerInstance {
-    private static Logger logger = Logger.getLogger(PlayerInstance.class);
+    private static final Logger logger = Logger.getLogger(PlayerInstance.class);
 
     public PlayerInformation getInformation() {
         return this.information;
@@ -48,10 +48,10 @@ public class PlayerInstance {
 
     public PlayerInstance() {
         this.information = new PlayerInformation();
-        this.rights = new ConcurrentHashMap<String, LevelRight>();
-        this.achievements = new ConcurrentHashMap<Integer, PlayerAchievement>();
-        this.favoriteRooms = new GapList<Integer>();
-        this.rooms = new GapList<RoomInformation>();
+        this.rights = new ConcurrentHashMap<>();
+        this.achievements = new ConcurrentHashMap<>();
+        this.favoriteRooms = new GapList<>();
+        this.rooms = new GapList<>();
         this.inventory = new PlayerInventory();
     }
 
@@ -71,7 +71,7 @@ public class PlayerInstance {
                 cal.setTime(Bootloader.getDateFromTimestamp(Bootloader.getTimestamp()));
                 final Integer today = cal.get(Calendar.DATE);
 
-                if (today != lastUpdate) {
+                if (!today.equals(lastUpdate)) {
                     Bootloader.getStorage().executeQuery("UPDATE players SET available_respects=3, last_update=" + Bootloader.getTimestamp() + " WHERE id=" + information.getId());
                     information.setAvailableRespects(3);
                 }
@@ -83,12 +83,22 @@ public class PlayerInstance {
                 this.subscriptionManager.set(subscription);
             }
 
-            final ResultSet favorite = Bootloader.getStorage().queryParams("SELECT * FROM player_room_favorites WHERE player_id=" + information.getId() + " ORDER BY id DESC LIMIT " + IDK.NAV_MAX_FAVORITES).executeQuery();
+            final ResultSet favorite = Bootloader.getStorage().queryParams(
+                    "SELECT * FROM player_room_favorites " +
+                            "WHERE player_id=" + information.getId() + " " +
+                            "ORDER BY id DESC LIMIT " + IDK.NAV_MAX_FAVORITES
+            ).executeQuery();
             while (favorite.next()) {
                 this.favoriteRooms.add(favorite.getInt("room_id"));
             }
             favorite.close();
-            final ResultSet roomRow = Bootloader.getStorage().queryParams("SELECT rooms.*, nickname FROM rooms, players WHERE owner_id=" + information.getId() + " AND players.id=owner_id ORDER BY name ASC" + (!this.hasRight("unlimited_rooms") ? " LIMIT " + IDK.NAV_MAX_ROOMS_PER_PLAYER : "")).executeQuery();
+            final ResultSet roomRow = Bootloader.getStorage().queryParams(
+                    "SELECT rooms.*, nickname FROM rooms, players " +
+                            "WHERE owner_id=" + information.getId() + " " +
+                            "AND players.id=owner_id " +
+                            "ORDER BY name ASC" + (!this.hasRight("unlimited_rooms") ? " " +
+                            "LIMIT " + IDK.NAV_MAX_ROOMS_PER_PLAYER : "")
+            ).executeQuery();
             while (roomRow.next()) {
                 final RoomInformation info = new RoomInformation();
                 info.set(roomRow);

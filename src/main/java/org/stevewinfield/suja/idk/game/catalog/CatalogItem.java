@@ -14,7 +14,7 @@ import org.stevewinfield.suja.idk.game.furnitures.FurnitureInteractor;
 import java.sql.ResultSet;
 
 public class CatalogItem implements ISerialize {
-    private static Logger logger = Logger.getLogger(CatalogItem.class);
+    private static final Logger logger = Logger.getLogger(CatalogItem.class);
 
     public int getId() {
         return id;

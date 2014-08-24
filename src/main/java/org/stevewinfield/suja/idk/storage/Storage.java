@@ -13,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class Storage {
-    private static Logger logger = Logger.getLogger(Storage.class);
+    private static final Logger logger = Logger.getLogger(Storage.class);
 
     private Boolean SQLException;
     private BoneCP boneCP;
@@ -24,6 +24,7 @@ public class Storage {
     public boolean create() {
         this.SQLException = false;
         try {
+            // TODO: Allow other driver types
             Class.forName("com.mysql.jdbc.Driver");
 
             final StoragePooling Pooling = new StoragePooling();
@@ -106,7 +107,7 @@ public class Storage {
         return false;
     }
 
-    public Integer entryCount(final String q) {
+    public int entryCount(final String q) {
         int i = 0;
 
         try {
@@ -121,12 +122,11 @@ public class Storage {
         return i;
     }
 
-    public Integer entryCount(final PreparedStatement pStmt) {
+    public int entryCount(final PreparedStatement pStmt) {
         int i = 0;
 
         try {
             final ResultSet resSet = pStmt.executeQuery();
-
             while (resSet.next()) {
                 ++i;
             }
@@ -140,7 +140,7 @@ public class Storage {
         try {
             final ResultSet resSet = driverStatement.executeQuery(Query);
 
-            while (resSet.next()) {
+            if (resSet.next()) {
                 return resSet;
             }
         } catch (final Exception e) {

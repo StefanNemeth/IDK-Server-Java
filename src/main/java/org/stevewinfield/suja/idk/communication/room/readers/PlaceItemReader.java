@@ -108,9 +108,7 @@ public class PlaceItemReader implements IMessageReader {
             case FurnitureType.WALL: {
                 final String[] correctedData = new String[itemData.length - 1];
 
-                for (int i = 1; i < itemData.length; i++) {
-                    correctedData[i - 1] = itemData[i];
-                }
+                System.arraycopy(itemData, 1, correctedData, 0, itemData.length - 1);
 
                 if (room.setWallItem(session, roomItem, correctedData, session.getPlayerInstance().getInventory().itemHasToUpdate(item.getItemId()))) {
                     goneRight = true;

@@ -26,7 +26,7 @@ public class FriendStreamEventRequestReader implements IMessageReader {
             return;
         }
 
-        final List<FriendStreamEventData> events = new ArrayList<FriendStreamEventData>(session.getFriendStream().getEvents());
+        final List<FriendStreamEventData> events = new ArrayList<>(session.getFriendStream().getEvents());
         Collections.reverse(events);
 
         session.writeMessage(new FriendStreamEventWriter(events));

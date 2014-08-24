@@ -23,7 +23,7 @@ public class FireworkInteractor extends DefaultInteractor {
             return;
         }
 
-        int currentCharges = 0;
+        int currentCharges;
         try {
             currentCharges = Integer.valueOf(item.getTermFlags()[0]);
         } catch (final NumberFormatException ex) {
@@ -54,19 +54,56 @@ public class FireworkInteractor extends DefaultInteractor {
 
             if (IDK.CATA_FIREWORKS_CHARGES_PIXELS > 0) {
                 player.getSession().getPlayerInstance().getInformation().setPixels(-IDK.CATA_FIREWORKS_CHARGES_PIXELS);
-                player.getSession().writeMessage(new ActivityPointsWriter(player.getSession().getPlayerInstance().getInformation().getPixelsBalance(), player.getSession().getPlayerInstance().getInformation().getShellsBalance()));
+                player.getSession().writeMessage(
+                        new ActivityPointsWriter(
+                                player.getSession().getPlayerInstance().getInformation().getPixelsBalance(),
+                                player.getSession().getPlayerInstance().getInformation().getShellsBalance()
+                        )
+                );
             }
 
             item.setTermFlags(new String[]{(currentCharges += 10) + ""});
             item.update(true, false);
-            player.getSession().writeMessage(new OpenFireworkChargeDialogWriter(item.getItemId(), currentCharges, IDK.CATA_FIREWORKS_CHARGES_CREDITS, IDK.CATA_FIREWORKS_CHARGES_PIXELS, IDK.CATA_FIREWORKS_CHARGES_AMOUNT));
-            player.getSession().writeMessage(new CatalogPurchaseResultWriter(item.getItemId(), "fireworks_charge_01", IDK.CATA_FIREWORKS_CHARGES_CREDITS, IDK.CATA_FIREWORKS_CHARGES_PIXELS, 0));
+            player.getSession().writeMessage(
+                    new OpenFireworkChargeDialogWriter(
+                            item.getItemId(),
+                            currentCharges,
+                            IDK.CATA_FIREWORKS_CHARGES_CREDITS,
+                            IDK.CATA_FIREWORKS_CHARGES_PIXELS,
+                            IDK.CATA_FIREWORKS_CHARGES_AMOUNT
+                    )
+            );
+            player.getSession().writeMessage(
+                    new CatalogPurchaseResultWriter(
+                            item.getItemId(),
+                            "fireworks_charge_01",
+                            IDK.CATA_FIREWORKS_CHARGES_CREDITS,
+                            IDK.CATA_FIREWORKS_CHARGES_PIXELS,
+                            0
+                    )
+            );
         } else if (request == 1 && player != null) {
-            player.getSession().writeMessage(new OpenFireworkChargeDialogWriter(item.getItemId(), currentCharges, IDK.CATA_FIREWORKS_CHARGES_CREDITS, IDK.CATA_FIREWORKS_CHARGES_PIXELS, IDK.CATA_FIREWORKS_CHARGES_AMOUNT));
+            player.getSession().writeMessage(
+                    new OpenFireworkChargeDialogWriter(
+                            item.getItemId(),
+                            currentCharges,
+                            IDK.CATA_FIREWORKS_CHARGES_CREDITS,
+                            IDK.CATA_FIREWORKS_CHARGES_PIXELS,
+                            IDK.CATA_FIREWORKS_CHARGES_AMOUNT
+                    )
+            );
         } else {
             if (currentCharges <= 0) {
                 if (player != null) {
-                    player.getSession().writeMessage(new OpenFireworkChargeDialogWriter(item.getItemId(), currentCharges, IDK.CATA_FIREWORKS_CHARGES_CREDITS, IDK.CATA_FIREWORKS_CHARGES_PIXELS, IDK.CATA_FIREWORKS_CHARGES_AMOUNT));
+                    player.getSession().writeMessage(
+                            new OpenFireworkChargeDialogWriter(
+                                    item.getItemId(),
+                                    currentCharges,
+                                    IDK.CATA_FIREWORKS_CHARGES_CREDITS,
+                                    IDK.CATA_FIREWORKS_CHARGES_PIXELS,
+                                    IDK.CATA_FIREWORKS_CHARGES_AMOUNT
+                            )
+                    );
                 }
                 return;
             }
@@ -88,9 +125,9 @@ public class FireworkInteractor extends DefaultInteractor {
                 int time = 10;
 
                 // Hardcoding? Well, no need to change.
-                if (item.getBase().getName() == "fireworks_01") {
+                if (item.getBase().getName().equals("fireworks_01")) {
                     time = 6;
-                } else if (item.getBase().getName() == "fireworks_07") {
+                } else if (item.getBase().getName().equals("fireworks_07")) {
                     time = 20;
                 }
 
@@ -106,7 +143,7 @@ public class FireworkInteractor extends DefaultInteractor {
     @Override
     public void onCycle(final RoomItem item) {
         super.onCycle(item);
-        int currentCharges = 0;
+        int currentCharges;
 
         try {
             currentCharges = Integer.valueOf(item.getTermFlags()[0]);

@@ -19,7 +19,7 @@ public class RoomChatWriter extends MessageWriter {
 
         // get message
         final StringBuilder builder = new StringBuilder();
-        final Map<Integer, String> linkRefs = new HashMap<Integer, String>();
+        final Map<Integer, String> linkRefs = new HashMap<>();
         final String[] bits = message.split(" ");
         int j = 0, i = 0;
 
@@ -29,7 +29,7 @@ public class RoomChatWriter extends MessageWriter {
             }
             if (bit.startsWith("http://") || bit.startsWith("https://") || bit.startsWith("www.")) {
                 linkRefs.put(i, bit);
-                builder.append("{" + i++ + "}");
+                builder.append("{").append(i++).append("}");
             } else {
                 builder.append(bit);
             }

@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class BotPhrase {
-    private static Logger logger = Logger.getLogger(BotPhrase.class);
+    private static final Logger logger = Logger.getLogger(BotPhrase.class);
 
     public int getBotId() {
         return botId;

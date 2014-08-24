@@ -10,13 +10,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ModerationPresetMessage {
-    private static Logger logger = Logger.getLogger(ModerationPresetMessage.class);
+    private static final Logger logger = Logger.getLogger(ModerationPresetMessage.class);
 
     public int getId() {
         return id;
     }
 
-    public int getType() {
+    public ModerationPresetMessageType getType() {
         return type;
     }
 
@@ -40,6 +40,6 @@ public class ModerationPresetMessage {
 
     // fields
     private int id;
-    private int type;
+    private ModerationPresetMessageType type;
     private String message;
 }

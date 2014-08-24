@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class MessengerSearchReader implements IMessageReader {
-    private static Logger logger = Logger.getLogger(MessengerSearchReader.class);
+    private static final Logger logger = Logger.getLogger(MessengerSearchReader.class);
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
@@ -34,7 +34,7 @@ public class MessengerSearchReader implements IMessageReader {
             query = query.substring(0, 100);
         }
 
-        List<MessengerBuddy> searchResults = new GapList<MessengerBuddy>();
+        List<MessengerBuddy> searchResults = new GapList<>();
 
         if (query.length() > 1) {
             try {
@@ -53,8 +53,8 @@ public class MessengerSearchReader implements IMessageReader {
             }
         }
 
-        final List<MessengerBuddy> nonFriends = new GapList<MessengerBuddy>();
-        final List<MessengerBuddy> friends = new GapList<MessengerBuddy>();
+        final List<MessengerBuddy> nonFriends = new GapList<>();
+        final List<MessengerBuddy> friends = new GapList<>();
 
         for (final MessengerBuddy buddy : searchResults) {
             if (session.getPlayerMessenger().getBuddies().containsKey(buddy.getPlayerId())) {
@@ -67,7 +67,6 @@ public class MessengerSearchReader implements IMessageReader {
         session.writeMessage(new MessengerSearchResultWriter(friends, nonFriends));
 
         searchResults.clear();
-        searchResults = null;
     }
 
 }

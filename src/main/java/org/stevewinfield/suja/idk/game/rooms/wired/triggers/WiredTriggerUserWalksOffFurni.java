@@ -16,7 +16,7 @@ import org.stevewinfield.suja.idk.game.rooms.wired.WiredTrigger;
 import java.util.List;
 
 public class WiredTriggerUserWalksOffFurni extends WiredTrigger {
-    private static Logger logger = Logger.getLogger(WiredTriggerUserWalksOffFurni.class);
+    private static final Logger logger = Logger.getLogger(WiredTriggerUserWalksOffFurni.class);
 
     public WiredTriggerUserWalksOffFurni(final RoomInstance room, final RoomItem item, final String[] data) {
         this.room = room;
@@ -41,7 +41,7 @@ public class WiredTriggerUserWalksOffFurni extends WiredTrigger {
 
     @Override
     public void set(final String[] obj) {
-        this.items = new GapList<Integer>();
+        this.items = new GapList<>();
         try {
             if (obj.length > 0 && obj[0].length() > 0) {
                 for (final String furni : obj[0].split(",")) {

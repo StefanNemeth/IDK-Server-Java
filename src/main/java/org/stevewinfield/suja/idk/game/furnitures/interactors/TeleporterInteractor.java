@@ -14,7 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class TeleporterInteractor extends DefaultInteractor {
-    private static Logger logger = Logger.getLogger(TeleporterInteractor.class);
+    private static final Logger logger = Logger.getLogger(TeleporterInteractor.class);
 
     @Override
     public void onLoaded(final RoomInstance room, final RoomItem item) {
@@ -40,6 +40,7 @@ public class TeleporterInteractor extends DefaultInteractor {
         }
 
         if (item.getFlagsState() == 0 && item.getInteractingPlayers().size() == 0) {
+            // TODO: Can player be null?
             item.getInteractingPlayers().put(1, player.getVirtualId());
             player.setWalkingBlocked(true);
             player.moveTo(item.getPosition().getVector2(), false, true);
@@ -55,14 +56,16 @@ public class TeleporterInteractor extends DefaultInteractor {
         RoomPlayer incomingPlayer = null;
 
         if (item.getInteractingPlayers().containsKey(1)) {
-            outgoingPlayer = item.getRoom().getRoomPlayers().containsKey(item.getInteractingPlayers().get(1)) ? item.getRoom().getRoomPlayers().get(item.getInteractingPlayers().get(1)) : null;
+            outgoingPlayer = item.getRoom().getRoomPlayers().containsKey(
+                    item.getInteractingPlayers().get(1)) ? item.getRoom().getRoomPlayers().get(item.getInteractingPlayers().get(1)) : null;
             if (outgoingPlayer == null) {
                 item.getInteractingPlayers().get(1);
             }
         }
 
         if (item.getInteractingPlayers().containsKey(2)) {
-            incomingPlayer = item.getRoom().getRoomPlayers().containsKey(item.getInteractingPlayers().get(2)) ? item.getRoom().getRoomPlayers().get(item.getInteractingPlayers().get(2)) : null;
+            incomingPlayer = item.getRoom().getRoomPlayers().containsKey(
+                    item.getInteractingPlayers().get(2)) ? item.getRoom().getRoomPlayers().get(item.getInteractingPlayers().get(2)) : null;
             if (incomingPlayer == null) {
                 item.getInteractingPlayers().get(2);
             }

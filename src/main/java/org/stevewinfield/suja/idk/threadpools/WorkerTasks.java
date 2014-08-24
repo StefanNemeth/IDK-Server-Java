@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 import java.util.concurrent.*;
 
 public class WorkerTasks {
-    private static Logger logger = Logger.getLogger(WorkerTasks.class);
+    private static final Logger logger = Logger.getLogger(WorkerTasks.class);
 
     public static Executor getNettyWorkerExecutor() {
         return nettyWorkerExecutor;

@@ -37,11 +37,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MessageHandler {
-    private static Logger logger = Logger.getLogger(MessageHandler.class);
+    private static final Logger logger = Logger.getLogger(MessageHandler.class);
     private static Map<Short, IMessageReader> messages;
 
     public static void loadMessages() {
-        messages = new HashMap<Short, IMessageReader>();
+        messages = new HashMap<>();
         putHandshakeMessages();
         putPlayerMessages();
         putGlobalMessages();

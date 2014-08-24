@@ -14,7 +14,7 @@ import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ModerationManager {
-    private static Logger logger = Logger.getLogger(ModerationManager.class);
+    private static final Logger logger = Logger.getLogger(ModerationManager.class);
 
     public ConcurrentHashMap<Integer, ModerationPresetMessage> getPresetMessages() {
         return presetMessages;
@@ -25,8 +25,8 @@ public class ModerationManager {
     }
 
     public ModerationManager() {
-        this.presetMessages = new ConcurrentHashMap<Integer, ModerationPresetMessage>();
-        this.presetActions = new ConcurrentHashMap<Integer, ModerationPresetAction>();
+        this.presetMessages = new ConcurrentHashMap<>();
+        this.presetActions = new ConcurrentHashMap<>();
         try {
             int counter = 0;
             ResultSet row = Bootloader.getStorage().queryParams("SELECT * FROM moderation_presets").executeQuery();
@@ -38,7 +38,7 @@ public class ModerationManager {
             }
             logger.info(counter + " Moderation Preset Message(s) loaded.");
             counter = 0;
-            final GapList<ModerationPresetAction> subActions = new GapList<ModerationPresetAction>();
+            final GapList<ModerationPresetAction> subActions = new GapList<>();
             row = Bootloader.getStorage().queryParams("SELECT * FROM moderation_preset_actions").executeQuery();
             while (row.next()) {
                 final ModerationPresetAction action = new ModerationPresetAction();
@@ -66,7 +66,10 @@ public class ModerationManager {
 
     public void logAction(final int moderatorId, final String logText) {
         try {
-            final PreparedStatement statement = Bootloader.getStorage().queryParams("INSERT INTO moderation_logs (moderator_id, log_text, timestamp) VALUES (" + moderatorId + ", ?, " + Bootloader.getTimestamp() + ")");
+            final PreparedStatement statement = Bootloader.getStorage()
+                    .queryParams("INSERT INTO moderation_logs (moderator_id, log_text, timestamp) " +
+                                    "VALUES (" + moderatorId + ", ?, " + Bootloader.getTimestamp() + ")"
+                    );
             statement.setString(1, logText);
             statement.execute();
         } catch (final SQLException ex) {

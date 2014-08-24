@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BotManager {
-    private static Logger logger = Logger.getLogger(BotManager.class);
+    private static final Logger logger = Logger.getLogger(BotManager.class);
 
     public ConcurrentHashMap<Integer, BotInstance> getBots() {
         return bots;
@@ -32,8 +32,8 @@ public class BotManager {
     }
 
     public BotManager() {
-        this.bots = new ConcurrentHashMap<Integer, BotInstance>();
-        this.botInteractors = new ConcurrentHashMap<Integer, IBotInteractor>();
+        this.bots = new ConcurrentHashMap<>();
+        this.botInteractors = new ConcurrentHashMap<>();
         this.botInteractors.put(BotInteractor.DEFAULT, new DefaultBotInteractor());
     }
 
@@ -78,7 +78,7 @@ public class BotManager {
     }
 
     public List<BotInstance> getBotsByRoomId(final int roomId) {
-        final GapList<BotInstance> bots = new GapList<BotInstance>();
+        final GapList<BotInstance> bots = new GapList<>();
         for (final BotInstance bot : this.bots.values()) {
             if (bot.getStartRoomId() == roomId) {
                 bots.add(bot);

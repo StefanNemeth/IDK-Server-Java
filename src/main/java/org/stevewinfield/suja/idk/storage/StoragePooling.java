@@ -12,7 +12,7 @@ import org.stevewinfield.suja.idk.Bootloader;
 import java.util.concurrent.TimeUnit;
 
 public class StoragePooling {
-    private static Logger logger = Logger.getLogger(StoragePooling.class);
+    private static final Logger logger = Logger.getLogger(StoragePooling.class);
 
     private BoneCP boneCP;
     private BoneCPConfig boneCPConfig;

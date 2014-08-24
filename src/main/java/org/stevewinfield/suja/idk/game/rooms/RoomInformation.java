@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RoomInformation {
-    private static Logger logger = Logger.getLogger(RoomInformation.class);
+    private static final Logger logger = Logger.getLogger(RoomInformation.class);
 
     // getters
     public int getId() {
@@ -116,6 +116,9 @@ public class RoomInformation {
         if (o == null) {
             return false;
         }
+        if (!(o instanceof RoomInformation)) {
+            return false;
+        }
         if (o == this) {
             return true;
         }
@@ -165,7 +168,7 @@ public class RoomInformation {
             this.tags = row.getString("tags").split(",");
             this.roomType = row.getInt("room_type");
             this.ownerId = row.getInt("owner_id");
-            this.ownerName = nickname != "" ? nickname : row.getString("nickname");
+            this.ownerName = !nickname.equals("") ? nickname : row.getString("nickname");
             this.name = row.getString("name");
             this.description = row.getString("description");
             this.accessType = row.getInt("access_type");
@@ -181,11 +184,11 @@ public class RoomInformation {
             this.wallThickness = row.getInt("wall_thickness");
             this.floorThickness = row.getInt("floor_thickness");
             final String[] splittingMap = row.getString("decorations").split(";");
-            this.decorations = new ConcurrentHashMap<String, String>();
+            this.decorations = new ConcurrentHashMap<>();
             for (final String entry : splittingMap) {
                 this.decorations.put(entry.split("=")[0], entry.split("=")[1]);
             }
-            RoomCategory category = null;
+            RoomCategory category;
             if ((category = Bootloader.getGame().getRoomManager().getRoomCategory(categoryId)) != null) {
                 this.tradingEnabled = category.isTradingEnabled();
             }

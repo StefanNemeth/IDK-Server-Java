@@ -15,7 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class FriendStreamEventData implements ISerialize {
-    private static Logger logger = Logger.getLogger(FriendStreamEventData.class);
+    private static final Logger logger = Logger.getLogger(FriendStreamEventData.class);
 
     public int getPostedTimeSpan() {
         final long diff[] = new long[]{0, 0, 0, 0, 0};
@@ -42,7 +42,9 @@ public class FriendStreamEventData implements ISerialize {
         this.eventData = new String[0];
     }
 
-    public FriendStreamEventData(final int id, final int playerId, final String name, final int gender, final String avatar, final int eventType, final long timestamp, final int linkType, final String[] eventData) {
+    public FriendStreamEventData(final int id, final int playerId, final String name, final int gender,
+                                 final String avatar, final int eventType, final long timestamp, final int linkType,
+                                 final String[] eventData) {
         this.id = id;
         this.playerId = playerId;
         this.playerName = name;
@@ -60,7 +62,7 @@ public class FriendStreamEventData implements ISerialize {
             this.id = row.getInt("id");
             this.playerId = row.getInt("player_id");
             this.playerName = row.getString("player_name");
-            this.playerGender = row.getString("player_gender").toLowerCase() == "f" ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
+            this.playerGender = row.getString("player_gender").toLowerCase().equals("f") ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
             this.playerAvatar = row.getString("player_avatar");
             this.eventType = row.getInt("event_type");
             this.timestamp = row.getInt("timestamp");

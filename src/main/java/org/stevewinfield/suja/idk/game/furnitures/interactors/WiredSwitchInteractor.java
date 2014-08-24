@@ -23,7 +23,6 @@ public class WiredSwitchInteractor extends DefaultSwitchInteractor {
             if (goal != null) {
                 player.moveTo(goal, item.getFrontRotation(goal), item);
             }
-            return;
         }
     }
 

@@ -16,7 +16,7 @@ import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NavigatorListManager {
-    private static Logger logger = Logger.getLogger(NavigatorListManager.class);
+    private static final Logger logger = Logger.getLogger(NavigatorListManager.class);
 
     public MessageWriter getOfficialItemsWriter() {
         return new NavigatorOfficialRoomsWriter(this.officialItems);
@@ -27,8 +27,8 @@ public class NavigatorListManager {
     }
 
     public NavigatorListManager(final int amount) {
-        this.officialItems = new GapList<OfficialItem>();
-        this.searchCategories = new ConcurrentHashMap<String, Integer>();
+        this.officialItems = new GapList<>();
+        this.searchCategories = new ConcurrentHashMap<>();
         try {
             ResultSet items = Bootloader.getStorage().queryParams("SELECT * FROM official_items").executeQuery();
             while (items.next()) {
@@ -45,7 +45,7 @@ public class NavigatorListManager {
         }
         logger.info(officialItems.size() + " Offical Items loaded.");
         logger.info(searchCategories.size() + " Search Categories loaded.");
-        this.navigatorLists = new ConcurrentHashMap<Integer, NavigatorList>();
+        this.navigatorLists = new ConcurrentHashMap<>();
         this.navigatorLists.put(-1, new NavigatorList(-1));
         for (int i = 1; i <= amount; i++) {
             this.navigatorLists.put(i, new NavigatorList(i));
