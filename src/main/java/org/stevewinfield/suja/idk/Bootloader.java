@@ -24,9 +24,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Properties;
 
@@ -92,6 +97,27 @@ public class Bootloader {
         settings = new Settings(pFile);
         logger.info("Properties file successfully read.");
 
+        final List<URL> classPath = new ArrayList<>();
+        File directoryFile = new File("libs");
+        if (!directoryFile.exists()) {
+            directoryFile.mkdirs();
+        }
+        if (!directoryFile.isDirectory()) {
+            logger.warn("File \"libs\" is not a directory.");
+        } else {
+            for (File pathname : directoryFile.listFiles()) {
+                if (pathname.isFile() && pathname.toString().toLowerCase().endsWith(".jar")) {
+                    try {
+                        classPath.add(pathname.toURI().toURL());
+                    } catch (MalformedURLException e) {
+                        logger.error("Library error", e);
+                    }
+                }
+            }
+        }
+
+        customClassLoader = new URLClassLoader(classPath.toArray(new URL[classPath.size()]));
+
         storage = new Storage();
 
         if (!storage.create()) {
@@ -152,10 +178,8 @@ public class Bootloader {
         game = new Game();
         game.getCatalogManager().loadCache();
         pluginManager = new PluginManager();
-
-        pluginManager.initClassLoader("libs");
-
         pluginManager.load(new File("plugins"));
+
         game.getBotManager().load();
 
         if (!Bootloader.placeholderNetwork.loadPlugins()) {
@@ -230,6 +254,10 @@ public class Bootloader {
         return result;
     }
 
+    public static URLClassLoader getCustomClassLoader() {
+        return customClassLoader;
+    }
+
     // fields
     private static Settings settings;
     private static ConnectionListener listener;
@@ -238,5 +266,5 @@ public class Bootloader {
     private static Storage storage;
     private static PlaceholderNetwork placeholderNetwork;
     private static Game game;
-
+    private static URLClassLoader customClassLoader;
 }

@@ -11,11 +11,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Storage {
     private static final Logger logger = Logger.getLogger(Storage.class);
 
-    private Boolean SQLException;
+    private boolean SQLException;
     private BoneCP boneCP;
 
     private Connection driverConnection;
@@ -24,9 +26,6 @@ public class Storage {
     public boolean create() {
         this.SQLException = false;
         try {
-            // TODO: Allow other driver types
-            Class.forName("com.mysql.jdbc.Driver");
-
             final StoragePooling Pooling = new StoragePooling();
 
             if (!Pooling.getStoragePooling()) {
@@ -37,9 +36,6 @@ public class Storage {
                 this.driverConnection = this.boneCP.getConnection();
                 this.driverStatement = this.driverConnection.createStatement();
             }
-        } catch (final ClassNotFoundException exception1) {
-            logger.error("Could not find JDBC class!");
-            return false;
         } catch (final Exception e) {
             logger.error(e.getMessage());
             return false;

@@ -5,6 +5,7 @@
 package org.stevewinfield.suja.idk.game.plugins;
 
 import org.apache.log4j.Logger;
+import org.stevewinfield.suja.idk.Bootloader;
 
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -99,7 +100,7 @@ public class PluginManager {
     public void load(final File pluginDir) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
-            Thread.currentThread().setContextClassLoader(urlClassLoader);
+            Thread.currentThread().setContextClassLoader(Bootloader.getCustomClassLoader());
 
             this.plugins = new ConcurrentHashMap<>();
             this.factory = new ScriptEngineManager();
@@ -129,10 +130,6 @@ public class PluginManager {
         logger.info("PLUGIN: " + txt);
     }
 
-    public void initClassLoader(String... directories) {
-        urlClassLoader = new URLClassLoader(buildClassPath(directories));
-    }
-
     private static URL[] buildClassPath(String... directories) {
         try {
             final List<URL> classPath = new ArrayList<>();
@@ -159,5 +156,4 @@ public class PluginManager {
 
     private ConcurrentHashMap<String, GamePlugin> plugins;
     private ScriptEngineManager factory;
-    private URLClassLoader urlClassLoader;
 }
