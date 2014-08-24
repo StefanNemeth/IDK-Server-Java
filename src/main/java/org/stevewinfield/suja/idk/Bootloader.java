@@ -67,14 +67,25 @@ public class Bootloader {
         logger.info(IDK.NAME + " (Version " + IDK.VERSION + ", Build " + IDK.BUILD_NUMBER + ") is starting.");
 
         final Properties pFile = new Properties();
+        File propertiesFile = new File("server.properties");
+        if (!propertiesFile.exists()) {
+            File oldPropertiesFile = new File(".properties");
+            if (oldPropertiesFile.exists()) {
+                logger.info("Moving old .properties to server.properties");
+                if (!oldPropertiesFile.renameTo(propertiesFile)) {
+                    logger.warn("Failed to move .properties to server.properties. Please do this manually.");
+                    propertiesFile = oldPropertiesFile;
+                }
+            }
+        }
 
         try {
-            pFile.load(new FileInputStream(".properties"));
+            pFile.load(new FileInputStream(propertiesFile));
         } catch (final FileNotFoundException e) {
-            logger.error("File \".properties\" not found.", e);
+            logger.error("File \"" + propertiesFile.getName() + "\" not found.", e);
             return;
         } catch (final IOException e) {
-            logger.error("Couldn't read file \".properties\".", e);
+            logger.error("Couldn't read file \"" + propertiesFile.getName() + "\".", e);
             return;
         }
 
