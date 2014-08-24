@@ -38,7 +38,7 @@ public class ChatCommandHandler {
             logger.warn("You didn't set the method execute in " + f);
             return;
         }
-        commands.put(cmd, new IChatCommand() {
+        addChatCommand(plugin, cmd, new IChatCommand() {
             @Override
             public String getPermissionCode() {
                 return permissionCode;
@@ -54,6 +54,10 @@ public class ChatCommandHandler {
                 }
             }
         });
+    }
+
+    public void addChatCommand(final GamePlugin plugin, final String cmd, IChatCommand chatCommand) {
+        commands.put(cmd, chatCommand);
     }
 
     public boolean commandExists(final String command) {

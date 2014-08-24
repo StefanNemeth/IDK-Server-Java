@@ -41,6 +41,10 @@ public class PluginManager {
             extension = "js";
             name = filename;
         }
+        if (showLog) {
+            logger.info("Loading plugin \"" + name + "\"");
+        }
+
         final ScriptEngine engine = factory.getEngineByExtension(extension);
         if (engine == null) {
             logger.error("No script engine found for plugin " + name);

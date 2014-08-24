@@ -93,7 +93,7 @@ public class BotManager {
         final PluginInterfaces.OnCycleInterface onCycleInterface = getInterface(plugin, obj, PluginInterfaces.OnCycleInterface.class);
         final PluginInterfaces.OnPlayerSaysInterface onPlayerSaysInterface = getInterface(plugin, obj, PluginInterfaces.OnPlayerSaysInterface.class);
 
-        botInteractors.put(interactorId, new IBotInteractor() {
+        addBotInteractor(plugin, interactorId, new IBotInteractor() {
 
             @Override
             public void onLoaded(final RoomInstance room, final RoomPlayer bot) {
@@ -144,6 +144,10 @@ public class BotManager {
             }
 
         });
+    }
+
+    public void addBotInteractor(GamePlugin plugin, final int interactorId, final IBotInteractor botInteractor) {
+        botInteractors.put(interactorId, botInteractor);
     }
 
     private <T> T getInterface(final GamePlugin plugin, final String obj, Class<T> clazz) {
