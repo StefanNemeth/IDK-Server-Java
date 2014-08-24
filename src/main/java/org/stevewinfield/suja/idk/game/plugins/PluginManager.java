@@ -56,7 +56,13 @@ public class PluginManager {
                 if (engine.getFactory().getEngineName().equals("Oracle Nashorn")) {
                     engine.eval("load(\"nashorn:mozilla_compat.js\");");
                 }
-                engine.eval("importClass(org.stevewinfield.suja.idk.Bootloader);" + "importPackage(org.stevewinfield.suja.idk.game.miscellaneous);" + "importPackage(org.stevewinfield.suja.idk.game.players);" + "importPackage(org.stevewinfield.suja.idk.game.rooms);" + "importClass(org.stevewinfield.suja.idk.game.plugins.PluginManager);");
+                engine.eval(
+                        "importClass(org.stevewinfield.suja.idk.Bootloader);" +
+                                "importPackage(org.stevewinfield.suja.idk.game.miscellaneous);" +
+                                "importPackage(org.stevewinfield.suja.idk.game.players);" +
+                                "importPackage(org.stevewinfield.suja.idk.game.rooms);" +
+                                "importClass(org.stevewinfield.suja.idk.game.plugins.PluginManager);"
+                );
             }
             GamePlugin plugin = new GamePlugin(name, engine);
             engine.put("IDK", plugin);
