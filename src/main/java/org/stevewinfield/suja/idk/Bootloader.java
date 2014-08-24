@@ -142,6 +142,9 @@ public class Bootloader {
         game = new Game();
         game.getCatalogManager().loadCache();
         pluginManager = new PluginManager();
+
+        pluginManager.initClassLoader("libs");
+
         pluginManager.load(new File("plugins"));
         game.getBotManager().load();
 
