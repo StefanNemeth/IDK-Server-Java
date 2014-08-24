@@ -4,13 +4,12 @@
  */
 package org.stevewinfield.suja.idk.storage;
 
-import java.util.concurrent.TimeUnit;
-
+import com.jolbox.bonecp.BoneCP;
+import com.jolbox.bonecp.BoneCPConfig;
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
 
-import com.jolbox.bonecp.BoneCP;
-import com.jolbox.bonecp.BoneCPConfig;
+import java.util.concurrent.TimeUnit;
 
 public class StoragePooling {
     private static Logger logger = Logger.getLogger(StoragePooling.class);
@@ -20,8 +19,7 @@ public class StoragePooling {
 
     public boolean getStoragePooling() {
         boneCPConfig = new BoneCPConfig();
-        boneCPConfig.setJdbcUrl("jdbc:mysql://" + Bootloader.getSettings().getProperty("idk.mysql.host") + "/"
-        + Bootloader.getSettings().getProperty("idk.mysql.database"));
+        boneCPConfig.setJdbcUrl("jdbc:mysql://" + Bootloader.getSettings().getProperty("idk.mysql.host") + "/" + Bootloader.getSettings().getProperty("idk.mysql.database"));
         boneCPConfig.setMinConnectionsPerPartition(5);
         boneCPConfig.setMaxConnectionsPerPartition(10);
         boneCPConfig.setConnectionTimeout(1000, TimeUnit.DAYS);

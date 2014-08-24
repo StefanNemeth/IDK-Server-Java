@@ -4,10 +4,10 @@
  */
 package org.stevewinfield.suja.idk.communication.room.writers;
 
-import java.util.Map.Entry;
-
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.OperationCodes;
+
+import java.util.Map.Entry;
 
 public class RoomDecorationWriter extends MessageWriter {
 

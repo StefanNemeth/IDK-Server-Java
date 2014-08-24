@@ -36,8 +36,9 @@ public class GameTeam {
     }
 
     public void onPointReceived(final int points) {
-        if (scoreBoard == null)
+        if (scoreBoard == null) {
             return;
+        }
         scoreBoard.setFlags((this.points += points) + "");
         scoreBoard.update(false, true);
     }

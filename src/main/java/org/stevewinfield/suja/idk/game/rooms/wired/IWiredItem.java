@@ -4,10 +4,10 @@
  */
 package org.stevewinfield.suja.idk.game.rooms.wired;
 
-import java.util.List;
-
 import org.stevewinfield.suja.idk.communication.MessageReader;
 import org.stevewinfield.suja.idk.game.rooms.RoomItem;
+
+import java.util.List;
 
 public interface IWiredItem {
     int getWiredType();

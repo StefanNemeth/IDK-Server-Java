@@ -4,8 +4,6 @@
  */
 package org.stevewinfield.suja.idk.game.rooms.wired.actions;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.magicwerk.brownies.collections.GapList;
 import org.stevewinfield.suja.idk.communication.MessageReader;
@@ -16,6 +14,8 @@ import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
 import org.stevewinfield.suja.idk.game.rooms.wired.WiredAction;
 import org.stevewinfield.suja.idk.game.rooms.wired.WiredDelayEvent;
 import org.stevewinfield.suja.idk.game.rooms.wired.WiredManager;
+
+import java.util.List;
 
 public class WiredActionToggleFurni extends WiredAction {
     private static Logger logger = Logger.getLogger(WiredActionToggleFurni.class);
@@ -52,8 +52,9 @@ public class WiredActionToggleFurni extends WiredAction {
         this.delay = 0;
         try {
             if (obj.length > 0 && obj[0].length() > 0) {
-                for (final String furni : obj[0].split(","))
+                for (final String furni : obj[0].split(",")) {
                     items.add(Integer.valueOf(furni));
+                }
             }
             if (obj.length > 1 && obj[1].length() > 0) {
                 delay = Integer.valueOf(obj[1]);
@@ -72,13 +73,13 @@ public class WiredActionToggleFurni extends WiredAction {
         final int furniAmount = reader.readInteger();
         for (int i = 0; i < furniAmount; i++) {
             final int furniId = reader.readInteger();
-            if (!item.getRoom().getRoomItems().containsKey(furniId)
-            || WiredManager.isWiredItem(item.getRoom().getRoomItems().get(furniId).getBase()))
+            if (!item.getRoom().getRoomItems().containsKey(furniId) || WiredManager.isWiredItem(item.getRoom().getRoomItems().get(furniId).getBase())) {
                 continue;
+            }
             furniString += "," + furniId;
         }
         final int delay = reader.readInteger();
-        return new String[] { furniString.length() > 0 ? furniString.substring(1) : furniString, delay + "" };
+        return new String[]{furniString.length() > 0 ? furniString.substring(1) : furniString, delay + ""};
     }
 
     @Override
@@ -94,8 +95,7 @@ public class WiredActionToggleFurni extends WiredAction {
         for (final Integer i : items) {
             final RoomItem item = room.getRoomItems().get(i);
             if (item != null) {
-                item.getInteractor().onTrigger(null, item,
-                item.getInteractorId() == FurnitureInteractor.BATTLE_BANZAI_TIMER ? 1 : 0, true);
+                item.getInteractor().onTrigger(null, item, item.getInteractorId() == FurnitureInteractor.BATTLE_BANZAI_TIMER ? 1 : 0, true);
             }
         }
     }

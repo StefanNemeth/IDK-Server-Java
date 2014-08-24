@@ -32,8 +32,7 @@ public class ChatCommandHandler {
     }
 
     public void addChatCommand(final GamePlugin plugin, final String cmd, final String permissionCode, final String f) {
-        final PluginInterfaces.ChatCommandExecutor executor = ((Invocable) plugin.getScript()).getInterface(plugin.getScript()
-                .get(f), PluginInterfaces.ChatCommandExecutor.class);
+        final PluginInterfaces.ChatCommandExecutor executor = ((Invocable) plugin.getScript()).getInterface(plugin.getScript().get(f), PluginInterfaces.ChatCommandExecutor.class);
         if (executor == null) {
             logger.error("Invalid chat command executor for command" + cmd);
             logger.warn("You didn't set the method execute in " + f);

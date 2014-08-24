@@ -13,14 +13,13 @@ public class GetObjectInventoryReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
-        session
-        .writeMessage(new InventoryObjectsWriter('S', session.getPlayerInstance().getInventory().getFloorItems()));
+        session.writeMessage(new InventoryObjectsWriter('S', session.getPlayerInstance().getInventory().getFloorItems()));
 
-        session
-        .writeMessage(new InventoryObjectsWriter('I', session.getPlayerInstance().getInventory().getWallItems()));
+        session.writeMessage(new InventoryObjectsWriter('I', session.getPlayerInstance().getInventory().getWallItems()));
     }
 
 }

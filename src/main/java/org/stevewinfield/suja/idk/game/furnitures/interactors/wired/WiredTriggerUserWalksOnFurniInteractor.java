@@ -13,8 +13,7 @@ public class WiredTriggerUserWalksOnFurniInteractor extends WiredInteractor {
 
     @Override
     public MessageWriter getWiredDialog(final RoomItem item) {
-        return new WiredTriggerUserWalksOnFurniWriter(item, item.getTermFlags().length > 0 ? item.getTermFlags()[0]
-        : "");
+        return new WiredTriggerUserWalksOnFurniWriter(item, item.getTermFlags().length > 0 ? item.getTermFlags()[0] : "");
     }
 
 }

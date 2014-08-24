@@ -17,27 +17,24 @@ public class ExchangeInteractor extends DefaultInteractor {
     public void onTrigger(final RoomPlayer player, final RoomItem item, final int request, final boolean hasRights) {
         super.onTrigger(player, item, request, hasRights);
 
-        if (player == null || (player.getRoom().hasRights(player.getSession(), true) && item.getBase().hasRightCheck())
-        || !Bootloader.getGame().getFurnitureManager().getFurnitureExchanges().containsKey(item.getBase().getId()))
+        if (player == null || (player.getRoom().hasRights(player.getSession(), true) && item.getBase().hasRightCheck()) || !Bootloader.getGame().getFurnitureManager().getFurnitureExchanges().containsKey(item.getBase().getId())) {
             return;
+        }
 
-        final FurnitureExchange exchange = Bootloader.getGame().getFurnitureManager().getFurnitureExchanges()
-        .get(item.getBase().getId());
+        final FurnitureExchange exchange = Bootloader.getGame().getFurnitureManager().getFurnitureExchanges().get(item.getBase().getId());
 
         if (exchange.getChangeCoins() > 0) {
             player.getSession().getPlayerInstance().getInformation().setCredits(exchange.getChangeCoins());
-            player.getSession().writeMessage(
-            new CreditsBalanceWriter(player.getSession().getPlayerInstance().getInformation().getCreditsBalance()));
+            player.getSession().writeMessage(new CreditsBalanceWriter(player.getSession().getPlayerInstance().getInformation().getCreditsBalance()));
         }
 
         if (exchange.getChangePixels() > 0 || exchange.getChangeExtra() > 0) {
-            if (exchange.getChangePixels() > 0)
+            if (exchange.getChangePixels() > 0) {
                 player.getSession().getPlayerInstance().getInformation().setPixels(exchange.getChangePixels());
-            else
+            } else {
                 player.getSession().getPlayerInstance().getInformation().setShells(exchange.getChangeExtra());
-            player.getSession().writeMessage(
-            new ActivityPointsWriter(player.getSession().getPlayerInstance().getInformation().getPixelsBalance(),
-            player.getSession().getPlayerInstance().getInformation().getShellsBalance()));
+            }
+            player.getSession().writeMessage(new ActivityPointsWriter(player.getSession().getPlayerInstance().getInformation().getPixelsBalance(), player.getSession().getPlayerInstance().getInformation().getShellsBalance()));
         }
 
         player.getSession().getPlayerInstance().getInformation().updateCurrencies();

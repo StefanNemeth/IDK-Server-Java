@@ -15,25 +15,25 @@ public class GiveRightsReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isInRoom())
+        if (!session.isAuthenticated() || !session.isInRoom()) {
             return;
+        }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
-        if (room == null || !room.hasRights(session, true))
+        if (room == null || !room.hasRights(session, true)) {
             return;
+        }
 
         final int playerId = reader.readInteger();
         final Session playerSession = Bootloader.getSessionManager().getAuthenticatedSession(playerId);
 
-        if (playerSession == null || !playerSession.isInRoom()
-        || playerSession.getRoomId() != room.getInformation().getId()) {
+        if (playerSession == null || !playerSession.isInRoom() || playerSession.getRoomId() != room.getInformation().getId()) {
             return;
         }
 
         if (room.giveRights(playerSession.getRoomPlayer())) {
-            session.writeMessage(new RoomRightsGivenConfirmationWriter(room.getInformation().getId(), playerId,
-            playerSession.getPlayerInstance().getInformation().getPlayerName()));
+            session.writeMessage(new RoomRightsGivenConfirmationWriter(room.getInformation().getId(), playerId, playerSession.getPlayerInstance().getInformation().getPlayerName()));
         }
     }
 

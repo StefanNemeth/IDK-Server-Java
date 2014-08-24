@@ -4,12 +4,12 @@
  */
 package org.stevewinfield.suja.idk.game.players;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.game.levels.Level;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class PlayerInformation {
     private static Logger logger = Logger.getLogger(PlayerInformation.class);
@@ -128,8 +128,7 @@ public class PlayerInformation {
             this.playerName = row.getString("nickname");
             this.email = row.getString("email");
             this.avatar = row.getString("figurecode");
-            this.gender = row.getString("gender").toUpperCase() == "F" ? PlayerInformation.FEMALE_GENDER
-            : PlayerInformation.MALE_GENDER;
+            this.gender = row.getString("gender").toUpperCase() == "F" ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
             this.mission = row.getString("motto");
             this.level = Bootloader.getGame().getLevelManager().getLevel(row.getInt("level"));
             this.creditsBalance = row.getInt("credits_balance");
@@ -185,20 +184,16 @@ public class PlayerInformation {
 
     public void incrementRespectPoints() {
         this.respectPoints++;
-        Bootloader.getStorage().executeQuery(
-        "UPDATE players SET respect_points=" + this.respectPoints + " WHERE id=" + this.id);
+        Bootloader.getStorage().executeQuery("UPDATE players SET respect_points=" + this.respectPoints + " WHERE id=" + this.id);
     }
 
     public void decrementAvailableRespects() {
         this.availableRespects--;
-        Bootloader.getStorage().executeQuery(
-        "UPDATE players SET available_respects=" + this.availableRespects + " WHERE id=" + this.id);
+        Bootloader.getStorage().executeQuery("UPDATE players SET available_respects=" + this.availableRespects + " WHERE id=" + this.id);
     }
 
     public void updateCurrencies() {
-        Bootloader.getStorage().executeQuery(
-        "UPDATE players SET credits_balance=" + this.creditsBalance + ", pixels_balance=" + this.pixelsBalance
-        + ", shells_balance=" + this.shellsBalance + " WHERE id=" + this.id);
+        Bootloader.getStorage().executeQuery("UPDATE players SET credits_balance=" + this.creditsBalance + ", pixels_balance=" + this.pixelsBalance + ", shells_balance=" + this.shellsBalance + " WHERE id=" + this.id);
     }
 
     public void setHomeRoom(final int home) {

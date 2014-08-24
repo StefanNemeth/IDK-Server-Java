@@ -35,17 +35,18 @@ public class BattleBanzaiPatchInteractor implements IFurnitureInteractor {
             item.setCounter(0);
             return;
         }
-        item.setFlags(item.getFlagsState() == 0 ? item.getRoom().getRoomTask().getBanzaiTask().getFlexInteger() + ""
-        : "0");
+        item.setFlags(item.getFlagsState() == 0 ? item.getRoom().getRoomTask().getBanzaiTask().getFlexInteger() + "" : "0");
         item.update(false, true);
-        if (item.getIncementedCounter() < 5)
+        if (item.getIncementedCounter() < 5) {
             item.requestCycles(1);
+        }
     }
 
     @Override
     public void onPlayerWalksOn(final RoomPlayer player, final RoomItem item) {
-        if (!item.getRoom().getRoomTask().getBanzaiTask().isRunning())
+        if (!item.getRoom().getRoomTask().getBanzaiTask().isRunning()) {
             return;
+        }
 
         item.getRoom().getRoomTask().getBanzaiTask().onHandle(player, item);
     }

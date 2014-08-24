@@ -4,9 +4,9 @@
  */
 package org.stevewinfield.suja.idk.game.rooms.wired;
 
-import java.util.List;
-
 import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
+
+import java.util.List;
 
 public abstract class WiredAction implements IWiredItem {
     public abstract void onHandle(RoomPlayer player);

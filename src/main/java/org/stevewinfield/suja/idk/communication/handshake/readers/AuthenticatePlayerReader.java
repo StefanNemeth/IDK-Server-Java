@@ -4,10 +4,6 @@
  */
 package org.stevewinfield.suja.idk.communication.handshake.readers;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.IDK;
@@ -19,31 +15,27 @@ import org.stevewinfield.suja.idk.communication.achievement.writers.AchievementD
 import org.stevewinfield.suja.idk.communication.friendstream.writers.FriendStreamEventWriter;
 import org.stevewinfield.suja.idk.communication.handshake.writers.AuthenticatedWriter;
 import org.stevewinfield.suja.idk.communication.moderation.writers.ModerationToolWriter;
-import org.stevewinfield.suja.idk.communication.player.writers.ActivityPointsWriter;
-import org.stevewinfield.suja.idk.communication.player.writers.AvailabilityStatusWriter;
-import org.stevewinfield.suja.idk.communication.player.writers.InfoFeedEnableMessageWriter;
-import org.stevewinfield.suja.idk.communication.player.writers.LevelRightsListWriter;
-import org.stevewinfield.suja.idk.communication.player.writers.PlayerFavoriteRoomsWriter;
-import org.stevewinfield.suja.idk.communication.player.writers.PlayerHomeRoomWriter;
-import org.stevewinfield.suja.idk.communication.player.writers.SubscriptionInfoWriter;
+import org.stevewinfield.suja.idk.communication.player.writers.*;
 import org.stevewinfield.suja.idk.game.friendstream.FriendStreamEventData;
 import org.stevewinfield.suja.idk.game.levels.ClubSubscriptionLevel;
 import org.stevewinfield.suja.idk.game.miscellaneous.NotifyType;
 import org.stevewinfield.suja.idk.network.sessions.Session;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class AuthenticatePlayerReader implements IMessageReader {
     private static Logger logger = Logger.getLogger(AuthenticatePlayerReader.class);
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (session.isAuthenticated())
+        if (session.isAuthenticated()) {
             return;
+        }
 
         if (!session.tryAuthenticate(reader.readUTF())) {
-            session
-            .sendNotification(
-            NotifyType.MULTI_ALERT,
-            Translations.getTranslation("fail_authenticate"));
+            session.sendNotification(NotifyType.MULTI_ALERT, Translations.getTranslation("fail_authenticate"));
             return;
         }
 
@@ -53,25 +45,20 @@ public class AuthenticatePlayerReader implements IMessageReader {
 
         final QueuedMessageWriter queue = new QueuedMessageWriter();
         queue.push(new AuthenticatedWriter());
-        queue.push(new LevelRightsListWriter(session.getPlayerInstance().hasVIP(), session.getPlayerInstance()
-        .hasClub(), session.getPlayerInstance().hasRight("hotel_admin")));
+        queue.push(new LevelRightsListWriter(session.getPlayerInstance().hasVIP(), session.getPlayerInstance().hasClub(), session.getPlayerInstance().hasRight("hotel_admin")));
         queue.push(new PlayerFavoriteRoomsWriter(session.getPlayerInstance().getFavoriteRooms()));
-        queue.push(new AchievementDataListWriter(Bootloader.getGame().getAchievementManager().getAchievements()
-        .values()));
+        queue.push(new AchievementDataListWriter(Bootloader.getGame().getAchievementManager().getAchievements().values()));
 
         if (session.getPlayerInstance().hasRight("moderation_tool")) {
-            queue.push(new ModerationToolWriter(session.getPlayerInstance(), Bootloader.getGame()
-            .getModerationManager().getPresetMessages().values(), Bootloader.getGame().getModerationManager()
-            .getPresetActions()));
+            queue.push(new ModerationToolWriter(session.getPlayerInstance(), Bootloader.getGame().getModerationManager().getPresetMessages().values(), Bootloader.getGame().getModerationManager().getPresetActions()));
         }
 
         queue.push(new AvailabilityStatusWriter());
         queue.push(new InfoFeedEnableMessageWriter(true)); // todo
-        queue.push(new ActivityPointsWriter(session.getPlayerInstance().getInformation().getPixelsBalance(), session
-        .getPlayerInstance().getInformation().getShellsBalance()));
+        queue.push(new ActivityPointsWriter(session.getPlayerInstance().getInformation().getPixelsBalance(), session.getPlayerInstance().getInformation().getShellsBalance()));
 
         final long timestamp = Bootloader.getTimestamp();
-        final long diff[] = new long[] { 0, 0, 0, 0, 0 };
+        final long diff[] = new long[]{0, 0, 0, 0, 0};
 
         if (session.getPlayerInstance().getSubscriptionManager().getExpireTime() >= timestamp) {
             long diffInSeconds = (session.getPlayerInstance().getSubscriptionManager().getExpireTime() - timestamp);
@@ -85,16 +72,10 @@ public class AuthenticatePlayerReader implements IMessageReader {
 
         final int days = (int) (diff[1] - (31 * diff[0]));
 
-        queue.push(new SubscriptionInfoWriter("club_habbo", days, (session.getPlayerInstance().getSubscriptionManager()
-        .getBaseLevel() != ClubSubscriptionLevel.NONE
-        && days > 5 ? 2 : 0),
-        (session.getPlayerInstance().getSubscriptionManager().getBaseLevel() == ClubSubscriptionLevel.VIP), session
-        .getPlayerInstance().getSubscriptionManager().getBaseLevel() == ClubSubscriptionLevel.NONE,
-        IDK.CATA_CLUB_OFFER_PRICE_REGULAR, IDK.CATA_CLUB_OFFER_PRICE_NOW));
+        queue.push(new SubscriptionInfoWriter("club_habbo", days, (session.getPlayerInstance().getSubscriptionManager().getBaseLevel() != ClubSubscriptionLevel.NONE && days > 5 ? 2 : 0), (session.getPlayerInstance().getSubscriptionManager().getBaseLevel() == ClubSubscriptionLevel.VIP), session.getPlayerInstance().getSubscriptionManager().getBaseLevel() == ClubSubscriptionLevel.NONE, IDK.CATA_CLUB_OFFER_PRICE_REGULAR, IDK.CATA_CLUB_OFFER_PRICE_NOW));
 
         if (session.getPlayerInstance().getInformation().isStreamEnabled()) {
-            final List<FriendStreamEventData> events = new ArrayList<FriendStreamEventData>(session.getFriendStream()
-            .getEvents());
+            final List<FriendStreamEventData> events = new ArrayList<FriendStreamEventData>(session.getFriendStream().getEvents());
             Collections.reverse(events);
 
             queue.push(new FriendStreamEventWriter(events));

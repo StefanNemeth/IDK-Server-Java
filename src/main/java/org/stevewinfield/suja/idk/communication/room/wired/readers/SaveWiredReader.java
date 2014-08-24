@@ -14,18 +14,21 @@ public class SaveWiredReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isInRoom())
+        if (!session.isAuthenticated() || !session.isInRoom()) {
             return;
+        }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
-        if (room == null || !room.hasRights(session, true))
+        if (room == null || !room.hasRights(session, true)) {
             return;
+        }
 
         final int itemId = reader.readInteger();
 
-        if (!room.getRoomItems().containsKey(itemId))
+        if (!room.getRoomItems().containsKey(itemId)) {
             return;
+        }
 
         room.getWiredHandler().saveWired(room.getRoomItems().get(itemId), reader);
     }

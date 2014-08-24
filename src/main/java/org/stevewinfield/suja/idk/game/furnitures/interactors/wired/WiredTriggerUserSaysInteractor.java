@@ -13,8 +13,7 @@ public class WiredTriggerUserSaysInteractor extends WiredInteractor {
 
     @Override
     public MessageWriter getWiredDialog(final RoomItem item) {
-        return new WiredTriggerUserSaysWriter(item, item.getTermFlags().length > 0 ? item.getTermFlags()[0] : "",
-        item.getTermFlags().length > 1 && item.getTermFlags()[1].equals("1"));
+        return new WiredTriggerUserSaysWriter(item, item.getTermFlags().length > 0 ? item.getTermFlags()[0] : "", item.getTermFlags().length > 1 && item.getTermFlags()[1].equals("1"));
     }
 
 }

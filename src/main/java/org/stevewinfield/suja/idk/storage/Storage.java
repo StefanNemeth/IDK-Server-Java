@@ -4,14 +4,13 @@
  */
 package org.stevewinfield.suja.idk.storage;
 
+import com.jolbox.bonecp.BoneCP;
+import org.apache.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-
-import org.apache.log4j.Logger;
-
-import com.jolbox.bonecp.BoneCP;
 
 public class Storage {
     private static Logger logger = Logger.getLogger(Storage.class);

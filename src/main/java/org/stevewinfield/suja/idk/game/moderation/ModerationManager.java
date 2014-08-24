@@ -4,14 +4,14 @@
  */
 package org.stevewinfield.suja.idk.game.moderation;
 
+import org.apache.log4j.Logger;
+import org.magicwerk.brownies.collections.GapList;
+import org.stevewinfield.suja.idk.Bootloader;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.log4j.Logger;
-import org.magicwerk.brownies.collections.GapList;
-import org.stevewinfield.suja.idk.Bootloader;
 
 public class ModerationManager {
     private static Logger logger = Logger.getLogger(ModerationManager.class);
@@ -66,9 +66,7 @@ public class ModerationManager {
 
     public void logAction(final int moderatorId, final String logText) {
         try {
-            final PreparedStatement statement = Bootloader.getStorage().queryParams(
-            "INSERT INTO moderation_logs (moderator_id, log_text, timestamp) VALUES (" + moderatorId + ", ?, "
-            + Bootloader.getTimestamp() + ")");
+            final PreparedStatement statement = Bootloader.getStorage().queryParams("INSERT INTO moderation_logs (moderator_id, log_text, timestamp) VALUES (" + moderatorId + ", ?, " + Bootloader.getTimestamp() + ")");
             statement.setString(1, logText);
             statement.execute();
         } catch (final SQLException ex) {

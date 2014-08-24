@@ -16,7 +16,7 @@ public class SubscriptionStatusWriter extends MessageWriter {
         super(OperationCodes.getOutgoingOpCode("SubscriptionStatus"));
 
         final long timestamp = Bootloader.getTimestamp();
-        final long diff[] = new long[] { 0, 0, 0, 0, 0 };
+        final long diff[] = new long[]{0, 0, 0, 0, 0};
 
         if (subscriptionManager.getExpireTime() >= timestamp) {
             long diffInSeconds = (subscriptionManager.getExpireTime() - timestamp);

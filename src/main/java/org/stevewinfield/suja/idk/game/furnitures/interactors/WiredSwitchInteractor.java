@@ -14,8 +14,9 @@ public class WiredSwitchInteractor extends DefaultSwitchInteractor {
     public void onTrigger(final RoomPlayer player, final RoomItem item, final int request, final boolean hasRights) {
         super.onTrigger(player, item, request, hasRights);
 
-        if (!hasRights && item.getBase().hasRightCheck())
+        if (!hasRights && item.getBase().hasRightCheck()) {
             return;
+        }
 
         if (!item.isTouching(player.getPosition(), player.getRotation(), true)) {
             final Vector2 goal = item.getFrontPosition(player.getPosition().getVector2());

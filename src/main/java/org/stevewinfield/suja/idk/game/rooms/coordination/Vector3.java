@@ -60,11 +60,13 @@ public class Vector3 {
         int y = 0;
         int z = 0;
 
-        if (bits.length > 1)
+        if (bits.length > 1) {
             y = Integer.valueOf(bits[1]);
+        }
 
-        if (bits.length > 2)
+        if (bits.length > 2) {
             z = Integer.valueOf(bits[2]);
+        }
 
         return new Vector3(x, y, z);
     }

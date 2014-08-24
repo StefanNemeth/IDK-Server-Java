@@ -4,10 +4,10 @@
  */
 package org.stevewinfield.suja.idk.game.catalog;
 
+import org.apache.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.apache.log4j.Logger;
 
 public class CatalogClubOffer {
     private static Logger logger = Logger.getLogger(CatalogClubOffer.class);
@@ -41,7 +41,9 @@ public class CatalogClubOffer {
         int correctedLength = length;
 
         if (false) // upgrade? nop
+        {
             correctedLength += 31;
+        }
 
         return (int) Math.ceil(correctedLength / 31);
     }

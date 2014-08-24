@@ -17,19 +17,18 @@ public class GetModerationRoomInfoReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.getPlayerInstance().hasRight("moderation_tool"))
+        if (!session.isAuthenticated() || !session.getPlayerInstance().hasRight("moderation_tool")) {
             return;
+        }
 
         final RoomInformation info = Bootloader.getGame().getRoomManager().getRoomInformation(reader.readInteger());
 
         if (info == null) {
-            session.sendNotification(NotifyType.MOD_ALERT,
-            Translations.getTranslation("fail_load_room_information"));
+            session.sendNotification(NotifyType.MOD_ALERT, Translations.getTranslation("fail_load_room_information"));
             return;
         }
 
-        session.writeMessage(new ModerationRoomInfoWriter(info, Bootloader.getGame().getRoomManager()
-        .getLoadedRoomInstance(info.getId())));
+        session.writeMessage(new ModerationRoomInfoWriter(info, Bootloader.getGame().getRoomManager().getLoadedRoomInstance(info.getId())));
     }
 
 }

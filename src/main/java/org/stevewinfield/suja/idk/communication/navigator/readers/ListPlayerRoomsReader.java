@@ -13,8 +13,9 @@ public class ListPlayerRoomsReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
         session.writeMessage(new NavigatorListRoomsWriter(0, 5, "", session.getPlayerInstance().getRooms()));
     }

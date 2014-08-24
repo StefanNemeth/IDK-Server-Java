@@ -15,13 +15,13 @@ public class InitializeMessengerReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
         final QueuedMessageWriter queue = new QueuedMessageWriter();
         queue.push(new MessengerFriendListWriter(session.getPlayerMessenger().getBuddies().values()));
-        queue.push(new MessengerRequestListWriter(session.getPlayerInstance().getInformation().getId(), session
-        .getPlayerMessenger().getRequests().values()));
+        queue.push(new MessengerRequestListWriter(session.getPlayerInstance().getInformation().getId(), session.getPlayerMessenger().getRequests().values()));
         session.writeMessage(queue);
     }
 

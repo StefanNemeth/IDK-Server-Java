@@ -4,8 +4,6 @@
  */
 package org.stevewinfield.suja.idk.network;
 
-import java.net.InetSocketAddress;
-
 import org.apache.log4j.Logger;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.ChannelException;
@@ -13,6 +11,8 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.stevewinfield.suja.idk.network.codec.NetworkDecoder;
 import org.stevewinfield.suja.idk.network.codec.NetworkEncoder;
 import org.stevewinfield.suja.idk.threadpools.WorkerTasks;
+
+import java.net.InetSocketAddress;
 
 public class ConnectionListener {
     private static Logger logger = Logger.getLogger(ConnectionListener.class);
@@ -26,8 +26,7 @@ public class ConnectionListener {
     public ConnectionListener(final String ip, final int port) {
         this.ip = ip;
         this.port = port;
-        this.factory = new NioServerSocketChannelFactory(WorkerTasks.getNettyBossExecutor(),
-        WorkerTasks.getNettyWorkerExecutor());
+        this.factory = new NioServerSocketChannelFactory(WorkerTasks.getNettyBossExecutor(), WorkerTasks.getNettyWorkerExecutor());
         this.bootstrap = new ServerBootstrap(this.factory);
     }
 

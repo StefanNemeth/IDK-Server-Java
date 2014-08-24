@@ -4,12 +4,12 @@
  */
 package org.stevewinfield.suja.idk.game.rooms.coordination;
 
+import org.stevewinfield.suja.idk.IDK;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.stevewinfield.suja.idk.IDK;
 
 public class Pathfinder {
     public static class Node {
@@ -50,9 +50,7 @@ public class Pathfinder {
         }
     }
 
-    public static final Vector2[] DIRECTIONS = new Vector2[] { new Vector2(-1, 0), new Vector2(0, -1),
-            new Vector2(1, 0), new Vector2(0, 1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 1),
-            new Vector2(1, -1) };
+    public static final Vector2[] DIRECTIONS = new Vector2[]{new Vector2(-1, 0), new Vector2(0, -1), new Vector2(1, 0), new Vector2(0, 1), new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1)};
 
     public static Node getPathInArray(final int[][] field, final double[][] heights, final Vector2 start, final Vector2 goal) {
         return getPathInArray(field, heights, start, goal, false);
@@ -85,15 +83,9 @@ public class Pathfinder {
             for (final Vector2 p : DIRECTIONS) {
                 final int x = qx + p.getX();
                 final int y = qy + p.getY();
-                if (x < 0
-                || y < 0
-                || heights.length <= x
-                || heights[x].length <= y
-                || field.length <= x
-                || field[x].length <= y
-                || heights[x][y]
-                - (q.getParent() == null ? startHeight : heights[q.getParent().getX()][q.getParent().getY()]) >= IDK.ROOM_MAX_WALK_ALTITUDE_DIFFERENCE)
+                if (x < 0 || y < 0 || heights.length <= x || heights[x].length <= y || field.length <= x || field[x].length <= y || heights[x][y] - (q.getParent() == null ? startHeight : heights[q.getParent().getX()][q.getParent().getY()]) >= IDK.ROOM_MAX_WALK_ALTITUDE_DIFFERENCE) {
                     continue;
+                }
                 final int f = field[x][y];
                 boolean walkOn = f == TileState.OPEN || override;
                 if (x == goal.getX() && y == goal.getY()) {
@@ -117,10 +109,12 @@ public class Pathfinder {
                     return n;
                 }
                 boolean add = true;
-                if (fVals.containsKey(n) && fVals.get(n) <= n.f)
+                if (fVals.containsKey(n) && fVals.get(n) <= n.f) {
                     add = false;
-                if (add)
+                }
+                if (add) {
                     addToList(n, openList, fVals);
+                }
             }
             addToList(q, closedList, fVals);
         }

@@ -13,8 +13,9 @@ public class GetOfficialRoomsReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
         session.writeMessage(Bootloader.getGame().getNavigatorListManager().getOfficialItemsWriter());
     }

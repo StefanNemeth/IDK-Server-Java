@@ -44,11 +44,11 @@ public class MoodlightData {
         for (int i = 1; i <= 3; i++) {
             final MoodlightPreset preset = presets.get(i);
 
-            if (i > 1)
+            if (i > 1) {
                 flagData += ";";
+            }
 
-            flagData += i + "," + preset.getColorCode() + "," + preset.getColorIntensity() + ","
-            + (preset.isOnlyBackground() ? "1" : "0");
+            flagData += i + "," + preset.getColorCode() + "," + preset.getColorIntensity() + "," + (preset.isOnlyBackground() ? "1" : "0");
         }
 
         return flagData;
@@ -57,11 +57,11 @@ public class MoodlightData {
     public String getDisplayData() {
         MoodlightPreset currentPreset = new MoodlightPreset("#000000", false, 255);
 
-        if (presets.containsKey(this.currentPreset))
+        if (presets.containsKey(this.currentPreset)) {
             currentPreset = presets.get(this.currentPreset);
+        }
 
-        return (enabled ? "2" : "1") + "," + this.currentPreset + "," + (currentPreset.isOnlyBackground() ? "2" : "1")
-        + "," + currentPreset.getColorCode() + "," + currentPreset.getColorIntensity();
+        return (enabled ? "2" : "1") + "," + this.currentPreset + "," + (currentPreset.isOnlyBackground() ? "2" : "1") + "," + currentPreset.getColorCode() + "," + currentPreset.getColorIntensity();
     }
 
     public static MoodlightData getInstance(final String itemFlags) {
@@ -70,8 +70,9 @@ public class MoodlightData {
 
         final Map<Integer, MoodlightPreset> presets = new ConcurrentHashMap<Integer, MoodlightPreset>();
 
-        for (int i = 1; i <= 3; i++)
+        for (int i = 1; i <= 3; i++) {
             presets.put(i, new MoodlightPreset("#000000", false, 255));
+        }
 
         final String[] majors = itemFlags.split("\\|");
 
@@ -102,17 +103,17 @@ public class MoodlightData {
 
     public static boolean isValidColor(final String colorCode) {
         switch (colorCode) {
-        case "#000000":
-        case "#0053F7":
-        case "#EA4532":
-        case "#82F349":
-        case "#74F5F5":
-        case "#E759DE":
-        case "#F2F851":
-            return true;
+            case "#000000":
+            case "#0053F7":
+            case "#EA4532":
+            case "#82F349":
+            case "#74F5F5":
+            case "#E759DE":
+            case "#F2F851":
+                return true;
 
-        default:
-            return false;
+            default:
+                return false;
         }
     }
 }

@@ -10,8 +10,7 @@ import org.stevewinfield.suja.idk.game.rooms.coordination.Vector3;
 
 public class RollerEventWriter extends MessageWriter {
 
-    public RollerEventWriter(final Vector3 source, final Vector3 target, final int playerId, final int rollerId, final int itemId,
-    final boolean itemMode) {
+    public RollerEventWriter(final Vector3 source, final Vector3 target, final int playerId, final int rollerId, final int itemId, final boolean itemMode) {
         super(OperationCodes.getOutgoingOpCode("RollerEvent"));
         super.push(source.getX());
         super.push(source.getY());

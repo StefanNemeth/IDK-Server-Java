@@ -4,13 +4,13 @@
  */
 package org.stevewinfield.suja.idk.game.rooms.coordination;
 
-import java.util.Collection;
-
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.room.writers.RoomRelativeHeightmapWriter;
 import org.stevewinfield.suja.idk.game.furnitures.FurnitureType;
 import org.stevewinfield.suja.idk.game.rooms.RoomItem;
 import org.stevewinfield.suja.idk.game.rooms.RoomModel;
+
+import java.util.Collection;
 
 public class Gamemap {
 
@@ -55,23 +55,24 @@ public class Gamemap {
             }
         }
         for (final RoomItem item : items) {
-            if (item.getBase().getType().equals(FurnitureType.WALL))
+            if (item.getBase().getType().equals(FurnitureType.WALL)) {
                 continue;
+            }
 
             for (final Vector2 posAct : item.getAffectedTiles()) {
                 RoomItem highestX = null;
 
                 for (final RoomItem yitem : items) {
-                    for (final Vector2 posAct2 : yitem.getAffectedTiles())
-                        if (posAct2.getX() == posAct.getX() && posAct2.getY() == posAct.getY()
-                        && (highestX == null || yitem.getAbsoluteHeight() > highestX.getAbsoluteHeight()))
+                    for (final Vector2 posAct2 : yitem.getAffectedTiles()) {
+                        if (posAct2.getX() == posAct.getX() && posAct2.getY() == posAct.getY() && (highestX == null || yitem.getAbsoluteHeight() > highestX.getAbsoluteHeight())) {
                             highestX = yitem;
+                        }
+                    }
                 }
 
                 this.updateTile(posAct, highestX.getState());
 
-                final double altitude = highestX.getState() == TileState.SITABLE || highestX.getState() == TileState.LAYABLE ? highestX
-                .getPosition().getAltitude() : highestX.getAbsoluteHeight();
+                final double altitude = highestX.getState() == TileState.SITABLE || highestX.getState() == TileState.LAYABLE ? highestX.getPosition().getAltitude() : highestX.getAbsoluteHeight();
 
                 if (this.heightMap[posAct.getX()][posAct.getY()] < altitude) {
                     this.heightMap[posAct.getX()][posAct.getY()] = altitude;

@@ -19,17 +19,17 @@ public class TradeCompleteReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isInRoom())
+        if (!session.isAuthenticated() || !session.isInRoom()) {
             return;
+        }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
         Trade trade = null;
 
-        if (room == null
-        || (trade = room.getTradeManager().getTrade(session.getPlayerInstance().getInformation().getId())) == null
-        || !trade.acceptTrade(session.getPlayerInstance().getInformation().getId()))
+        if (room == null || (trade = room.getTradeManager().getTrade(session.getPlayerInstance().getInformation().getId())) == null || !trade.acceptTrade(session.getPlayerInstance().getInformation().getId())) {
             return;
+        }
 
         if (trade.getStage() == TradeStage.FINALIZED) { // deliver items
             room.getTradeManager().stopTrade(session.getPlayerInstance().getInformation().getId());
@@ -40,21 +40,20 @@ public class TradeCompleteReader implements IMessageReader {
             session.writeMessage(finalized);
 
             Session targetSession = null;
-            final int targetId = session.getPlayerInstance().getInformation().getId() == trade.getPlayerOne() ? trade
-            .getPlayerTwo() : trade.getPlayerOne();
+            final int targetId = session.getPlayerInstance().getInformation().getId() == trade.getPlayerOne() ? trade.getPlayerTwo() : trade.getPlayerOne();
 
-            for (final RoomPlayer player : room.getRoomPlayers().values())
-                if (player.getSession() != null
-                && player.getSession().getPlayerInstance().getInformation().getId() == targetId)
+            for (final RoomPlayer player : room.getRoomPlayers().values()) {
+                if (player.getSession() != null && player.getSession().getPlayerInstance().getInformation().getId() == targetId) {
                     targetSession = player.getSession();
+                }
+            }
 
             if (targetSession != null) {
                 room.getTradeManager().stopTrade(targetSession.getPlayerInstance().getInformation().getId());
                 targetSession.getRoomPlayer().removeStatus("trd");
                 targetSession.getRoomPlayer().update();
                 targetSession.writeMessage(finalized);
-                trade.deliverItems(targetId == trade.getPlayerOne() ? targetSession : session,
-                targetId == trade.getPlayerTwo() ? targetSession : session);
+                trade.deliverItems(targetId == trade.getPlayerOne() ? targetSession : session, targetId == trade.getPlayerTwo() ? targetSession : session);
             }
         }
     }

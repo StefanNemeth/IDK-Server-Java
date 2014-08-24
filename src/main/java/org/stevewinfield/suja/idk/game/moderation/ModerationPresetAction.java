@@ -4,11 +4,11 @@
  */
 package org.stevewinfield.suja.idk.game.moderation;
 
+import org.apache.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.log4j.Logger;
 
 public class ModerationPresetAction {
     private static Logger logger = Logger.getLogger(ModerationPresetAction.class);

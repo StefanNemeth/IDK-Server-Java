@@ -4,10 +4,10 @@
  */
 package org.stevewinfield.suja.idk.game.moderation;
 
+import org.apache.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.apache.log4j.Logger;
 
 public class ModerationPresetMessage {
     private static Logger logger = Logger.getLogger(ModerationPresetMessage.class);
@@ -31,8 +31,7 @@ public class ModerationPresetMessage {
     public void set(final ResultSet row) {
         try {
             this.id = row.getInt("id");
-            this.type = row.getString("type").equals("room") ? ModerationPresetMessageType.ROOM_MESSAGE
-            : ModerationPresetMessageType.PLAYER_MESSAGE;
+            this.type = row.getString("type").equals("room") ? ModerationPresetMessageType.ROOM_MESSAGE : ModerationPresetMessageType.PLAYER_MESSAGE;
             this.message = row.getString("message");
         } catch (final SQLException ex) {
             logger.error("SQL Exception", ex);

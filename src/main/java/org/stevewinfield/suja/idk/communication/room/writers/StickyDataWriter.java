@@ -13,8 +13,7 @@ public class StickyDataWriter extends MessageWriter {
     public StickyDataWriter(final RoomItem item) {
         super(OperationCodes.getOutgoingOpCode("StickyData"));
         super.push(item.getItemId() + "");
-        super.push(item.getTermFlags() != null && item.getTermFlags().length > 1 ? item.getTermFlags()[0] + " "
-        + item.getTermFlags()[1] : "");
+        super.push(item.getTermFlags() != null && item.getTermFlags().length > 1 ? item.getTermFlags()[0] + " " + item.getTermFlags()[1] : "");
     }
 
 }

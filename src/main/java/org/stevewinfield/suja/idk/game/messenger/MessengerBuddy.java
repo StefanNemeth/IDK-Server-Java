@@ -4,14 +4,14 @@
  */
 package org.stevewinfield.suja.idk.game.messenger;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.communication.ISerialize;
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.network.sessions.Session;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class MessengerBuddy implements ISerialize {
     private static Logger logger = Logger.getLogger(MessengerBuddy.class);

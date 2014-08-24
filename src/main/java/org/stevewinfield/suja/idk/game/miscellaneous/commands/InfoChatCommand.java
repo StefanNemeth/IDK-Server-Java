@@ -20,8 +20,7 @@ public class InfoChatCommand implements IChatCommand {
 
     @Override
     public boolean execute(final RoomPlayer player, final ChatCommandArguments arguments) {
-        player.getSession().sendNotification(NotifyType.STAFF_ALERT,
-                Translations.getTranslation("info_chat_command", IDK.VERSION, IDK.BUILD_NUMBER, "Steve Winfield", "Rhinnodanny."));
+        player.getSession().sendNotification(NotifyType.STAFF_ALERT, Translations.getTranslation("info_chat_command", IDK.VERSION, IDK.BUILD_NUMBER, "Steve Winfield", "Rhinnodanny."));
         return true;
     }
 

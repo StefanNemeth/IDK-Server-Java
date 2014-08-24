@@ -4,13 +4,14 @@
  */
 package org.stevewinfield.suja.idk.game.catalog;
 
-import java.sql.ResultSet;
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.communication.ISerialize;
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.game.furnitures.Furniture;
 import org.stevewinfield.suja.idk.game.furnitures.FurnitureInteractor;
+
+import java.sql.ResultSet;
 
 public class CatalogItem implements ISerialize {
     private static Logger logger = Logger.getLogger(CatalogItem.class);
@@ -69,13 +70,14 @@ public class CatalogItem implements ISerialize {
             this.pageId = row.getInt("page_id");
             this.baseItem = Bootloader.getGame().getFurnitureManager().getFurniture(row.getInt("furni_id"));
             switch (this.baseItem.getInteractor()) {
-            case FurnitureInteractor.WALLPAPER:
-            case FurnitureInteractor.FLOOR:
-            case FurnitureInteractor.LANDSCAPE:
-                final String[] split = this.displayName.split("_");
-                if (split.length == 3)
-                    this.secondaryData = split[2];
-                break;
+                case FurnitureInteractor.WALLPAPER:
+                case FurnitureInteractor.FLOOR:
+                case FurnitureInteractor.LANDSCAPE:
+                    final String[] split = this.displayName.split("_");
+                    if (split.length == 3) {
+                        this.secondaryData = split[2];
+                    }
+                    break;
             }
 
             this.costsPixels = row.getInt("costs_pixels");

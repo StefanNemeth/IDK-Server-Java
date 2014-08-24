@@ -4,14 +4,14 @@
  */
 package org.stevewinfield.suja.idk.game.catalog;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.communication.ISerialize;
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.game.furnitures.Furniture;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class CatalogClubGift implements ISerialize {
     private static Logger logger = Logger.getLogger(CatalogClubGift.class);

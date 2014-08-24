@@ -4,10 +4,6 @@
  */
 package org.stevewinfield.suja.idk.game.messenger;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.communication.messenger.writers.MessageReceivedWriter;
@@ -15,6 +11,10 @@ import org.stevewinfield.suja.idk.communication.messenger.writers.MessengerInvit
 import org.stevewinfield.suja.idk.communication.messenger.writers.MessengerUpdateListWriter;
 import org.stevewinfield.suja.idk.game.players.PlayerInformation;
 import org.stevewinfield.suja.idk.network.sessions.Session;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Messenger {
     private static Logger logger = Logger.getLogger(Messenger.class);
@@ -74,15 +74,10 @@ public class Messenger {
         this.onlineBuddies = new ConcurrentHashMap<Integer, MessengerBuddy>();
         this.requests = new ConcurrentHashMap<Integer, MessengerRequest>();
         try {
-            final ResultSet row = Bootloader
-            .getStorage()
-            .queryParams(
-            "SELECT * FROM player_friends WHERE player_req_id = " + this.player.getId() + " OR player_acc_id = "
-            + this.player.getId() + " ORDER BY id").executeQuery();
+            final ResultSet row = Bootloader.getStorage().queryParams("SELECT * FROM player_friends WHERE player_req_id = " + this.player.getId() + " OR player_acc_id = " + this.player.getId() + " ORDER BY id").executeQuery();
             while (row.next()) {
                 if (row.getInt("is_request") == 1) {
-                    if (row.getInt("player_req_id") != player.getId()
-                    && !this.requests.containsKey(row.getInt("player_req_id"))) {
+                    if (row.getInt("player_req_id") != player.getId() && !this.requests.containsKey(row.getInt("player_req_id"))) {
                         final MessengerRequest request = new MessengerRequest();
                         request.set(row);
                         this.requests.put(row.getInt("player_req_id"), request);
@@ -96,15 +91,14 @@ public class Messenger {
                     playerId = row.getInt("player_req_id");
                 }
                 if (playerId > 0 && !this.buddies.containsKey(playerId)) {
-                    final ResultSet userInfo = Bootloader.getStorage()
-                    .queryParams("SELECT id, nickname, figurecode, motto FROM players WHERE id = " + playerId)
-                    .executeQuery();
+                    final ResultSet userInfo = Bootloader.getStorage().queryParams("SELECT id, nickname, figurecode, motto FROM players WHERE id = " + playerId).executeQuery();
                     if (userInfo.next()) {
                         final MessengerBuddy buddy = new MessengerBuddy();
                         buddy.set(userInfo);
                         this.buddies.put(playerId, buddy);
-                        if (buddy.isOnline())
+                        if (buddy.isOnline()) {
                             this.onlineBuddies.put(playerId, buddy);
+                        }
                     }
                     userInfo.close();
                 }

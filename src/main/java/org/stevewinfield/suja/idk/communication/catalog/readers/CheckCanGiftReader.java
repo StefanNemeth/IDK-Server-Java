@@ -15,8 +15,9 @@ public class CheckCanGiftReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
         final int catalogItemId = reader.readInteger();
         boolean canGift = false;

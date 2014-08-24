@@ -15,12 +15,12 @@ public class GetPlayerBalanceReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
         final QueuedMessageWriter queue = new QueuedMessageWriter();
         queue.push(new CreditsBalanceWriter(session.getPlayerInstance().getInformation().getCreditsBalance()));
-        queue.push(new ActivityPointsWriter(session.getPlayerInstance().getInformation().getPixelsBalance(), session
-        .getPlayerInstance().getInformation().getShellsBalance()));
+        queue.push(new ActivityPointsWriter(session.getPlayerInstance().getInformation().getPixelsBalance(), session.getPlayerInstance().getInformation().getShellsBalance()));
         session.writeMessage(queue);
     }
 

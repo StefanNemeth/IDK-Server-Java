@@ -10,8 +10,7 @@ import org.stevewinfield.suja.idk.game.players.PlayerInformation;
 
 public class PlayerInfoUpdateWriter extends MessageWriter {
 
-    public PlayerInfoUpdateWriter(final int actorId, final String avatar, final int gender, final String motto,
-    final int score) {
+    public PlayerInfoUpdateWriter(final int actorId, final String avatar, final int gender, final String motto, final int score) {
         super(OperationCodes.getOutgoingOpCode("PlayerInfoUpdate"));
         super.push(actorId);
         super.push(avatar);

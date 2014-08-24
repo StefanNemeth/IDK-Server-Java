@@ -30,15 +30,16 @@ public class WiredActionShowMessage extends WiredAction {
 
     @Override
     public void onHandle(final RoomPlayer player) {
-        if (message.length() > 0)
+        if (message.length() > 0) {
             player.whisper(player.getSession(), player.getVirtualId(), message);
+        }
     }
 
     @Override
     public String[] getObject(final MessageReader reader) {
         reader.readBoolean(); // skip
         final String message = InputFilter.filterString(reader.readUTF(), true);
-        return new String[] { message.length() > 100 ? message.substring(0, 100) : message };
+        return new String[]{message.length() > 100 ? message.substring(0, 100) : message};
     }
 
     @Override

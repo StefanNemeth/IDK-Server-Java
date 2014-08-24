@@ -10,8 +10,7 @@ import org.stevewinfield.suja.idk.game.achievements.Achievement;
 
 public class AchievementUnlockedWriter extends MessageWriter {
 
-    public AchievementUnlockedWriter(final Achievement achievement, final int level, final int pointsReward,
-    final int pixelsReward) {
+    public AchievementUnlockedWriter(final Achievement achievement, final int level, final int pointsReward, final int pixelsReward) {
         super(OperationCodes.getOutgoingOpCode("AchievementUnlocked"));
         super.push(achievement.getId());
         super.push(level);

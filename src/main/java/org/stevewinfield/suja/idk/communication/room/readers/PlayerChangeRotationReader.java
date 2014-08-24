@@ -17,23 +17,24 @@ public class PlayerChangeRotationReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isInRoom())
+        if (!session.isAuthenticated() || !session.isInRoom()) {
             return;
+        }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
-        if (room == null || session.getRoomPlayer().isWalking())
+        if (room == null || session.getRoomPlayer().isWalking()) {
             return;
+        }
 
         final RoomPlayer player = session.getRoomPlayer();
         final Vector2 targetPosition = new Vector2(reader.readInteger(), reader.readInteger());
 
-        if ((targetPosition.getX() == player.getPosition().getX() && targetPosition.getY() == player.getPosition()
-        .getY()) || player.getStatusMap().containsKey("sit") || player.getStatusMap().containsKey("lay"))
+        if ((targetPosition.getX() == player.getPosition().getX() && targetPosition.getY() == player.getPosition().getY()) || player.getStatusMap().containsKey("sit") || player.getStatusMap().containsKey("lay")) {
             return;
+        }
 
-        final int rotation = Rotation.calculate(player.getPosition().getX(), player.getPosition().getY(),
-        targetPosition.getX(), targetPosition.getY());
+        final int rotation = Rotation.calculate(player.getPosition().getX(), player.getPosition().getY(), targetPosition.getX(), targetPosition.getY());
 
         boolean update = false;
 

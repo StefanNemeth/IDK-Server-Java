@@ -4,10 +4,10 @@
  */
 package org.stevewinfield.suja.idk.game.rooms;
 
+import org.apache.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.apache.log4j.Logger;
 
 public class RoomCategory {
     private static Logger logger = Logger.getLogger(RoomCategory.class);

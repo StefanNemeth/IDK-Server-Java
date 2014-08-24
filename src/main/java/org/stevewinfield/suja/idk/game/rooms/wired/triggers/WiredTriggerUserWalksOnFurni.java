@@ -4,8 +4,6 @@
  */
 package org.stevewinfield.suja.idk.game.rooms.wired.triggers;
 
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.magicwerk.brownies.collections.GapList;
 import org.stevewinfield.suja.idk.communication.MessageReader;
@@ -14,6 +12,8 @@ import org.stevewinfield.suja.idk.game.rooms.RoomItem;
 import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
 import org.stevewinfield.suja.idk.game.rooms.wired.WiredManager;
 import org.stevewinfield.suja.idk.game.rooms.wired.WiredTrigger;
+
+import java.util.List;
 
 public class WiredTriggerUserWalksOnFurni extends WiredTrigger {
     private static Logger logger = Logger.getLogger(WiredTriggerUserWalksOnFurni.class);
@@ -44,8 +44,9 @@ public class WiredTriggerUserWalksOnFurni extends WiredTrigger {
         this.items = new GapList<Integer>();
         try {
             if (obj.length > 0 && obj[0].length() > 0) {
-                for (final String furni : obj[0].split(","))
+                for (final String furni : obj[0].split(",")) {
                     items.add(Integer.valueOf(furni));
+                }
             }
         } catch (final NumberFormatException e) {
             logger.error("NumberFormatException", e);
@@ -61,12 +62,12 @@ public class WiredTriggerUserWalksOnFurni extends WiredTrigger {
         final int furniAmount = reader.readInteger();
         for (int i = 0; i < furniAmount; i++) {
             final int furniId = reader.readInteger();
-            if (!item.getRoom().getRoomItems().containsKey(furniId)
-            || WiredManager.isWiredItem(item.getRoom().getRoomItems().get(furniId).getBase()))
+            if (!item.getRoom().getRoomItems().containsKey(furniId) || WiredManager.isWiredItem(item.getRoom().getRoomItems().get(furniId).getBase())) {
                 continue;
+            }
             furniString += "," + furniId;
         }
-        return new String[] { furniString.length() > 0 ? furniString.substring(1) : furniString };
+        return new String[]{furniString.length() > 0 ? furniString.substring(1) : furniString};
     }
 
     @Override

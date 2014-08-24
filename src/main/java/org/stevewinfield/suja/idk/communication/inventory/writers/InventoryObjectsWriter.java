@@ -4,11 +4,11 @@
  */
 package org.stevewinfield.suja.idk.communication.inventory.writers;
 
-import java.util.Collection;
-
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.OperationCodes;
 import org.stevewinfield.suja.idk.game.inventory.PlayerItem;
+
+import java.util.Collection;
 
 public class InventoryObjectsWriter extends MessageWriter {
 

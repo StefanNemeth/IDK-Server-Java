@@ -4,14 +4,14 @@
  */
 package org.stevewinfield.suja.idk.game.navigator;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.stevewinfield.suja.idk.collections.NavigatorListHelper;
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.navigator.writers.NavigatorListRoomsWriter;
 import org.stevewinfield.suja.idk.game.rooms.RoomInformation;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class NavigatorList {
 
@@ -25,8 +25,9 @@ public class NavigatorList {
 
     public RoomInformation getInformationEntry(final int id) {
         for (final RoomInformation room : this.rooms) {
-            if (room.getId() == id)
+            if (room.getId() == id) {
                 return room;
+            }
         }
         return null;
     }

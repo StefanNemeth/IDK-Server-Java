@@ -52,9 +52,10 @@ public class WiredTriggerPeriodically extends WiredTrigger {
     public String[] getObject(final MessageReader reader) {
         reader.readInteger();
         int delay = reader.readInteger();
-        if (delay > 120)
+        if (delay > 120) {
             delay = 120;
-        return new String[] { delay + "" };
+        }
+        return new String[]{delay + ""};
     }
 
     @Override

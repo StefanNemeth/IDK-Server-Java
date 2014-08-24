@@ -24,14 +24,16 @@ public class RefreshCatalogCommand implements IChatCommand {
     public boolean execute(final RoomPlayer player, final ChatCommandArguments arguments) {
         final RoomInstance room = player.getRoom();
 
-        if (room == null)
+        if (room == null) {
             return false;
+        }
 
         Bootloader.getGame().getCatalogManager().loadCache();
         final MessageWriter update = new CatalogUpdateWriter();
 
-        for (final Session session : Bootloader.getSessionManager().getSessions())
+        for (final Session session : Bootloader.getSessionManager().getSessions()) {
             session.writeMessage(update);
+        }
 
         return true;
     }

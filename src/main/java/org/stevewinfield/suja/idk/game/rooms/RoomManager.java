@@ -4,18 +4,18 @@
  */
 package org.stevewinfield.suja.idk.game.rooms;
 
+import org.apache.log4j.Logger;
+import org.magicwerk.brownies.collections.GapList;
+import org.stevewinfield.suja.idk.Bootloader;
+import org.stevewinfield.suja.idk.communication.MessageWriter;
+import org.stevewinfield.suja.idk.communication.navigator.writers.RoomCategoriesWriter;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.log4j.Logger;
-import org.magicwerk.brownies.collections.GapList;
-import org.stevewinfield.suja.idk.Bootloader;
-import org.stevewinfield.suja.idk.communication.MessageWriter;
-import org.stevewinfield.suja.idk.communication.navigator.writers.RoomCategoriesWriter;
 
 public class RoomManager {
     private static Logger logger = Logger.getLogger(RoomManager.class);
@@ -36,8 +36,7 @@ public class RoomManager {
                 roomModels.put(models.getString("name"), model);
             }
             logger.info(roomModels.size() + " Room Model(s) loaded.");
-            final ResultSet categories = Bootloader.getStorage().queryParams("SELECT * FROM room_categories ORDER BY id ASC")
-            .executeQuery();
+            final ResultSet categories = Bootloader.getStorage().queryParams("SELECT * FROM room_categories ORDER BY id ASC").executeQuery();
             while (categories.next()) {
                 final RoomCategory category = new RoomCategory();
                 category.set(categories);
@@ -78,11 +77,7 @@ public class RoomManager {
         }
         RoomInformation info = null;
         try {
-            final ResultSet row = Bootloader
-            .getStorage()
-            .queryParams(
-            "SELECT rooms.*, nickname FROM rooms, players WHERE rooms.id=" + roomId
-            + " AND players.id=owner_id ORDER BY name ASC LIMIT 1").executeQuery();
+            final ResultSet row = Bootloader.getStorage().queryParams("SELECT rooms.*, nickname FROM rooms, players WHERE rooms.id=" + roomId + " AND players.id=owner_id ORDER BY name ASC LIMIT 1").executeQuery();
             if (row.next()) {
                 info = new RoomInformation();
                 info.set(row);
@@ -100,11 +95,7 @@ public class RoomManager {
         }
         RoomInstance instance = null;
         try {
-            final ResultSet row = Bootloader
-            .getStorage()
-            .queryParams(
-            "SELECT rooms.*, nickname FROM rooms, players WHERE rooms.id=" + roomId
-            + " AND players.id=owner_id ORDER BY name ASC LIMIT 1").executeQuery();
+            final ResultSet row = Bootloader.getStorage().queryParams("SELECT rooms.*, nickname FROM rooms, players WHERE rooms.id=" + roomId + " AND players.id=owner_id ORDER BY name ASC LIMIT 1").executeQuery();
             if (row.next()) {
                 instance = new RoomInstance();
                 instance.load(row);

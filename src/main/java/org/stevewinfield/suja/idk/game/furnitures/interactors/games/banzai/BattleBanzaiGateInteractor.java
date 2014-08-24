@@ -43,8 +43,9 @@ public class BattleBanzaiGateInteractor extends DefaultInteractor {
         int players = item.getFlagsState();
         final GameTeam team = this.game.getTeam(this.teamId);
 
-        if (team == null)
+        if (team == null) {
             return;
+        }
 
         if (player.getEffectId() > 0 && player.getEffectId() != this.teamId) {
             final GameTeam oldTeam = this.game.getTeam(player.getEffectId());

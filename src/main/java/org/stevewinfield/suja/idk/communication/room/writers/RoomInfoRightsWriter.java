@@ -9,8 +9,7 @@ import org.stevewinfield.suja.idk.communication.OperationCodes;
 
 public class RoomInfoRightsWriter extends MessageWriter {
 
-    public RoomInfoRightsWriter(final boolean isFlat, final int roomId, final boolean hasOwnerRights,
-    final String internalName) {
+    public RoomInfoRightsWriter(final boolean isFlat, final int roomId, final boolean hasOwnerRights, final String internalName) {
         super(OperationCodes.getOutgoingOpCode("RoomInfoRights"));
         super.push(isFlat);
 

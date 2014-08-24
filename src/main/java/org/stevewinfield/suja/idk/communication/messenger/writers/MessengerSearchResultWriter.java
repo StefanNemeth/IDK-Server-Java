@@ -4,11 +4,11 @@
  */
 package org.stevewinfield.suja.idk.communication.messenger.writers;
 
-import java.util.List;
-
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.OperationCodes;
 import org.stevewinfield.suja.idk.game.messenger.MessengerBuddy;
+
+import java.util.List;
 
 public class MessengerSearchResultWriter extends MessageWriter {
 

@@ -8,8 +8,9 @@ public class InputFilter {
 
     public static String filterString(final String x, final boolean removeLinebreaks) {
         String f = x.replace((char) 1, ' ').replace((char) 2, ' ').replace((char) 3, ' ').replace((char) 9, ' ');
-        if (removeLinebreaks)
+        if (removeLinebreaks) {
             f = f.replace((char) 13, ' ').replace((char) 10, ' ');
+        }
         return f;
     }
 

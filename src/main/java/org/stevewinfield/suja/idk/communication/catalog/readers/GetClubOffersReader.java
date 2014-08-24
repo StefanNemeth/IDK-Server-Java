@@ -18,15 +18,16 @@ public class GetClubOffersReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
-        final GapList<CatalogClubOffer> correctedOffers = new GapList<CatalogClubOffer>();
+        final GapList<CatalogClubOffer> correctedOffers = new GapList<>();
 
         for (final CatalogClubOffer offer : Bootloader.getGame().getCatalogManager().getCatalogClubOffers().values()) {
-            if (session.getPlayerInstance().getSubscriptionManager().getBaseLevel() > ClubSubscriptionLevel.BASIC
-            && offer.getType() == CatalogClubOfferType.BASIC)
+            if (session.getPlayerInstance().getSubscriptionManager().getBaseLevel() > ClubSubscriptionLevel.BASIC && offer.getType() == CatalogClubOfferType.BASIC) {
                 continue;
+            }
             correctedOffers.add(offer);
         }
 

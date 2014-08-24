@@ -17,8 +17,7 @@ public class RandomInteractor extends DefaultInteractor {
     public void onTrigger(final RoomPlayer player, final RoomItem item, final int request, final boolean hasRights) {
         super.onTrigger(player, item, request, hasRights);
 
-        if (item.getBase().getType().equals(FurnitureType.FLOOR) && player != null && player.getSession() != null
-        && !item.isTouching(player.getPosition(), player.getRotation(), true)) {
+        if (item.getBase().getType().equals(FurnitureType.FLOOR) && player != null && player.getSession() != null && !item.isTouching(player.getPosition(), player.getRotation(), true)) {
             final Vector2 goal = item.getFrontPosition(player.getPosition().getVector2());
             if (goal != null) {
                 player.moveTo(goal, item.getFrontRotation(goal), item);
@@ -42,12 +41,12 @@ public class RandomInteractor extends DefaultInteractor {
          * Well, hardcoding?.. MAN! YOU CAN DO IT BETTER
          */
         switch (item.getBase().getName().toLowerCase()) {
-        case "habbowheel":
-            timeBreak = 14;
-            break;
-        case "bottle":
-            timeBreak = 4;
-            break;
+            case "habbowheel":
+                timeBreak = 14;
+                break;
+            case "bottle":
+                timeBreak = 4;
+                break;
         }
 
         item.setFlags(-1);

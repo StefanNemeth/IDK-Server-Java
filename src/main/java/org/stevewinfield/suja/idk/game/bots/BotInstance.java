@@ -4,15 +4,15 @@
  */
 package org.stevewinfield.suja.idk.game.bots;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.log4j.Logger;
 import org.magicwerk.brownies.collections.GapList;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.game.players.PlayerInformation;
 import org.stevewinfield.suja.idk.game.rooms.coordination.Vector3;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class BotInstance {
     private static Logger logger = Logger.getLogger(BotInstance.class);
@@ -84,12 +84,10 @@ public class BotInstance {
             this.startRoomId = row.getInt("start_room_id");
             this.botName = row.getString("nickname");
             this.avatar = row.getString("figurecode");
-            this.gender = row.getString("gender").toUpperCase() == "F" ? PlayerInformation.FEMALE_GENDER
-            : PlayerInformation.MALE_GENDER;
+            this.gender = row.getString("gender").toUpperCase() == "F" ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
             this.mission = row.getString("motto");
             this.startRotation = row.getInt("start_rotation");
-            this.startPosition = new Vector3(row.getInt("start_position_x"), row.getInt("start_position_y"),
-            row.getDouble("start_position_altitude"));
+            this.startPosition = new Vector3(row.getInt("start_position_x"), row.getInt("start_position_y"), row.getDouble("start_position_altitude"));
             this.interactorId = row.getInt("interactor");
             this.movingEnabled = row.getInt("moving_enabled") == 1;
         } catch (final SQLException ex) {

@@ -38,7 +38,7 @@ public class WiredTriggerEnterRoom extends WiredTrigger {
     public String[] getObject(final MessageReader reader) {
         reader.readInteger();
         reader.readInteger();
-        return new String[] { InputFilter.filterString(reader.readUTF()) };
+        return new String[]{InputFilter.filterString(reader.readUTF())};
     }
 
     @Override

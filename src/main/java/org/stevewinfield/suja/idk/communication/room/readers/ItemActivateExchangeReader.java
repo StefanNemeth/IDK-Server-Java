@@ -16,15 +16,16 @@ public class ItemActivateExchangeReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isInRoom())
+        if (!session.isAuthenticated() || !session.isInRoom()) {
             return;
+        }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
         RoomItem item = null;
 
-        if (room == null || (item = room.getRoomItems().get(reader.readInteger())) == null
-        || item.getInteractorId() != FurnitureInteractor.EXCHANGE)
+        if (room == null || (item = room.getRoomItems().get(reader.readInteger())) == null || item.getInteractorId() != FurnitureInteractor.EXCHANGE) {
             return;
+        }
 
         item.getInteractor().onTrigger(session.getRoomPlayer(), item, reader.readInteger(), room.hasRights(session));
     }

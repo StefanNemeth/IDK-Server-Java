@@ -15,13 +15,15 @@ public class TakeAllRightsReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isInRoom())
+        if (!session.isAuthenticated() || !session.isInRoom()) {
             return;
+        }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
-        if (room == null || !room.hasRights(session, true))
+        if (room == null || !room.hasRights(session, true)) {
             return;
+        }
 
         for (int i = 0; i < room.getRights().size(); i++) {
             final int playerId = room.getRights().get(i);

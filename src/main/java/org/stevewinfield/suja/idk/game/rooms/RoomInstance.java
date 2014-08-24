@@ -4,15 +4,6 @@
  */
 package org.stevewinfield.suja.idk.game.rooms;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.log4j.Logger;
 import org.magicwerk.brownies.collections.GapList;
 import org.stevewinfield.suja.idk.Bootloader;
@@ -20,26 +11,7 @@ import org.stevewinfield.suja.idk.IDK;
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.QueuedMessageWriter;
 import org.stevewinfield.suja.idk.communication.global.writers.GenericErrorWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RollerEventWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomChatWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomFloorItemPlacedWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomFloorItemRemovedWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomInfoRightsWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomInfoWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomItemUpdatedWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomKickedWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomPlayerCarryItemWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomPlayerDanceWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomPlayerEffectWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomPlayerObjectListWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomPlayerRemovedWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomPlayerStatusListWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomRightsRemovedWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomRightsWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomWallItemMovedWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomWallItemPlacedWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomWallItemRemovedWriter;
-import org.stevewinfield.suja.idk.communication.room.writers.RoomWallsStatusWriter;
+import org.stevewinfield.suja.idk.communication.room.writers.*;
 import org.stevewinfield.suja.idk.communication.trading.writers.TradeAbortedWriter;
 import org.stevewinfield.suja.idk.game.bots.BotInstance;
 import org.stevewinfield.suja.idk.game.bots.BotKeywordReaction;
@@ -49,11 +21,7 @@ import org.stevewinfield.suja.idk.game.messenger.MessengerBuddy;
 import org.stevewinfield.suja.idk.game.miscellaneous.ChatMessage;
 import org.stevewinfield.suja.idk.game.miscellaneous.ChatType;
 import org.stevewinfield.suja.idk.game.navigator.NavigatorList;
-import org.stevewinfield.suja.idk.game.rooms.coordination.Gamemap;
-import org.stevewinfield.suja.idk.game.rooms.coordination.Heightmap;
-import org.stevewinfield.suja.idk.game.rooms.coordination.TileState;
-import org.stevewinfield.suja.idk.game.rooms.coordination.Vector2;
-import org.stevewinfield.suja.idk.game.rooms.coordination.Vector3;
+import org.stevewinfield.suja.idk.game.rooms.coordination.*;
 import org.stevewinfield.suja.idk.game.rooms.tasks.RoomTask;
 import org.stevewinfield.suja.idk.game.rooms.wired.WiredHandler;
 import org.stevewinfield.suja.idk.game.rooms.wired.WiredManager;
@@ -61,6 +29,15 @@ import org.stevewinfield.suja.idk.game.trading.Trade;
 import org.stevewinfield.suja.idk.game.trading.TradeManager;
 import org.stevewinfield.suja.idk.network.sessions.Session;
 import org.stevewinfield.suja.idk.threadpools.WorkerTasks;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RoomInstance {
     private static Logger logger = Logger.getLogger(RoomInstance.class);
@@ -131,11 +108,8 @@ public class RoomInstance {
     }
 
     public boolean hasRights(final Session session, final boolean ownerRights) {
-        final boolean isOwner = session.getPlayerInstance().hasRight("any_room_owner")
-        || session.getPlayerInstance().getInformation().getId() == this.information.getOwnerId();
-        return ownerRights ? isOwner
-        : (isOwner || session.getPlayerInstance().hasRight("any_room_rights") || this.rights.contains(session
-        .getPlayerInstance().getInformation().getId()));
+        final boolean isOwner = session.getPlayerInstance().hasRight("any_room_owner") || session.getPlayerInstance().getInformation().getId() == this.information.getOwnerId();
+        return ownerRights ? isOwner : (isOwner || session.getPlayerInstance().hasRight("any_room_rights") || this.rights.contains(session.getPlayerInstance().getInformation().getId()));
     }
 
     public boolean hasRights(final Session session) {
@@ -148,8 +122,7 @@ public class RoomInstance {
 
     public RoomItem getTopItem(final int x, final int y) {
         final int key = x + (y * this.information.getModel().getHeightMap().getSizeX());
-        return this.topRoomItems.containsKey(key) && this.topRoomItems.get(key).size() > 0 ? this.topRoomItems.get(key)
-        .getLast() : null;
+        return this.topRoomItems.containsKey(key) && this.topRoomItems.get(key).size() > 0 ? this.topRoomItems.get(key).getLast() : null;
     }
 
     public void load(final ResultSet set) {
@@ -167,39 +140,34 @@ public class RoomInstance {
         }
         this.information.set(set);
         try {
-            ResultSet row = Bootloader.getStorage()
-            .queryParams("SELECT player_id FROM room_votes WHERE room_id=" + information.getId()).executeQuery();
+            ResultSet row = Bootloader.getStorage().queryParams("SELECT player_id FROM room_votes WHERE room_id=" + information.getId()).executeQuery();
             while (row.next()) {
                 this.votes.add(row.getInt("player_id"));
             }
             row.close();
             this.information.setScore(this.votes.size());
-            row = Bootloader
-            .getStorage()
-            .queryParams(
-            "SELECT * FROM room_items, items WHERE room_id = " + this.information.getId()
-            + " AND items.id=room_items.item_id").executeQuery();
+            row = Bootloader.getStorage().queryParams("SELECT * FROM room_items, items WHERE room_id = " + this.information.getId() + " AND items.id=room_items.item_id").executeQuery();
             while (row.next()) {
                 final RoomItem item = new RoomItem(this);
                 item.set(row);
                 this.roomItems.put(row.getInt("room_items.item_id"), item);
-                if (item.getBase().getInteractor() == FurnitureInteractor.MOODLIGHT && this.moodLight == null)
+                if (item.getBase().getInteractor() == FurnitureInteractor.MOODLIGHT && this.moodLight == null) {
                     this.moodLight = item;
+                }
                 if (WiredManager.isWiredItem(item.getBase())) {
-                    this.wiredHandler.addItem(item.getPosition().getVector2(),
-                    WiredManager.getInstance(item, this, item.getTermFlags()));
+                    this.wiredHandler.addItem(item.getPosition().getVector2(), WiredManager.getInstance(item, this, item.getTermFlags()));
                 }
                 item.getInteractor().onLoaded(this, item);
             }
             row.close();
-            this.gameMap = new Gamemap(this.information.getModel(), this.information.getModel().getHeightMap(),
-            this.roomItems.values());
+            this.gameMap = new Gamemap(this.information.getModel(), this.information.getModel().getHeightMap(), this.roomItems.values());
             for (int y = 0; y < this.information.getModel().getHeightMap().getSizeY(); y++) {
                 for (int x = 0; x < this.information.getModel().getHeightMap().getSizeX(); x++) {
                     final GapList<RoomItem> items = new GapList<RoomItem>();
                     for (final RoomItem item : this.roomItems.values()) {
-                        if (item == null)
+                        if (item == null) {
                             continue;
+                        }
                         final List<Vector2> affectedTiles = item.getAffectedTiles();
                         boolean containsPosition = false;
                         for (final Vector2 affectedTile : affectedTiles) {
@@ -215,16 +183,14 @@ public class RoomInstance {
                     Collections.sort(items, new Comparator<RoomItem>() {
                         @Override
                         public int compare(final RoomItem arg0, final RoomItem arg1) {
-                            return ((Double) (arg0.getPosition().getAltitude())).compareTo((arg1.getPosition()
-                            .getAltitude()));
+                            return ((Double) (arg0.getPosition().getAltitude())).compareTo((arg1.getPosition().getAltitude()));
                         }
                     });
                     this.topRoomItems.put(x + (y * this.information.getModel().getHeightMap().getSizeX()), items);
                 }
             }
             this.roomItemsInitialized = true;
-            row = Bootloader.getStorage().queryParams("SELECT * FROM room_rights WHERE room_id=" + information.getId())
-            .executeQuery();
+            row = Bootloader.getStorage().queryParams("SELECT * FROM room_rights WHERE room_id=" + information.getId()).executeQuery();
             while (row.next()) {
                 this.rights.add(row.getInt("player_id"));
             }
@@ -233,8 +199,7 @@ public class RoomInstance {
             logger.error("SQL Exception", e);
         }
         for (final BotInstance bot : Bootloader.getGame().getBotManager().getBotsByRoomId(this.information.getId())) {
-            final RoomPlayer player = new RoomPlayer(virtualPlayerId++, bot, this.information.getId(), this,
-            bot.getStartPosition(), bot.getStartRotation());
+            final RoomPlayer player = new RoomPlayer(virtualPlayerId++, bot, this.information.getId(), this, bot.getStartPosition(), bot.getStartRotation());
             this.roomPlayers.put(player.getVirtualId(), player);
             if (player.getBotInstance().getInteractor() != null) {
                 player.getBotInstance().getInteractor().onLoaded(this, player);
@@ -265,13 +230,13 @@ public class RoomInstance {
             tradeManager.stopTrade(player.getPlayerInformation().getId());
 
             Session targetSession = null;
-            final int targetId = player.getPlayerInformation().getId() == trade.getPlayerOne() ? trade.getPlayerTwo()
-            : trade.getPlayerOne();
+            final int targetId = player.getPlayerInformation().getId() == trade.getPlayerOne() ? trade.getPlayerTwo() : trade.getPlayerOne();
 
-            for (final RoomPlayer target : this.getRoomPlayers().values())
-                if (target.getSession() != null
-                && target.getSession().getPlayerInstance().getInformation().getId() == targetId)
+            for (final RoomPlayer target : this.getRoomPlayers().values()) {
+                if (target.getSession() != null && target.getSession().getPlayerInstance().getInformation().getId() == targetId) {
                     targetSession = target.getSession();
+                }
+            }
 
             if (targetSession != null && targetSession.getRoomPlayer() != null) {
                 targetSession.writeMessage(new TradeAbortedWriter(player.getPlayerInformation().getId()));
@@ -283,8 +248,7 @@ public class RoomInstance {
         this.getInformation().totalPlayers--;
 
         for (final MessengerBuddy buddy : player.getSession().getPlayerMessenger().getOnlineBuddies().values()) {
-            buddy.getSession().getPlayerMessenger()
-            .onStatusChanged(player.getSession().getPlayerInstance().getInformation().getId());
+            buddy.getSession().getPlayerMessenger().onStatusChanged(player.getSession().getPlayerInstance().getInformation().getId());
         }
     }
 
@@ -292,8 +256,9 @@ public class RoomInstance {
         final List<RoomPlayer> updatedPlayers = new GapList<RoomPlayer>();
         for (final RoomPlayer player : this.roomPlayers.values()) {
             if (!all) {
-                if (!player.needsUpdate())
+                if (!player.needsUpdate()) {
                     continue;
+                }
                 player.setUpdateNeeded(false);
             }
             updatedPlayers.add(player);
@@ -314,9 +279,7 @@ public class RoomInstance {
         player.addStatus("flatctrl", "");
         player.update();
         player.getSession().writeMessage(new RoomRightsWriter());
-        Bootloader.getStorage().executeQuery(
-        "INSERT INTO room_rights (room_id, player_id) VALUES (" + this.information.getId() + ", "
-        + player.getPlayerInformation().getId() + ")");
+        Bootloader.getStorage().executeQuery("INSERT INTO room_rights (room_id, player_id) VALUES (" + this.information.getId() + ", " + player.getPlayerInformation().getId() + ")");
         return true;
     }
 
@@ -331,8 +294,7 @@ public class RoomInstance {
             playerSession.getRoomPlayer().update();
             playerSession.writeMessage(new RoomRightsRemovedWriter());
         }
-        Bootloader.getStorage().executeQuery(
-        "DELETE FROM room_rights WHERE player_id=" + playerId + " AND room_id=" + this.information.getId());
+        Bootloader.getStorage().executeQuery("DELETE FROM room_rights WHERE player_id=" + playerId + " AND room_id=" + this.information.getId());
         return true;
     }
 
@@ -366,11 +328,8 @@ public class RoomInstance {
         }
 
         queue.push(new RoomPlayerObjectListWriter(playersToDisplay));
-        queue.push(new RoomWallsStatusWriter(information.wallsHidden(), information.getWallThickness(), information
-        .getFloorThickness()));
-        queue.push(new RoomInfoRightsWriter((information.getRoomType() == RoomType.PRIVATE), information.getId(),
-        information.getOwnerId() == player.getSession().getPlayerInstance().getInformation().getId()
-        || player.getSession().getPlayerInstance().hasRight("any_room_owner"), ""));
+        queue.push(new RoomWallsStatusWriter(information.wallsHidden(), information.getWallThickness(), information.getFloorThickness()));
+        queue.push(new RoomInfoRightsWriter((information.getRoomType() == RoomType.PRIVATE), information.getId(), information.getOwnerId() == player.getSession().getPlayerInstance().getInformation().getId() || player.getSession().getPlayerInstance().hasRight("any_room_owner"), ""));
         queue.push(new RoomInfoWriter(this));
 
         final MessageWriter updates = this.getStatusUpdates(true);
@@ -398,29 +357,24 @@ public class RoomInstance {
         this.wiredHandler.onPlayerEnters(player);
 
         for (final MessengerBuddy buddy : player.getSession().getPlayerMessenger().getOnlineBuddies().values()) {
-            buddy.getSession().getPlayerMessenger()
-            .onStatusChanged(player.getSession().getPlayerInstance().getInformation().getId());
+            buddy.getSession().getPlayerMessenger().onStatusChanged(player.getSession().getPlayerInstance().getInformation().getId());
         }
     }
 
     public void onPlayerChat(final ChatMessage message) {
-        if (message == null || message.getSender() == null)
+        if (message == null || message.getSender() == null) {
             return;
+        }
         if (this.wiredHandler.onPlayerSays(message.getSender(), message.getMessage())) {
             return;
         }
-        final MessageWriter chatWriter = new RoomChatWriter(message.getSender().getVirtualId(), message.getMessage(), 0,
-        message.getChatType());
+        final MessageWriter chatWriter = new RoomChatWriter(message.getSender().getVirtualId(), message.getMessage(), 0, message.getChatType());
         this.writeMessage(chatWriter, null);
         if (!message.getSender().isBot()) {
             for (final RoomPlayer player : this.roomPlayers.values()) {
-                if (player.isBot()
-                && player.getBotInstance().getInteractor() != null
-                && Heightmap.getDistance(message.getSender().getPosition().getX(), message.getSender().getPosition()
-                .getY(), player.getPosition().getX(), player.getPosition().getY()) < 10) {
+                if (player.isBot() && player.getBotInstance().getInteractor() != null && Heightmap.getDistance(message.getSender().getPosition().getX(), message.getSender().getPosition().getY(), player.getPosition().getX(), player.getPosition().getY()) < 10) {
                     if (message.getChatType() == ChatType.SHOUT && new Random().nextInt(10) % 2 == 0) {
-                        player.chat(IDK.BOTS_SHOUT_RESPONSES[new Random().nextInt(IDK.BOTS_SHOUT_RESPONSES.length)],
-                        ChatType.SHOUT);
+                        player.chat(IDK.BOTS_SHOUT_RESPONSES[new Random().nextInt(IDK.BOTS_SHOUT_RESPONSES.length)], ChatType.SHOUT);
                         continue;
                     }
                     final String[] words = message.getMessage().replace("?", "").replace("!", "").replace(".", "").split(" ");
@@ -429,8 +383,7 @@ public class RoomInstance {
                         if (player.getBotInstance().getKeywordReactions().containsKey(word)) {
                             final BotKeywordReaction reaction = player.getBotInstance().getKeywordReactions().get(word);
                             if (reaction.getResponses().length > 0) {
-                                final String response = reaction.getResponses()[new Random()
-                                .nextInt(reaction.getResponses().length)];
+                                final String response = reaction.getResponses()[new Random().nextInt(reaction.getResponses().length)];
                                 if (reaction.getChatType() == ChatType.WHISPER) {
                                     player.whisper(message.getSender().getSession(), player.getVirtualId(), response);
                                 } else {
@@ -438,8 +391,7 @@ public class RoomInstance {
                                 }
                             }
                             if (reaction.getDrinks().length > 0) {
-                                message.getSender().handleVending(
-                                reaction.getDrinks()[new Random().nextInt(reaction.getDrinks().length)]);
+                                message.getSender().handleVending(reaction.getDrinks()[new Random().nextInt(reaction.getDrinks().length)]);
                             }
                             break;
                         }
@@ -452,10 +404,10 @@ public class RoomInstance {
     }
 
     public void addPlayerToRoom(final Session session) {
-        if (this.roomTask.isCanceled())
+        if (this.roomTask.isCanceled()) {
             this.roomTask.setCanceled(false);
-        this.roomTask.offerRoomPlayerAdd(new RoomPlayer(virtualPlayerId++, session, this.information.getId(), this,
-        this.information.getModel().getDoorPosition(), this.information.getModel().getDoorRotation()));
+        }
+        this.roomTask.offerRoomPlayerAdd(new RoomPlayer(virtualPlayerId++, session, this.information.getId(), this, this.information.getModel().getDoorPosition(), this.information.getModel().getDoorRotation()));
         session.setLoadingRoomId(information.getId());
         session.setRoomJoined(true);
     }
@@ -495,31 +447,26 @@ public class RoomInstance {
             for (final Vector2 posAct : item.getAffectedTiles()) {
                 RoomItem oldHighest = null;
                 for (final RoomItem yitem : this.getRoomItemsForTile(posAct)) {
-                    if (yitem.getItemId() != item.getItemId()
-                    && (oldHighest == null || yitem.getAbsoluteHeight() > oldHighest.getAbsoluteHeight()))
+                    if (yitem.getItemId() != item.getItemId() && (oldHighest == null || yitem.getAbsoluteHeight() > oldHighest.getAbsoluteHeight())) {
                         oldHighest = yitem;
+                    }
                 }
                 RoomItem checkItem = null;
                 int oldState = 0;
                 double oldAltitude = 0;
                 if (oldHighest != null) {
                     oldState = oldHighest.getState();
-                    oldAltitude = oldHighest.getBase().isLayable() || oldHighest.getBase().isSitable() ? oldHighest
-                    .getPosition().getAltitude() : oldHighest.getAbsoluteHeight();
+                    oldAltitude = oldHighest.getBase().isLayable() || oldHighest.getBase().isSitable() ? oldHighest.getPosition().getAltitude() : oldHighest.getAbsoluteHeight();
                     checkItem = oldHighest;
                 } else {
                     oldState = this.information.getModel().getHeightMap().getTileState(posAct.getX(), posAct.getY());
-                    oldAltitude = this.information.getModel().getHeightMap()
-                    .getFloorHeight(posAct.getX(), posAct.getY());
+                    oldAltitude = this.information.getModel().getHeightMap().getFloorHeight(posAct.getX(), posAct.getY());
                     checkItem = item;
                 }
-                final GapList<RoomItem> items = this.topRoomItems.get(posAct.getX()
-                + (posAct.getY() * this.information.getModel().getHeightMap().getSizeX()));
+                final GapList<RoomItem> items = this.topRoomItems.get(posAct.getX() + (posAct.getY() * this.information.getModel().getHeightMap().getSizeX()));
                 for (int i = 0; i < items.size(); ++i) {
                     if (items.get(i).getItemId() == item.getItemId()) {
-                        this.topRoomItems.get(
-                        posAct.getX() + (posAct.getY() * this.information.getModel().getHeightMap().getSizeX()))
-                        .remove(i);
+                        this.topRoomItems.get(posAct.getX() + (posAct.getY() * this.information.getModel().getHeightMap().getSizeX())).remove(i);
                         break;
                     }
                 }
@@ -527,10 +474,13 @@ public class RoomInstance {
                 this.gameMap.setHeight(posAct, oldAltitude);
                 final GapList<RoomPlayer> players = this.getRoomPlayersForTile(posAct);
                 if (players.size() > 0) {
-                    for (final RoomPlayer player : players)
-                        if (player.getPosition().getAltitude() >= checkItem.getPosition().getAltitude())
-                            if (!toUpdate.contains(player))
+                    for (final RoomPlayer player : players) {
+                        if (player.getPosition().getAltitude() >= checkItem.getPosition().getAltitude()) {
+                            if (!toUpdate.contains(player)) {
                                 toUpdate.add(player);
+                            }
+                        }
+                    }
                 }
             }
             this.wiredHandler.onFloorItemRemoved(item);
@@ -538,18 +488,21 @@ public class RoomInstance {
         if (item.getBase().getInteractor() == FurnitureInteractor.MOODLIGHT && this.moodLight != null) {
             this.moodLight = null;
         }
-        if (this.itemsToAdd.contains(item.getItemId()))
+        if (this.itemsToAdd.contains(item.getItemId())) {
             this.itemsToAdd.remove(new Integer(item.getItemId()));
-        if (this.itemsToUpdate.contains(item.getItemId()))
+        }
+        if (this.itemsToUpdate.contains(item.getItemId())) {
             this.itemsToUpdate.remove(new Integer(item.getItemId()));
-        if (item.getBase().isWiredItem())
+        }
+        if (item.getBase().isWiredItem()) {
             this.wiredHandler.removeItem(item, item.getPosition().getVector2());
+        }
         this.roomItems.remove(item.getItemId());
         this.itemsToRemove.add(item.getItemId());
-        this.writeMessage(isFloorItem ? new RoomFloorItemRemovedWriter(item.getItemId())
-        : new RoomWallItemRemovedWriter(item.getItemId()), session);
-        if (isFloorItem)
+        this.writeMessage(isFloorItem ? new RoomFloorItemRemovedWriter(item.getItemId()) : new RoomWallItemRemovedWriter(item.getItemId()), session);
+        if (isFloorItem) {
             this.updateRoomPlayers(toUpdate);
+        }
         item.getInteractor().onRemove(session.getRoomPlayer(), item);
     }
 
@@ -564,31 +517,33 @@ public class RoomInstance {
     public boolean setWallItem(final Session session, final RoomItem item, final String data[], final boolean setUpdate) {
         final boolean newItem = !this.roomItems.containsKey(item.getItemId());
 
-        if (data.length != 3 || !data[0].startsWith(":w=") || !data[1].startsWith("l=")
-        || (!data[2].equals("r") && !data[2].equals("l")))
+        if (data.length != 3 || !data[0].startsWith(":w=") || !data[1].startsWith("l=") || (!data[2].equals("r") && !data[2].equals("l"))) {
             return false;
+        }
 
         final String wBit = data[0].substring(3, data[0].length());
         final String lBit = data[1].substring(2, data[1].length());
 
-        if (!wBit.contains(",") || !lBit.contains(","))
+        if (!wBit.contains(",") || !lBit.contains(",")) {
             return false;
+        }
 
         final int w1 = Integer.valueOf(wBit.split(",")[0]);
         final int w2 = Integer.valueOf(wBit.split(",")[1]);
         final int l1 = Integer.valueOf(lBit.split(",")[0]);
         final int l2 = Integer.valueOf(lBit.split(",")[1]);
 
-        if (!session.getPlayerInstance().hasRight("hotel_admin")
-        && (w1 < 0 || w2 < 0 || l1 < 0 || l2 < 0 || w1 > 200 || w2 > 200 || l1 > 200 || l2 > 200))
+        if (!session.getPlayerInstance().hasRight("hotel_admin") && (w1 < 0 || w2 < 0 || l1 < 0 || l2 < 0 || w1 > 200 || w2 > 200 || l1 > 200 || l2 > 200)) {
             return false;
+        }
 
         item.setWallPosition(":w=" + w1 + "," + w2 + " l=" + l1 + "," + l2 + " " + data[2]);
 
         if (newItem) {
             if (item.getBase().getInteractor() == FurnitureInteractor.MOODLIGHT) {
-                if (this.moodLight != null)
+                if (this.moodLight != null) {
                     return false;
+                }
                 this.moodLight = item;
             }
             this.roomItems.put(item.getItemId(), item);
@@ -613,13 +568,11 @@ public class RoomInstance {
         return true;
     }
 
-    public boolean setFloorItem(final Session session, final RoomItem item, final Vector2 position, final int rotation,
-    final boolean setUpdate, final int rollerId) {
+    public boolean setFloorItem(final Session session, final RoomItem item, final Vector2 position, final int rotation, final boolean setUpdate, final int rollerId) {
         return setFloorItem(session, item, position, rotation, setUpdate, rollerId, 0);
     }
 
-    public boolean setFloorItem(final Session session, final RoomItem item, final Vector2 position, final int rotation,
-    final boolean setUpdate, final int rollerId, final double rollerItemAltitude) {
+    public boolean setFloorItem(final Session session, final RoomItem item, final Vector2 position, final int rotation, final boolean setUpdate, final int rollerId, final double rollerItemAltitude) {
         if (rotation != 2 && rotation != 0 && rotation != 6 && rotation != 4) {
             return false;
         }
@@ -627,21 +580,18 @@ public class RoomInstance {
         final boolean newItem = !this.roomItems.containsKey(item.getItemId());
         if (!newItem) {
             if (item.getPosition().getX() == position.getX() && item.getPosition().getY() == position.getY()) {
-                if (item.getRotation() == rotation)
+                if (item.getRotation() == rotation) {
                     return false;
+                }
                 onlyChangeRot = true;
             }
         }
         if (!onlyChangeRot) {
-            if (this.gameMap.getTileState(position.getX(), position.getY()) == TileState.CLOSED
-            || ((item.getBase().getWidth() > 1 || item.getBase().getHeight() > 1 || !item.getBase().isWalkable() || item
-            .getBase().getHeight() > 0.2)
-            && this.getInformation().getModel().getDoorPosition().getX() == position.getX() && this.getInformation()
-            .getModel().getDoorPosition().getY() == position.getY()))
+            if (this.gameMap.getTileState(position.getX(), position.getY()) == TileState.CLOSED || ((item.getBase().getWidth() > 1 || item.getBase().getHeight() > 1 || !item.getBase().isWalkable() || item.getBase().getHeight() > 0.2) && this.getInformation().getModel().getDoorPosition().getX() == position.getX() && this.getInformation().getModel().getDoorPosition().getY() == position.getY())) {
                 return false;
+            }
         }
-        double newAltitude = this.information.getModel().getHeightMap()
-        .getFloorHeight(position.getX(), position.getY());
+        double newAltitude = this.information.getModel().getHeightMap().getFloorHeight(position.getX(), position.getY());
         final int oldX = item.getPosition().getX();
         final int oldY = item.getPosition().getY();
         final int oldRot = item.getRotation();
@@ -652,19 +602,17 @@ public class RoomInstance {
         final List<Vector2> newPos = item.getAffectedTiles();
         item.setPosition(new Vector3(oldX, oldY, oldAlt), oldRot);
         for (final Vector2 posAct : newPos) {
-            if (posAct.getX() > information.getModel().getHeightMap().getSizeX()
-            || posAct.getY() > information.getModel().getHeightMap().getSizeY()
-            || gameMap.getTileState(posAct.getX(), posAct.getY()) == TileState.CLOSED) {
+            if (posAct.getX() > information.getModel().getHeightMap().getSizeX() || posAct.getY() > information.getModel().getHeightMap().getSizeY() || gameMap.getTileState(posAct.getX(), posAct.getY()) == TileState.CLOSED) {
                 return false;
             }
             final GapList<RoomPlayer> players = this.getRoomPlayersForTile(posAct);
             if (players.size() > 0) {
-                if (onlyChangeRot
-                && (item.getState() == TileState.SITABLE || item.getState() == (TileState.SITABLE | TileState.PLAYER) || item
-                .getState() == (TileState.SITABLE | TileState.BLOCKED))) {
-                    for (final RoomPlayer player : players)
-                        if (!toUpdate.contains(player))
+                if (onlyChangeRot && (item.getState() == TileState.SITABLE || item.getState() == (TileState.SITABLE | TileState.PLAYER) || item.getState() == (TileState.SITABLE | TileState.BLOCKED))) {
+                    for (final RoomPlayer player : players) {
+                        if (!toUpdate.contains(player)) {
                             toUpdate.add(player);
+                        }
+                    }
                 } else {
                     return false;
                 }
@@ -673,15 +621,13 @@ public class RoomInstance {
             for (final RoomItem xitem : items) {
                 if (xitem.getItemId() != item.getItemId()) {
                     if (rollerId < 0) {
-                        if (!xitem.getBase().isStackable()
-                        || (item.getInteractorId() == FurnitureInteractor.ROLLER && onlyChangeRot && xitem
-                        .getPosition().getAltitude() >= item.getPosition().getAltitude())) {
+                        if (!xitem.getBase().isStackable() || (item.getInteractorId() == FurnitureInteractor.ROLLER && onlyChangeRot && xitem.getPosition().getAltitude() >= item.getPosition().getAltitude())) {
                             return false;
                         }
-                        if (setItem == null || xitem.getAbsoluteHeight() > setItem.getAbsoluteHeight())
+                        if (setItem == null || xitem.getAbsoluteHeight() > setItem.getAbsoluteHeight()) {
                             setItem = xitem;
-                    } else if (xitem.getPosition().getAltitude() <= rollerItemAltitude
-                    && (setItem == null || xitem.getPosition().getAltitude() >= setItem.getPosition().getAltitude())) {
+                        }
+                    } else if (xitem.getPosition().getAltitude() <= rollerItemAltitude && (setItem == null || xitem.getPosition().getAltitude() >= setItem.getPosition().getAltitude())) {
                         setItem = xitem;
                     }
 
@@ -695,53 +641,49 @@ public class RoomInstance {
             for (final Vector2 posAct : item.getAffectedTiles()) {
                 RoomItem oldHighest = null;
                 for (final RoomItem yitem : this.getRoomItemsForTile(posAct)) {
-                    if (yitem.getItemId() != item.getItemId()
-                    && (oldHighest == null || yitem.getAbsoluteHeight() > oldHighest.getAbsoluteHeight()))
+                    if (yitem.getItemId() != item.getItemId() && (oldHighest == null || yitem.getAbsoluteHeight() > oldHighest.getAbsoluteHeight())) {
                         oldHighest = yitem;
+                    }
                 }
                 RoomItem checkItem = null;
                 int oldState = 0;
                 double oldAltitude = 0;
                 if (oldHighest != null) {
                     oldState = oldHighest.getState();
-                    oldAltitude = oldHighest.getBase().isLayable() || oldHighest.getBase().isSitable() ? oldHighest
-                    .getPosition().getAltitude() : oldHighest.getAbsoluteHeight();
+                    oldAltitude = oldHighest.getBase().isLayable() || oldHighest.getBase().isSitable() ? oldHighest.getPosition().getAltitude() : oldHighest.getAbsoluteHeight();
                     checkItem = oldHighest;
                 } else {
                     oldState = this.information.getModel().getHeightMap().getTileState(posAct.getX(), posAct.getY());
-                    oldAltitude = this.information.getModel().getHeightMap()
-                    .getFloorHeight(posAct.getX(), posAct.getY());
+                    oldAltitude = this.information.getModel().getHeightMap().getFloorHeight(posAct.getX(), posAct.getY());
                     checkItem = item;
                 }
                 this.gameMap.updateTile(posAct, oldState);
                 this.gameMap.setHeight(posAct, oldAltitude);
-                final GapList<RoomItem> items = this.topRoomItems.get(posAct.getX()
-                + (posAct.getY() * this.information.getModel().getHeightMap().getSizeX()));
+                final GapList<RoomItem> items = this.topRoomItems.get(posAct.getX() + (posAct.getY() * this.information.getModel().getHeightMap().getSizeX()));
                 for (int i = 0; i < items.size(); ++i) {
                     if (items.get(i).getItemId() == item.getItemId()) {
-                        this.topRoomItems.get(
-                        posAct.getX() + (posAct.getY() * this.information.getModel().getHeightMap().getSizeX()))
-                        .remove(i);
+                        this.topRoomItems.get(posAct.getX() + (posAct.getY() * this.information.getModel().getHeightMap().getSizeX())).remove(i);
                         break;
                     }
                 }
                 final GapList<RoomPlayer> players = this.getRoomPlayersForTile(posAct);
                 if (players.size() > 0) {
                     for (final RoomPlayer player : players) {
-                        if (player.getPosition().getAltitude() >= checkItem.getPosition().getAltitude())
-                            if (!toUpdate.contains(player))
+                        if (player.getPosition().getAltitude() >= checkItem.getPosition().getAltitude()) {
+                            if (!toUpdate.contains(player)) {
                                 toUpdate.add(player);
+                            }
+                        }
                     }
                 }
             }
         }
         if (setItem != null) {
-            newAltitude = (rollerId > -1 && setItem.getInteractorId() != FurnitureInteractor.ROLLER && setItem
-            .getAbsoluteHeight() > rollerItemAltitude) ? setItem.getPosition().getAltitude() : setItem
-            .getAbsoluteHeight();
+            newAltitude = (rollerId > -1 && setItem.getInteractorId() != FurnitureInteractor.ROLLER && setItem.getAbsoluteHeight() > rollerItemAltitude) ? setItem.getPosition().getAltitude() : setItem.getAbsoluteHeight();
         }
-        if (onlyChangeRot && newAltitude < oldAlt)
+        if (onlyChangeRot && newAltitude < oldAlt) {
             newAltitude = oldAlt;
+        }
         final int state = item.getState();
         for (final Vector2 posAct : newPos) {
             this.gameMap.updateTile(posAct, state);
@@ -750,8 +692,7 @@ public class RoomInstance {
             } else {
                 this.gameMap.setHeight(posAct, newAltitude + item.getBase().getHeight());
             }
-            this.topRoomItems.get(
-            posAct.getX() + (posAct.getY() * this.information.getModel().getHeightMap().getSizeX())).add(item);
+            this.topRoomItems.get(posAct.getX() + (posAct.getY() * this.information.getModel().getHeightMap().getSizeX())).add(item);
         }
         item.setPosition(new Vector3(position.getX(), position.getY(), newAltitude), rotation);
         if (!newItem) {
@@ -759,8 +700,7 @@ public class RoomInstance {
                 itemsToAdd.add(item.getItemId());
             }
             if (rollerId > -1) {
-                this.writeMessage(new RollerEventWriter(new Vector3(oldX, oldY, oldAlt), item.getPosition(), 0,
-                rollerId, item.getItemId(), true), null);
+                this.writeMessage(new RollerEventWriter(new Vector3(oldX, oldY, oldAlt), item.getPosition(), 0, rollerId, item.getItemId(), true), null);
             } else {
                 this.writeMessage(new RoomItemUpdatedWriter(item), session);
             }
@@ -777,13 +717,13 @@ public class RoomInstance {
             this.writeMessage(new RoomFloorItemPlacedWriter(item), session);
             item.getInteractor().onLoaded(this, item);
         }
-        if (!item.getBase().isWiredItem())
+        if (!item.getBase().isWiredItem()) {
             item.getInteractor().onPlace(session != null ? session.getRoomPlayer() : null, item);
-        else if (!newItem)
+        } else if (!newItem) {
             this.wiredHandler.moveWired(item, new Vector2(oldX, oldY));
-        else
-            this.wiredHandler.addItem(item.getPosition().getVector2(),
-            WiredManager.getInstance(item, this, item.getTermFlags()));
+        } else {
+            this.wiredHandler.addItem(item.getPosition().getVector2(), WiredManager.getInstance(item, this, item.getTermFlags()));
+        }
         return true;
     }
 
@@ -798,10 +738,8 @@ public class RoomInstance {
     public void updateRoomPlayers(final GapList<RoomPlayer> players) {
         for (final RoomPlayer player : players) {
             final int state = this.gameMap.getTileState(player.getPosition().getX(), player.getPosition().getY());
-            player.setPosition(new Vector3(player.getPosition().getX(), player.getPosition().getY(), this.gameMap
-            .getHeight(player.getPosition().getX(), player.getPosition().getY())));
-            this.getGamemap().updateTile(player.getPosition().getVector2(),
-            this.getInformation().blockingDisabled() ? TileState.PLAYER : TileState.BLOCKED);
+            player.setPosition(new Vector3(player.getPosition().getX(), player.getPosition().getY(), this.gameMap.getHeight(player.getPosition().getX(), player.getPosition().getY())));
+            this.getGamemap().updateTile(player.getPosition().getVector2(), this.getInformation().blockingDisabled() ? TileState.PLAYER : TileState.BLOCKED);
             player.setFloorItem(null);
             player.setCurrentTileState(state);
             player.removeStatus("sit");
@@ -809,26 +747,23 @@ public class RoomInstance {
             if (player.getEffectId() > 0) {
                 player.applyEffect(0);
                 player.applyEffect(player.getEffectCache() > 0 ? player.getEffectCache() : 0);
-                if (player.getEffectCache() > 0)
+                if (player.getEffectCache() > 0) {
                     player.setEffectCache(0);
+                }
             }
             RoomItem highestItem = this.getTopItem(player.getPosition().getX(), player.getPosition().getY());
             if (highestItem != null) {
-                if (state == TileState.SITABLE || state == (TileState.SITABLE | TileState.PLAYER)
-                || state == (TileState.SITABLE | TileState.BLOCKED)) {
+                if (state == TileState.SITABLE || state == (TileState.SITABLE | TileState.PLAYER) || state == (TileState.SITABLE | TileState.BLOCKED)) {
                     for (final RoomItem item : this.getRoomItemsForTile(player.getPosition().getVector2())) {
-                        if ((highestItem == null || item.getAbsoluteHeight() > highestItem.getAbsoluteHeight())
-                        && item.getBase().isSitable())
+                        if ((highestItem == null || item.getAbsoluteHeight() > highestItem.getAbsoluteHeight()) && item.getBase().isSitable()) {
                             highestItem = item;
+                        }
                     }
                     player.setRotation(highestItem.getRotation());
                     player.addStatus("sit", String.valueOf(highestItem.getBase().getHeight()));
                 }
                 final boolean oxi = state == TileState.SITABLE || state == TileState.LAYABLE;
-                this.getGamemap().updateTile(
-                player.getPosition().getVector2(),
-                this.getInformation().blockingDisabled() ? (TileState.PLAYER | (oxi ? state : 0))
-                : (TileState.BLOCKED | (oxi ? state : 0)));
+                this.getGamemap().updateTile(player.getPosition().getVector2(), this.getInformation().blockingDisabled() ? (TileState.PLAYER | (oxi ? state : 0)) : (TileState.BLOCKED | (oxi ? state : 0)));
                 player.setFloorItem(highestItem);
                 highestItem.onPlayerWalksOn(player, true);
             }
@@ -838,12 +773,11 @@ public class RoomInstance {
 
     public GapList<RoomPlayer> getRoomPlayersForTile(final Vector2 pos) {
         final GapList<RoomPlayer> players = new GapList<RoomPlayer>();
-        for (final RoomPlayer player : roomPlayers.values())
-            if (player.getPosition().getX() == pos.getX()
-            && player.getPosition().getY() == pos.getY()
-            || (player.stepIsSetted() && player.getSettedPosition().getX() == pos.getX() && player.getSettedPosition()
-            .getY() == pos.getY()))
+        for (final RoomPlayer player : roomPlayers.values()) {
+            if (player.getPosition().getX() == pos.getX() && player.getPosition().getY() == pos.getY() || (player.stepIsSetted() && player.getSettedPosition().getX() == pos.getX() && player.getSettedPosition().getY() == pos.getY())) {
                 players.add(player);
+            }
+        }
         return players;
     }
 
@@ -857,48 +791,45 @@ public class RoomInstance {
 
     public void save() {
         final StringBuilder removeQuery = new StringBuilder();
-        for (final Integer removeItem : this.itemsToRemove)
+        for (final Integer removeItem : this.itemsToRemove) {
             removeQuery.append(" OR item_id=" + removeItem);
-        if (removeQuery.length() > 0)
+        }
+        if (removeQuery.length() > 0) {
             Bootloader.getStorage().executeQuery("DELETE FROM room_items WHERE " + removeQuery.toString().substring(4));
+        }
         this.itemsToRemove.clear();
         final StringBuilder insertQuery = new StringBuilder();
         for (final Integer addItem : this.itemsToAdd) {
             if (this.roomItems.get(addItem).getBase().getInteractor() == FurnitureInteractor.TELEPORTER) {
                 Bootloader.getGame().getRoomManager().getTeleporterCache().remove(addItem);
             }
-            insertQuery.append(" ,(" + addItem + ", " + this.information.getId() + ", "
-            + this.roomItems.get(addItem).getPosition().getX() + ", "
-            + this.roomItems.get(addItem).getPosition().getY() + ", " + this.roomItems.get(addItem).getRotation()
-            + ", " + String.valueOf(this.roomItems.get(addItem).getPosition().getAltitude()) + ", " + "'"
-            + this.roomItems.get(addItem).getWallPosition() + "')");
+            insertQuery.append(" ,(" + addItem + ", " + this.information.getId() + ", " + this.roomItems.get(addItem).getPosition().getX() + ", " + this.roomItems.get(addItem).getPosition().getY() + ", " + this.roomItems.get(addItem).getRotation() + ", " + String.valueOf(this.roomItems.get(addItem).getPosition().getAltitude()) + ", " + "'" + this.roomItems.get(addItem).getWallPosition() + "')");
         }
         final StringBuilder updateQuery = new StringBuilder();
         List<String> flagList = new GapList<String>();
         for (final Integer updateItem : this.itemsToUpdate) {
-            if (!this.roomItems.containsKey(updateItem))
+            if (!this.roomItems.containsKey(updateItem)) {
                 continue;
+            }
             updateQuery.append(" ,(" + updateItem + ", ?)");
             String flags = this.roomItems.get(updateItem).getFlags();
             if (this.roomItems.get(updateItem).getTermFlags() != null) {
                 flags = "";
-                for (final String tFlag : this.roomItems.get(updateItem).getTermFlags())
+                for (final String tFlag : this.roomItems.get(updateItem).getTermFlags()) {
                     flags += tFlag + (char) 10;
+                }
             }
             flagList.add(flags);
         }
-        if (insertQuery.length() > 0)
-            Bootloader
-            .getStorage()
-            .executeQuery(
-            "REPLACE INTO room_items (item_id, room_id, position_x, position_y, rotation, position_altitude, wall_position) VALUES "
-            + insertQuery.toString().substring(2));
+        if (insertQuery.length() > 0) {
+            Bootloader.getStorage().executeQuery("REPLACE INTO room_items (item_id, room_id, position_x, position_y, rotation, position_altitude, wall_position) VALUES " + insertQuery.toString().substring(2));
+        }
         if (updateQuery.length() > 0) {
-            final PreparedStatement pn = Bootloader.getStorage().queryParams(
-            "REPLACE INTO item_flags (item_id, flag) VALUES " + updateQuery.toString().substring(2));
+            final PreparedStatement pn = Bootloader.getStorage().queryParams("REPLACE INTO item_flags (item_id, flag) VALUES " + updateQuery.toString().substring(2));
             try {
-                for (int i = 0; i < flagList.size(); i++)
+                for (int i = 0; i < flagList.size(); i++) {
                     pn.setString(i + 1, flagList.get(i));
+                }
                 pn.execute();
             } catch (final SQLException ex) {
                 logger.error("SQL Exception", ex);
@@ -925,17 +856,21 @@ public class RoomInstance {
 
     public GapList<RoomItem> getFloorItems() {
         final GapList<RoomItem> items = new GapList<RoomItem>();
-        for (final RoomItem item : this.roomItems.values())
-            if (item != null && !item.getBase().getType().equals(FurnitureType.WALL))
+        for (final RoomItem item : this.roomItems.values()) {
+            if (item != null && !item.getBase().getType().equals(FurnitureType.WALL)) {
                 items.add(item);
+            }
+        }
         return items;
     }
 
     public GapList<RoomItem> getWallItems() {
         final GapList<RoomItem> items = new GapList<RoomItem>();
-        for (final RoomItem item : this.roomItems.values())
-            if (item != null && item.getBase().getType().equals(FurnitureType.WALL))
+        for (final RoomItem item : this.roomItems.values()) {
+            if (item != null && item.getBase().getType().equals(FurnitureType.WALL)) {
                 items.add(item);
+            }
+        }
         return items;
     }
 

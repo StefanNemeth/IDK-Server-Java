@@ -4,10 +4,10 @@
  */
 package org.stevewinfield.suja.idk.game.navigator;
 
+import org.apache.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.apache.log4j.Logger;
 
 public class OfficialItem {
     private static Logger logger = Logger.getLogger(OfficialItem.class);

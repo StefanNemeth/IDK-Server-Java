@@ -17,18 +17,18 @@ public class FriendRemoveReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
         int amount = reader.readInteger();
 
-        if (amount > 50)
+        if (amount > 50) {
             amount = 50;
+        }
 
         final MessengerBuddy sessionBuddy = new MessengerBuddy();
-        sessionBuddy.set(session.getPlayerInstance().getInformation().getId(), session.getPlayerInstance()
-        .getInformation().getPlayerName(), session.getPlayerInstance().getInformation().getAvatar(), session
-        .getPlayerInstance().getInformation().getMission());
+        sessionBuddy.set(session.getPlayerInstance().getInformation().getId(), session.getPlayerInstance().getInformation().getPlayerName(), session.getPlayerInstance().getInformation().getAvatar(), session.getPlayerInstance().getInformation().getMission());
 
         final QueuedMessageWriter queue = new QueuedMessageWriter();
         final MessageWriter broadcastOldFriend = new MessengerUpdateListWriter(sessionBuddy, -1);
@@ -39,17 +39,13 @@ public class FriendRemoveReader implements IMessageReader {
         for (int i = 0; i < amount; i++) {
             final int playerId = reader.readInteger();
             if (session.getPlayerMessenger().getBuddies().containsKey(playerId)) {
-                where += " OR ((player_req_id=" + session.getPlayerInstance().getInformation().getId()
-                + " AND player_acc_id=" + playerId + ") OR (player_req_id=" + playerId + " AND player_acc_id="
-                + session.getPlayerInstance().getInformation().getId() + "))";
+                where += " OR ((player_req_id=" + session.getPlayerInstance().getInformation().getId() + " AND player_acc_id=" + playerId + ") OR (player_req_id=" + playerId + " AND player_acc_id=" + session.getPlayerInstance().getInformation().getId() + "))";
                 final MessengerBuddy buddy = session.getPlayerMessenger().getBuddies().get(playerId);
                 session.getPlayerMessenger().getBuddies().remove(playerId);
                 if (buddy.getSession() != null) {
                     session.getPlayerMessenger().getOnlineBuddies().remove(playerId);
-                    buddy.getSession().getPlayerMessenger().getBuddies()
-                    .remove(session.getPlayerInstance().getInformation().getId());
-                    buddy.getSession().getPlayerMessenger().getOnlineBuddies()
-                    .remove(session.getPlayerInstance().getInformation().getId());
+                    buddy.getSession().getPlayerMessenger().getBuddies().remove(session.getPlayerInstance().getInformation().getId());
+                    buddy.getSession().getPlayerMessenger().getOnlineBuddies().remove(session.getPlayerInstance().getInformation().getId());
                     buddy.getSession().writeMessage(broadcastOldFriend);
                 }
                 queue.push(new MessengerUpdateListWriter(buddy, -1));

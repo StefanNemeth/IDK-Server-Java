@@ -4,16 +4,12 @@
  */
 package org.stevewinfield.suja.idk.game.rooms.tasks.games;
 
+import org.stevewinfield.suja.idk.Bootloader;
+import org.stevewinfield.suja.idk.game.rooms.*;
+import org.stevewinfield.suja.idk.game.rooms.tasks.GameTask;
+
 import java.util.LinkedList;
 import java.util.List;
-
-import org.stevewinfield.suja.idk.Bootloader;
-import org.stevewinfield.suja.idk.game.rooms.GameTeam;
-import org.stevewinfield.suja.idk.game.rooms.RoomInstance;
-import org.stevewinfield.suja.idk.game.rooms.RoomItem;
-import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
-import org.stevewinfield.suja.idk.game.rooms.RoomPlayerEffect;
-import org.stevewinfield.suja.idk.game.rooms.tasks.GameTask;
 
 public class BattleBanzaiTask extends GameTask {
     public BattleBanzaiTask(final RoomInstance room) {
@@ -28,8 +24,9 @@ public class BattleBanzaiTask extends GameTask {
         GameTeam winner = null;
         int highScore = 0;
         for (final GameTeam team : this.gameTeams.values()) {
-            if (team.getGate() != null)
+            if (team.getGate() != null) {
                 team.getGate().updateState(true, true);
+            }
             if (team.getPoints() > 0 && team.getPoints() == highScore) {
                 winner = null;
             } else if (team.getPoints() > highScore) {
@@ -49,15 +46,13 @@ public class BattleBanzaiTask extends GameTask {
                 continue;
             }
 
-            if (winner == null)
+            if (winner == null) {
                 continue;
+            }
 
             final int state = banzaiPatch.getFlagsState();
 
-            if ((winner.getId() == RoomPlayerEffect.BANZAI_PINK && state == 5)
-            || (winner.getId() == RoomPlayerEffect.BANZAI_GREEN && state == 8)
-            || (winner.getId() == RoomPlayerEffect.BANZAI_BLUE && state == 11)
-            || (winner.getId() == RoomPlayerEffect.BANZAI_ORANGE && state == 14)) {
+            if ((winner.getId() == RoomPlayerEffect.BANZAI_PINK && state == 5) || (winner.getId() == RoomPlayerEffect.BANZAI_GREEN && state == 8) || (winner.getId() == RoomPlayerEffect.BANZAI_BLUE && state == 11) || (winner.getId() == RoomPlayerEffect.BANZAI_ORANGE && state == 14)) {
                 this.flexInteger = state;
                 banzaiPatch.setFlags(0);
                 banzaiPatch.update(false, true);
@@ -73,16 +68,18 @@ public class BattleBanzaiTask extends GameTask {
         this.running = false;
         this.paused = true;
         for (final GameTeam team : this.gameTeams.values()) {
-            if (team.getGate() != null)
+            if (team.getGate() != null) {
                 team.getGate().updateState(true, false);
+            }
         }
     }
 
     @Override
     public void onGameStarts(final RoomItem timer) {
         for (final GameTeam team : this.gameTeams.values()) {
-            if (team.getGate() != null)
+            if (team.getGate() != null) {
                 team.getGate().updateState(false, false);
+            }
         }
         if (this.ended) {
             for (final RoomItem banzaiPatch : this.gameItems) {
@@ -100,12 +97,10 @@ public class BattleBanzaiTask extends GameTask {
     }
 
     public static boolean isHighlighted(final RoomItem item) {
-        return item.getFlagsState() == 5 || item.getFlagsState() == 8 || item.getFlagsState() == 11
-        || item.getFlagsState() == 14;
+        return item.getFlagsState() == 5 || item.getFlagsState() == 8 || item.getFlagsState() == 11 || item.getFlagsState() == 14;
     }
 
-    public static List<RoomItem> buildBanzaiRectangle(final RoomItem triggerItem, final int x, final int y, final int goX,
-    final int goY, final int currentDirection, final int turns, final int teamId) {
+    public static List<RoomItem> buildBanzaiRectangle(final RoomItem triggerItem, final int x, final int y, final int goX, final int goY, final int currentDirection, final int turns, final int teamId) {
         final boolean[] directions = new boolean[4];
 
         if (goX == -1 || goX == 0) {
@@ -149,14 +144,10 @@ public class BattleBanzaiTask extends GameTask {
                 List<RoomItem> foundPatches = null;
                 if (currentDirection != i && currentDirection != -1) {
                     if (turns > 0) {
-                        foundPatches = BattleBanzaiTask.buildBanzaiRectangle(triggerItem, nextX, nextY,
-                        (nextXStep == 0) ? (goX * -1) : (nextXStep * -1), (nextYStep == 0) ? (goY * -1)
-                        : (nextYStep * -1), i, (turns - 1), teamId);
+                        foundPatches = BattleBanzaiTask.buildBanzaiRectangle(triggerItem, nextX, nextY, (nextXStep == 0) ? (goX * -1) : (nextXStep * -1), (nextYStep == 0) ? (goY * -1) : (nextYStep * -1), i, (turns - 1), teamId);
                     }
                 } else {
-                    foundPatches = BattleBanzaiTask.buildBanzaiRectangle(triggerItem, nextX, nextY,
-                    (nextXStep == 0) ? goX : (nextXStep * -1), (nextYStep == 0) ? goY : (nextYStep * -1), i, turns,
-                    teamId);
+                    foundPatches = BattleBanzaiTask.buildBanzaiRectangle(triggerItem, nextX, nextY, (nextXStep == 0) ? goX : (nextXStep * -1), (nextYStep == 0) ? goY : (nextYStep * -1), i, turns, teamId);
                 }
                 if (foundPatches != null) {
                     foundPatches.add(item);
@@ -171,55 +162,58 @@ public class BattleBanzaiTask extends GameTask {
     public void onHandle(final RoomPlayer player, final RoomItem item) {
         final GameTeam team = this.getTeam(player.getEffectId());
 
-        if (team == null)
+        if (team == null) {
             return;
+        }
 
         int state = item.getFlagsState();
         boolean givePoint = false;
 
-        if (BattleBanzaiTask.isHighlighted(item))
+        if (BattleBanzaiTask.isHighlighted(item)) {
             return;
+        }
 
-        if ((state < 5 && player.getEffectId() != RoomPlayerEffect.BANZAI_PINK)
-        || (state < 8 && state > 5 && player.getEffectId() != RoomPlayerEffect.BANZAI_GREEN)
-        || (state < 11 && state > 8 && player.getEffectId() != RoomPlayerEffect.BANZAI_BLUE)
-        || (state < 13 && state > 11 && player.getEffectId() != RoomPlayerEffect.BANZAI_ORANGE)) {
+        if ((state < 5 && player.getEffectId() != RoomPlayerEffect.BANZAI_PINK) || (state < 8 && state > 5 && player.getEffectId() != RoomPlayerEffect.BANZAI_GREEN) || (state < 11 && state > 8 && player.getEffectId() != RoomPlayerEffect.BANZAI_BLUE) || (state < 13 && state > 11 && player.getEffectId() != RoomPlayerEffect.BANZAI_ORANGE)) {
             state = 0;
         }
 
         switch (player.getEffectId()) {
-        case RoomPlayerEffect.BANZAI_PINK:
-            if (state < 3)
-                state = 2;
+            case RoomPlayerEffect.BANZAI_PINK:
+                if (state < 3) {
+                    state = 2;
+                }
 
-            if (state - 2 >= 2) {
-                givePoint = true;
-            }
-            break;
-        case RoomPlayerEffect.BANZAI_GREEN:
-            if (state < 6)
-                state = 5;
+                if (state - 2 >= 2) {
+                    givePoint = true;
+                }
+                break;
+            case RoomPlayerEffect.BANZAI_GREEN:
+                if (state < 6) {
+                    state = 5;
+                }
 
-            if (state - 5 >= 2) {
-                givePoint = true;
-            }
-            break;
-        case RoomPlayerEffect.BANZAI_BLUE:
-            if (state < 9)
-                state = 8;
+                if (state - 5 >= 2) {
+                    givePoint = true;
+                }
+                break;
+            case RoomPlayerEffect.BANZAI_BLUE:
+                if (state < 9) {
+                    state = 8;
+                }
 
-            if (state - 8 >= 2) {
-                givePoint = true;
-            }
-            break;
-        case RoomPlayerEffect.BANZAI_ORANGE:
-            if (state < 12)
-                state = 11;
+                if (state - 8 >= 2) {
+                    givePoint = true;
+                }
+                break;
+            case RoomPlayerEffect.BANZAI_ORANGE:
+                if (state < 12) {
+                    state = 11;
+                }
 
-            if (state - 11 >= 2) {
-                givePoint = true;
-            }
-            break;
+                if (state - 11 >= 2) {
+                    givePoint = true;
+                }
+                break;
         }
 
         item.setFlags(++state);
@@ -230,8 +224,7 @@ public class BattleBanzaiTask extends GameTask {
             int empty = 0;
 
             try {
-                final List<RoomItem> tilesToAdd = BattleBanzaiTask.buildBanzaiRectangle(item, item.getPosition().getX(), item
-                .getPosition().getY(), 0, 0, -1, 4, state);
+                final List<RoomItem> tilesToAdd = BattleBanzaiTask.buildBanzaiRectangle(item, item.getPosition().getX(), item.getPosition().getY(), 0, 0, -1, 4, state);
                 if (tilesToAdd != null) {
                     for (final RoomItem _item : this.gameItems) {
                         if (BattleBanzaiTask.isHighlighted(_item)) {
@@ -270,8 +263,7 @@ public class BattleBanzaiTask extends GameTask {
             }
 
             if (!player.isBot() && player.getSession() != null) {
-                Bootloader.getGame().getAchievementManager()
-                .progressAchievement(player.getSession(), "ACH_BattleBallTilesLocked", points);
+                Bootloader.getGame().getAchievementManager().progressAchievement(player.getSession(), "ACH_BattleBallTilesLocked", points);
                 team.onPointReceived(points);
             }
             if (empty < 1) {

@@ -14,8 +14,9 @@ public class PurchaseGiftItemReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
         final int pageId = reader.readInteger();
         final int itemId = reader.readInteger();
@@ -23,18 +24,16 @@ public class PurchaseGiftItemReader implements IMessageReader {
         String targetName = InputFilter.filterString(reader.readUTF(), true);
         String targetMessage = InputFilter.filterString(reader.readUTF(), true);
 
-        if (targetName.length() > 20)
+        if (targetName.length() > 20) {
             targetName = targetName.substring(0, 20);
+        }
 
-        if (targetMessage.length() > 140)
+        if (targetMessage.length() > 140) {
             targetMessage = targetMessage.substring(0, 140);
+        }
 
         if (Bootloader.getGame().getCatalogManager().getCatalogPages().containsKey(pageId)) {
-            Bootloader
-            .getGame()
-            .getCatalogManager()
-            .purchaseItem(session, Bootloader.getGame().getCatalogManager().getCatalogPages().get(pageId), itemId,
-            extra, true, targetName, targetMessage, reader.readInteger(), reader.readInteger(), reader.readInteger());
+            Bootloader.getGame().getCatalogManager().purchaseItem(session, Bootloader.getGame().getCatalogManager().getCatalogPages().get(pageId), itemId, extra, true, targetName, targetMessage, reader.readInteger(), reader.readInteger(), reader.readInteger());
         }
     }
 

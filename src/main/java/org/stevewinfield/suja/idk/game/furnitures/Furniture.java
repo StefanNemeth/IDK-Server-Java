@@ -4,12 +4,12 @@
  */
 package org.stevewinfield.suja.idk.game.furnitures;
 
+import org.apache.log4j.Logger;
+import org.stevewinfield.suja.idk.game.rooms.wired.WiredManager;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random;
-
-import org.apache.log4j.Logger;
-import org.stevewinfield.suja.idk.game.rooms.wired.WiredManager;
 
 public class Furniture {
     private static Logger logger = Logger.getLogger(Furniture.class);

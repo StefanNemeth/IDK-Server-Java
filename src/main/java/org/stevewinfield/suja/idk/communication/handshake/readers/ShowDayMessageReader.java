@@ -14,13 +14,11 @@ public class ShowDayMessageReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
         if (Bootloader.getSettings().getProperty("idk.game.dayMessageEnabled", "false").equals("true")) {
-            session.sendNotification(
-            NotifyType.MULTI_ALERT,
-            Bootloader.getSettings().getProperty("idk.game.dayMessage")
-            .replace("%user%", session.getPlayerInstance().getInformation().getPlayerName()));
+            session.sendNotification(NotifyType.MULTI_ALERT, Bootloader.getSettings().getProperty("idk.game.dayMessage").replace("%user%", session.getPlayerInstance().getInformation().getPlayerName()));
         }
     }
 

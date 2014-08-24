@@ -14,8 +14,9 @@ public class GetRecyclerConfigurationReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
         session.writeMessage(new CatalogRecyclerConfigWriter(IDK.CATA_RECYCLER_ENABLED));
     }

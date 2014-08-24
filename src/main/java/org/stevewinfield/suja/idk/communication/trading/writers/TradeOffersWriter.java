@@ -4,13 +4,13 @@
  */
 package org.stevewinfield.suja.idk.communication.trading.writers;
 
-import java.util.Collection;
-
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.OperationCodes;
 import org.stevewinfield.suja.idk.game.furnitures.FurnitureType;
 import org.stevewinfield.suja.idk.game.inventory.PlayerItem;
 import org.stevewinfield.suja.idk.game.trading.Trade;
+
+import java.util.Collection;
 
 public class TradeOffersWriter extends MessageWriter {
 

@@ -4,12 +4,12 @@
  */
 package org.stevewinfield.suja.idk.communication;
 
-import java.nio.charset.Charset;
-
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.stevewinfield.suja.idk.encryption.Base64Encryption;
 import org.stevewinfield.suja.idk.encryption.WireEncryption;
+
+import java.nio.charset.Charset;
 
 public class MessageWriter {
     private short headerId;
@@ -56,8 +56,9 @@ public class MessageWriter {
 
     public void push(final String s, final boolean breaks) {
         this.push(s.getBytes());
-        if (breaks)
+        if (breaks) {
             this.body.writeByte((byte) 2);
+        }
     }
 
     public void push(final ISerialize x) {

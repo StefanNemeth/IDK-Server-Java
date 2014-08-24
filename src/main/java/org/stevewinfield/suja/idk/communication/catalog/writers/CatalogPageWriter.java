@@ -29,8 +29,9 @@ public class CatalogPageWriter extends MessageWriter {
 
         super.push(page.getItems().size()); // items
 
-        for (final CatalogItem item : page.getItems().values())
+        for (final CatalogItem item : page.getItems().values()) {
             super.push(item);
+        }
 
         super.push(-1);
     }

@@ -4,9 +4,9 @@
  */
 package org.stevewinfield.suja.idk.collections;
 
-import java.util.Comparator;
-
 import org.stevewinfield.suja.idk.game.rooms.RoomInformation;
+
+import java.util.Comparator;
 
 public class NavigatorListHelper implements Comparator<RoomInformation> {
     String searchQuery;

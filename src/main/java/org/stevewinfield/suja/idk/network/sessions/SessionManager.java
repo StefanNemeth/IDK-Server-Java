@@ -4,12 +4,12 @@
  */
 package org.stevewinfield.suja.idk.network.sessions;
 
+import org.apache.log4j.Logger;
+import org.jboss.netty.channel.Channel;
+
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-
-import org.apache.log4j.Logger;
-import org.jboss.netty.channel.Channel;
 
 public class SessionManager {
     private static Logger logger = Logger.getLogger(SessionManager.class);
@@ -43,8 +43,7 @@ public class SessionManager {
             this.sessions.remove(channel.getId());
             if (((Session) channel.getAttachment()).isAuthenticated()) {
                 activeSessions--;
-                this.authenticatedSessions.remove(((Session) channel.getAttachment()).getPlayerInstance()
-                .getInformation().getId());
+                this.authenticatedSessions.remove(((Session) channel.getAttachment()).getPlayerInstance().getInformation().getId());
             }
             return true;
         }

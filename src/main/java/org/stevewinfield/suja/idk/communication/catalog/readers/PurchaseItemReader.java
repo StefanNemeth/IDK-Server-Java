@@ -13,19 +13,16 @@ public class PurchaseItemReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
         final int pageId = reader.readInteger();
         final int itemId = reader.readInteger();
         final String extra = reader.readUTF();
 
         if (Bootloader.getGame().getCatalogManager().getCatalogPages().containsKey(pageId)) {
-            Bootloader
-            .getGame()
-            .getCatalogManager()
-            .purchaseItem(session, Bootloader.getGame().getCatalogManager().getCatalogPages().get(pageId), itemId,
-            extra);
+            Bootloader.getGame().getCatalogManager().purchaseItem(session, Bootloader.getGame().getCatalogManager().getCatalogPages().get(pageId), itemId, extra);
         }
     }
 

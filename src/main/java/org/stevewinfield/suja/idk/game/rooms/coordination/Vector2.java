@@ -53,8 +53,9 @@ public class Vector2 {
         final int x = Integer.valueOf(bits[0]);
         int y = 0;
 
-        if (bits.length > 1)
+        if (bits.length > 1) {
             y = Integer.valueOf(bits[1]);
+        }
 
         return new Vector2(x, y);
     }

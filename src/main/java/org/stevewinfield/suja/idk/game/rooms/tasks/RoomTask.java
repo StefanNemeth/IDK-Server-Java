@@ -4,11 +4,6 @@
  */
 package org.stevewinfield.suja.idk.game.rooms.tasks;
 
-import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ScheduledFuture;
-
 import org.magicwerk.brownies.collections.GapList;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.communication.MessageWriter;
@@ -20,6 +15,11 @@ import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
 import org.stevewinfield.suja.idk.game.rooms.tasks.games.BattleBanzaiTask;
 import org.stevewinfield.suja.idk.game.rooms.wired.WiredDelayEvent;
 import org.stevewinfield.suja.idk.threadpools.ServerTask;
+
+import java.util.List;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ScheduledFuture;
 
 public class RoomTask extends ServerTask {
     private final RoomInstance room;
@@ -92,8 +92,9 @@ public class RoomTask extends ServerTask {
     @Override
     public void run() {
         if (this.canceled) {
-            if (this.scheduledFuture == null)
+            if (this.scheduledFuture == null) {
                 return;
+            }
             for (final RoomPlayer player : this.room.getRoomPlayers().values()) {
                 if (player.getSession() != null) {
                     room.removePlayerFromRoom(player.getSession(), true, false);
@@ -148,8 +149,9 @@ public class RoomTask extends ServerTask {
         }
         if (messages.size() > 0) {
             for (final RoomPlayer player : this.room.getRoomPlayers().values()) {
-                if (player.isBot())
+                if (player.isBot()) {
                     continue;
+                }
                 for (final MessageWriter message : messages) {
                     if (message.getSenderId() < 1 || player.getSession().getId() != message.getSenderId()) {
                         player.getSession().writeMessage(message);
@@ -167,15 +169,15 @@ public class RoomTask extends ServerTask {
         while (!this.wiredItemDelay.isEmpty()) {
             final WiredDelayEvent delayEvent = this.wiredItemDelay.poll();
             delayEvent.getAction().onHandle(delayEvent.getPlayer(), delayEvent);
-            if (!delayEvent.isFinished())
+            if (!delayEvent.isFinished()) {
                 reAdd.add(delayEvent);
+            }
         }
         for (final WiredDelayEvent delay : reAdd) {
             this.wiredItemDelay.offer(delay);
         }
         if (this.updates == 0 || this.updates == 3) {
-            Bootloader.getGame().getNavigatorListManager()
-            .setRoom(room.getInformation(), room.getInformation().getTotalPlayers());
+            Bootloader.getGame().getNavigatorListManager().setRoom(room.getInformation(), room.getInformation().getTotalPlayers());
             this.updates = 0;
         }
         this.updates++;

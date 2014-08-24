@@ -9,8 +9,7 @@ import org.stevewinfield.suja.idk.communication.OperationCodes;
 
 public class SubscriptionInfoWriter extends MessageWriter {
 
-    public SubscriptionInfoWriter(final String productName, final int clubDays, final int purchaseStatus,
-    final boolean vip, final boolean showPromo, final int regular, final int priceNow) {
+    public SubscriptionInfoWriter(final String productName, final int clubDays, final int purchaseStatus, final boolean vip, final boolean showPromo, final int regular, final int priceNow) {
         super(OperationCodes.getOutgoingOpCode("SubscriptionInfo"));
         super.push(productName);
         super.push(clubDays);

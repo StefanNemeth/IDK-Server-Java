@@ -15,12 +15,11 @@ public class GetCatalogGiftWrappingSettingsReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
-        session.writeMessage(new CatalogGiftWrappingSettingsWriter(IDK.CATA_GIFTS_MODERN_ENABLED,
-        IDK.CATA_GIFTS_MODERN_PRICE, Bootloader.getGame().getCatalogManager().getCatalogModernGiftItems().keySet(),
-        IDK.CATA_GIFTS_BOX_COUNT, IDK.CATA_GIFTS_RIBBON_COUNT));
+        session.writeMessage(new CatalogGiftWrappingSettingsWriter(IDK.CATA_GIFTS_MODERN_ENABLED, IDK.CATA_GIFTS_MODERN_PRICE, Bootloader.getGame().getCatalogManager().getCatalogModernGiftItems().keySet(), IDK.CATA_GIFTS_BOX_COUNT, IDK.CATA_GIFTS_RIBBON_COUNT));
     }
 
 }

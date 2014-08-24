@@ -15,8 +15,9 @@ public class OpenFlatConnectionReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
         final int roomId = reader.readInteger();
         final String password = reader.readUTF();

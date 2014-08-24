@@ -4,9 +4,6 @@
  */
 package org.stevewinfield.suja.idk.game.friendstream;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.IDK;
@@ -14,11 +11,14 @@ import org.stevewinfield.suja.idk.communication.ISerialize;
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.game.players.PlayerInformation;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class FriendStreamEventData implements ISerialize {
     private static Logger logger = Logger.getLogger(FriendStreamEventData.class);
 
     public int getPostedTimeSpan() {
-        final long diff[] = new long[] { 0, 0, 0, 0, 0 };
+        final long diff[] = new long[]{0, 0, 0, 0, 0};
         long diffInSeconds = (Bootloader.getTimestamp() - timestamp);
         diff[4] = (diffInSeconds >= 60 ? diffInSeconds % 60 : diffInSeconds);
         diff[3] = (diffInSeconds = (diffInSeconds / 60)) >= 60 ? diffInSeconds % 60 : diffInSeconds;
@@ -42,8 +42,7 @@ public class FriendStreamEventData implements ISerialize {
         this.eventData = new String[0];
     }
 
-    public FriendStreamEventData(final int id, final int playerId, final String name, final int gender,
-    final String avatar, final int eventType, final long timestamp, final int linkType, final String[] eventData) {
+    public FriendStreamEventData(final int id, final int playerId, final String name, final int gender, final String avatar, final int eventType, final long timestamp, final int linkType, final String[] eventData) {
         this.id = id;
         this.playerId = playerId;
         this.playerName = name;
@@ -61,8 +60,7 @@ public class FriendStreamEventData implements ISerialize {
             this.id = row.getInt("id");
             this.playerId = row.getInt("player_id");
             this.playerName = row.getString("player_name");
-            this.playerGender = row.getString("player_gender").toLowerCase() == "f" ? PlayerInformation.FEMALE_GENDER
-            : PlayerInformation.MALE_GENDER;
+            this.playerGender = row.getString("player_gender").toLowerCase() == "f" ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
             this.playerAvatar = row.getString("player_avatar");
             this.eventType = row.getInt("event_type");
             this.timestamp = row.getInt("timestamp");
@@ -88,8 +86,9 @@ public class FriendStreamEventData implements ISerialize {
         writer.push(likes);
         writer.push(false);
 
-        for (final String data : this.eventData)
+        for (final String data : this.eventData) {
             writer.push(data);
+        }
     }
 
     // fields

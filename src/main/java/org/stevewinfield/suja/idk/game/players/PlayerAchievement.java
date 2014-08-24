@@ -4,10 +4,10 @@
  */
 package org.stevewinfield.suja.idk.game.players;
 
+import org.apache.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.apache.log4j.Logger;
 
 public class PlayerAchievement {
     private static Logger logger = Logger.getLogger(PlayerAchievement.class);

@@ -14,14 +14,16 @@ public class ListPopularRoomsReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
         final int category = Integer.valueOf(reader.readUTF());
 
         final MessageWriter m = Bootloader.getGame().getNavigatorListManager().getListWriter(category);
-        if (m != null)
+        if (m != null) {
             session.writeMessage(m);
+        }
     }
 
 }

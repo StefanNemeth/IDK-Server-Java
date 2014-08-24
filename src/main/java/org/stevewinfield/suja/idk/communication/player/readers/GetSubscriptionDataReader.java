@@ -14,15 +14,17 @@ public class GetSubscriptionDataReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
         session.writeMessage(new SubscriptionStatusWriter(session.getPlayerInstance().getSubscriptionManager(), false));
 
         final int availableClubGifts = session.getPlayerInstance().getSubscriptionManager().getAvailableGifts();
 
-        if (availableClubGifts > 0)
+        if (availableClubGifts > 0) {
             session.writeMessage(new ClubGiftReadyWriter(availableClubGifts));
+        }
 
     }
 }

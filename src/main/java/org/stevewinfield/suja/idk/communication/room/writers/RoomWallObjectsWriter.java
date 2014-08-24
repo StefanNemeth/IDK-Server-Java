@@ -4,11 +4,11 @@
  */
 package org.stevewinfield.suja.idk.communication.room.writers;
 
-import java.util.Collection;
-
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.OperationCodes;
 import org.stevewinfield.suja.idk.game.rooms.RoomItem;
+
+import java.util.Collection;
 
 public class RoomWallObjectsWriter extends MessageWriter {
 

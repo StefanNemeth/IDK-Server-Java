@@ -13,8 +13,9 @@ public class GetFurniCampaignsReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isLoadingRoom() || !session.roomLoadingChecksPassed())
+        if (!session.isAuthenticated() || !session.isLoadingRoom() || !session.roomLoadingChecksPassed()) {
             return;
+        }
 
         session.writeMessage(new FurniCampaignsWriter());
     }

@@ -4,17 +4,7 @@
  */
 package org.stevewinfield.suja.idk;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Date;
-import java.util.Map.Entry;
-import java.util.Properties;
-
+import com.google.common.io.BaseEncoding;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.magicwerk.brownies.collections.GapList;
@@ -29,7 +19,16 @@ import org.stevewinfield.suja.idk.storage.Storage;
 import org.stevewinfield.suja.idk.threadpools.ServerTask;
 import org.stevewinfield.suja.idk.threadpools.WorkerTasks;
 
-import com.google.common.io.BaseEncoding;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 public class Bootloader {
     private static Logger logger = Logger.getLogger(Bootloader.class);
@@ -158,8 +157,7 @@ public class Bootloader {
         WorkerTasks.initWorkerTasks(1); // initialize worker tasks
 
         sessionManager = new SessionManager(Integer.valueOf(settings.getProperty("idk.game.maxconns", "2000")));
-        listener = new ConnectionListener(settings.getProperty("idk.game.host"), Integer.valueOf(settings
-        .getProperty("idk.game.port")));
+        listener = new ConnectionListener(settings.getProperty("idk.game.host"), Integer.valueOf(settings.getProperty("idk.game.port")));
 
         if (listener.tryListen()) {
             logger.info("Ready for connections (Debugging " + (IDK.DEBUG ? "enabled" : "disabled") + ").");
@@ -169,9 +167,7 @@ public class Bootloader {
                 public void run() {
                     final GapList<Entry<String, String>> parameters = new GapList<Entry<String, String>>();
                     if (Bootloader.placeholderNetwork.analyticsPing(parameters)) {
-                        Bootloader.getStorage().executeQuery(
-                        "UPDATE idk_settings SET `value`='" + Bootloader.getSessionManager().getActiveSessionCount()
-                        + "' WHERE `key`='system.user.online'");
+                        Bootloader.getStorage().executeQuery("UPDATE idk_settings SET `value`='" + Bootloader.getSessionManager().getActiveSessionCount() + "' WHERE `key`='system.user.online'");
                         return;
                     }
                     Bootloader.exitServer();

@@ -4,14 +4,14 @@
  */
 package org.stevewinfield.suja.idk.game.levels;
 
+import org.apache.log4j.Logger;
+import org.magicwerk.brownies.collections.GapList;
+import org.stevewinfield.suja.idk.Bootloader;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.log4j.Logger;
-import org.magicwerk.brownies.collections.GapList;
-import org.stevewinfield.suja.idk.Bootloader;
 
 public class LevelManager {
     private static Logger logger = Logger.getLogger(LevelManager.class);
@@ -46,8 +46,9 @@ public class LevelManager {
             }
             row.close();
             for (int i = 1; i < highestLevel; i++) {
-                if (!this.levels.containsKey(i))
+                if (!this.levels.containsKey(i)) {
                     this.levels.put(i, new Level(i));
+                }
             }
             logger.info(this.levels.size() + " Level(s) loaded.");
 
@@ -57,8 +58,9 @@ public class LevelManager {
                 final LevelRight right = new LevelRight();
                 right.set(row);
                 if (row.getString("exact_name").length() > 0) {
-                    if (!this.specialRights.containsKey(row.getString("exact_name")))
+                    if (!this.specialRights.containsKey(row.getString("exact_name"))) {
                         this.specialRights.put(row.getString("exact_name"), new GapList<LevelRight>());
+                    }
                     this.specialRights.get(row.getString("exact_name")).add(right);
                 } else {
                     for (int i = row.getInt("min_level"); i <= highestLevel; i++) {

@@ -4,9 +4,6 @@
  */
 package org.stevewinfield.suja.idk.game.inventory;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.IDK;
@@ -15,6 +12,9 @@ import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.game.furnitures.Furniture;
 import org.stevewinfield.suja.idk.game.furnitures.FurnitureInteractor;
 import org.stevewinfield.suja.idk.game.furnitures.FurnitureType;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class PlayerItem implements ISerialize {
     private static Logger logger = Logger.getLogger(PlayerItem.class);
@@ -41,8 +41,7 @@ public class PlayerItem implements ISerialize {
     }
 
     public boolean flagsHidden() {
-        return this.base.isWiredItem() || this.base.isGift() || this.getBase().getId() == IDK.CATA_RECYCLER_BOX_ID
-        || this.getBase().getInteractor() == FurnitureInteractor.TELEPORTER;
+        return this.base.isWiredItem() || this.base.isGift() || this.getBase().getId() == IDK.CATA_RECYCLER_BOX_ID || this.getBase().getInteractor() == FurnitureInteractor.TELEPORTER;
     }
 
     public PlayerItem() {
@@ -62,14 +61,13 @@ public class PlayerItem implements ISerialize {
         try {
             this.itemId = row.getInt("item_id");
             this.base = Bootloader.getGame().getFurnitureManager().getFurniture(row.getInt("base_item"));
-            this.interactorId = row.getInt("special_interactor") > -1 ? row.getInt("special_interactor") : this.base
-            .getInteractor();
-            final ResultSet _row = Bootloader.getStorage()
-            .queryParams("SELECT flag FROM item_flags WHERE item_id=" + this.itemId).executeQuery();
-            if (_row != null && _row.next())
+            this.interactorId = row.getInt("special_interactor") > -1 ? row.getInt("special_interactor") : this.base.getInteractor();
+            final ResultSet _row = Bootloader.getStorage().queryParams("SELECT flag FROM item_flags WHERE item_id=" + this.itemId).executeQuery();
+            if (_row != null && _row.next()) {
                 this.flags = _row.getString("flag");
-            else
+            } else {
                 this.flags = "0";
+            }
         } catch (final SQLException e) {
             logger.error("SQL Exception", e);
         }
@@ -81,21 +79,21 @@ public class PlayerItem implements ISerialize {
         int secondaryId = 0;
 
         switch (this.getBase().getInteractor()) {
-        case FurnitureInteractor.WALLPAPER:
-            typeId = 2;
-            break;
-        case FurnitureInteractor.FLOOR:
-            typeId = 3;
-            break;
-        case FurnitureInteractor.LANDSCAPE:
-            typeId = 4;
-            break;
-        case FurnitureInteractor.GIFT:
-            final String[] termFlags = this.flags.split("" + (char) 10);
-            if (termFlags.length > 2) {
-                secondaryId = (Integer.valueOf(termFlags[1]) * 1000) + Integer.valueOf(termFlags[2]);
-            }
-            break;
+            case FurnitureInteractor.WALLPAPER:
+                typeId = 2;
+                break;
+            case FurnitureInteractor.FLOOR:
+                typeId = 3;
+                break;
+            case FurnitureInteractor.LANDSCAPE:
+                typeId = 4;
+                break;
+            case FurnitureInteractor.GIFT:
+                final String[] termFlags = this.flags.split("" + (char) 10);
+                if (termFlags.length > 2) {
+                    secondaryId = (Integer.valueOf(termFlags[1]) * 1000) + Integer.valueOf(termFlags[2]);
+                }
+                break;
         }
 
         writer.push(itemId);

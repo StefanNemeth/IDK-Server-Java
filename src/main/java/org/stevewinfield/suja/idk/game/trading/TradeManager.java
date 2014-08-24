@@ -16,8 +16,9 @@ public class TradeManager {
     }
 
     public boolean initiateTrade(final int a, final int b) {
-        if (this.tradeSessions.containsKey(a) || this.tradeSessions.containsKey(b))
+        if (this.tradeSessions.containsKey(a) || this.tradeSessions.containsKey(b)) {
             return false;
+        }
 
         final Trade trade = new Trade(a, b);
 

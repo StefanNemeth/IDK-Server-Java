@@ -4,15 +4,15 @@
  */
 package org.stevewinfield.suja.idk.communication.catalog.writers;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import org.magicwerk.brownies.collections.GapList;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.OperationCodes;
 import org.stevewinfield.suja.idk.game.catalog.CatalogClubOffer;
 import org.stevewinfield.suja.idk.game.catalog.CatalogClubOfferType;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class CatalogClubOffersWriter extends MessageWriter {
 

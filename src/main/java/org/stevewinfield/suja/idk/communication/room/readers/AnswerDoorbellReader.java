@@ -16,28 +16,29 @@ public class AnswerDoorbellReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isInRoom())
+        if (!session.isAuthenticated() || !session.isInRoom()) {
             return;
+        }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
-        if (room == null || !room.hasRights(session))
+        if (room == null || !room.hasRights(session)) {
             return;
+        }
 
         final String playerName = reader.readUTF();
         final boolean accept = reader.readBytes(1)[0] == 65;
         Session requestSession = null;
 
         for (final Session entry : Bootloader.getSessionManager().getSessions()) {
-            if (!entry.isAuthenticated()
-            || !entry.getPlayerInstance().getInformation().getPlayerName().equals(playerName))
+            if (!entry.isAuthenticated() || !entry.getPlayerInstance().getInformation().getPlayerName().equals(playerName)) {
                 continue;
+            }
             requestSession = entry;
             break;
         }
 
-        if (requestSession == null || !requestSession.isLoadingRoom()
-        || requestSession.getRoomId() != room.getInformation().getId()) {
+        if (requestSession == null || !requestSession.isLoadingRoom() || requestSession.getRoomId() != room.getInformation().getId()) {
             return;
         }
 

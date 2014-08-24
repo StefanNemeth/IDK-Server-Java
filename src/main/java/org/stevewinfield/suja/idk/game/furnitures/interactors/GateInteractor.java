@@ -14,8 +14,9 @@ public class GateInteractor extends DefaultInteractor {
     public void onTrigger(final RoomPlayer player, final RoomItem item, final int request, final boolean hasRights) {
         super.onTrigger(player, item, request, hasRights);
 
-        if (!hasRights && item.getBase().hasRightCheck())
+        if (!hasRights && item.getBase().hasRightCheck()) {
             return;
+        }
 
         if (item.updateState(item.getFlagsState() == 0)) {
             item.setFlags(item.getState() == TileState.OPEN ? 1 : 0);

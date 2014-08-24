@@ -43,8 +43,9 @@ public class ChatCommandArguments {
 
     public String readMessage() {
         String result = "";
-        for (; pointer < this.message.length; pointer++)
+        for (; pointer < this.message.length; pointer++) {
             result += this.message[pointer];
+        }
         return result;
     }
 }

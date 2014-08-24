@@ -13,17 +13,18 @@ public class FriendRequestDeclineReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
         reader.readBoolean();
         int amount = reader.readInteger();
 
-        if (amount > 50)
+        if (amount > 50) {
             amount = 50;
+        }
 
-        final String updateString = "DELETE FROM player_friends WHERE player_acc_id="
-        + session.getPlayerInstance().getInformation().getId();
+        final String updateString = "DELETE FROM player_friends WHERE player_acc_id=" + session.getPlayerInstance().getInformation().getId();
         String whereString = "";
 
         for (int i = 0; i < amount; i++) {

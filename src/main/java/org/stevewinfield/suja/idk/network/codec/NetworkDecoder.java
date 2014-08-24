@@ -20,37 +20,36 @@ public class NetworkDecoder extends FrameDecoder {
 
     @Override
     protected Object decode(final ChannelHandlerContext ctx, final Channel channel, final ChannelBuffer buffer) {
-        
+
         if (buffer.readableBytes() < 5) {
             return null;
         }
-        
+
         int handledObjects = 0;
-        
+
         while (buffer.readableBytes() > 0) {
             try {
                 final byte testXmlLength = buffer.readByte();
                 if (testXmlLength != 64) {
-					buffer.discardReadBytes();
-					ctx.getChannel().write(IDK.XML_POLICY);
+                    buffer.discardReadBytes();
+                    ctx.getChannel().write(IDK.XML_POLICY);
                     return null;
                 }
-                
-                final int    messageLength = Base64Encryption.decode(new String(new byte[] { testXmlLength, buffer.readByte(), buffer.readByte() }));
-                final short  messageId     = (short) Base64Encryption.decode(new String(new byte[] { buffer.readByte(), buffer.readByte() }));
-                final byte[] content       = new byte[messageLength - 2];
-    
+
+                final int messageLength = Base64Encryption.decode(new String(new byte[]{testXmlLength, buffer.readByte(), buffer.readByte()}));
+                final short messageId = (short) Base64Encryption.decode(new String(new byte[]{buffer.readByte(), buffer.readByte()}));
+                final byte[] content = new byte[messageLength - 2];
+
                 buffer.readBytes(content);
-                
-                MessageHandler.handleMessage((Session) ctx.getChannel().getAttachment(),
-                MessageReaderFactory.getMessageReader(messageId, content));
-                
+
+                MessageHandler.handleMessage((Session) ctx.getChannel().getAttachment(), MessageReaderFactory.getMessageReader(messageId, content));
+
                 ++handledObjects;
             } catch (final Exception e) {
                 logger.error("Failed to handle packet", e);
             }
         }
-        
+
         return handledObjects;
     }
 }

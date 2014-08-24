@@ -20,8 +20,9 @@ public class Base64Encryption {
             int y = 0;
             for (int x = (val.length - 1); x >= 0; x--) {
                 int intTmp = (byte) ((val[x] - 64));
-                if (y > 0)
+                if (y > 0) {
                     intTmp = intTmp * (int) (Math.pow(64, y));
+                }
                 intTot += intTmp;
                 y++;
             }

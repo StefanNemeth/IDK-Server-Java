@@ -4,10 +4,10 @@
  */
 package org.stevewinfield.suja.idk.communication;
 
-import java.nio.charset.Charset;
-
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+
+import java.nio.charset.Charset;
 
 public class QueuedMessageWriter {
     private int senderId;
@@ -28,8 +28,9 @@ public class QueuedMessageWriter {
 
     public void push(final MessageWriter writer) {
         this.body.writeBytes(writer.getBytes());
-        if (writer.getSenderId() != null)
+        if (writer.getSenderId() != null) {
             this.senderId = writer.getSenderId();
+        }
         ++count;
     }
 

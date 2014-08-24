@@ -4,15 +4,15 @@
  */
 package org.stevewinfield.suja.idk.game.rooms.wired;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.stevewinfield.suja.idk.communication.MessageReader;
 import org.stevewinfield.suja.idk.game.rooms.RoomInstance;
 import org.stevewinfield.suja.idk.game.rooms.RoomItem;
 import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
 import org.stevewinfield.suja.idk.game.rooms.coordination.Vector2;
 import org.stevewinfield.suja.idk.game.rooms.wired.triggers.*;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class WiredHandler {
     public ConcurrentHashMap<Vector2, ConcurrentHashMap<Integer, IWiredItem>> getStack() {
@@ -24,8 +24,9 @@ public class WiredHandler {
     }
 
     public void addItem(final Vector2 position, final IWiredItem item) {
-        if (!this.stack.containsKey(position))
+        if (!this.stack.containsKey(position)) {
             this.stack.put(position, new ConcurrentHashMap<Integer, IWiredItem>());
+        }
         this.stack.get(position).put(item.getItem().getItemId(), item);
     }
 
@@ -49,23 +50,17 @@ public class WiredHandler {
         final RoomInstance room = item.getRoom();
 
         for (final RoomItem checkWired : room.getRoomItems().values()) {
-            if (WiredManager.isWiredItem(checkWired.getBase())
-            && this.getStack().containsKey(checkWired.getPosition().getVector2())
-            && this.getStack().get(checkWired.getPosition().getVector2()).get(checkWired.getItemId()) instanceof IWiredItem) {
-                final IWiredItem wiredItem = this.getStack().get(checkWired.getPosition().getVector2())
-                .get(checkWired.getItemId());
-                if (wiredItem != null && wiredItem.getItems() != null
-                && wiredItem.getItems().contains(item.getItemId())) {
+            if (WiredManager.isWiredItem(checkWired.getBase()) && this.getStack().containsKey(checkWired.getPosition().getVector2()) && this.getStack().get(checkWired.getPosition().getVector2()).get(checkWired.getItemId()) instanceof IWiredItem) {
+                final IWiredItem wiredItem = this.getStack().get(checkWired.getPosition().getVector2()).get(checkWired.getItemId());
+                if (wiredItem != null && wiredItem.getItems() != null && wiredItem.getItems().contains(item.getItemId())) {
                     String furniString = "";
                     for (final int furni : wiredItem.getItems()) {
-                        if (furni == item.getItemId())
+                        if (furni == item.getItemId()) {
                             continue;
+                        }
                         furniString += "," + furni;
                     }
-                    final String[] obj = wiredItem.getDelay() > -1 ? new String[] {
-                            furniString.length() > 0 ? furniString.substring(1) : furniString,
-                            wiredItem.getDelay() + "" } : new String[] { furniString.length() > 0 ? furniString
-                    .substring(1) : furniString };
+                    final String[] obj = wiredItem.getDelay() > -1 ? new String[]{furniString.length() > 0 ? furniString.substring(1) : furniString, wiredItem.getDelay() + ""} : new String[]{furniString.length() > 0 ? furniString.substring(1) : furniString};
                     wiredItem.set(obj);
                     checkWired.setTermFlags(obj);
                 }
@@ -84,8 +79,7 @@ public class WiredHandler {
         for (final Map.Entry<Vector2, ConcurrentHashMap<Integer, IWiredItem>> e : stack.entrySet()) {
             boolean x2 = false;
             for (final IWiredItem item : e.getValue().values()) {
-                if (item.getWiredType() == 1 && item instanceof WiredTriggerUserSays
-                && ((WiredTrigger) item).onTrigger(player, message)) {
+                if (item.getWiredType() == 1 && item instanceof WiredTriggerUserSays && ((WiredTrigger) item).onTrigger(player, message)) {
                     if (!x) {
                         player.whisper(player.getSession(), player.getVirtualId(), message);
                     }
@@ -106,8 +100,7 @@ public class WiredHandler {
         for (final Map.Entry<Vector2, ConcurrentHashMap<Integer, IWiredItem>> e : stack.entrySet()) {
             boolean x2 = false;
             for (final IWiredItem item : e.getValue().values()) {
-                if (item.getWiredType() == 1 && item instanceof WiredTriggerEnterRoom
-                && ((WiredTrigger) item).onTrigger(player, null)) {
+                if (item.getWiredType() == 1 && item instanceof WiredTriggerEnterRoom && ((WiredTrigger) item).onTrigger(player, null)) {
                     this.lightItem(item);
                     if (!x2) {
                         this.itemTriggered((WiredTrigger) item, player, e.getKey());
@@ -125,8 +118,7 @@ public class WiredHandler {
         for (final Map.Entry<Vector2, ConcurrentHashMap<Integer, IWiredItem>> e : stack.entrySet()) {
             boolean x2 = false;
             for (final IWiredItem item : e.getValue().values()) {
-                if (item.getWiredType() == 1 && item instanceof WiredTriggerUserWalksOnFurni
-                && ((WiredTrigger) item).onTrigger(player, obj)) {
+                if (item.getWiredType() == 1 && item instanceof WiredTriggerUserWalksOnFurni && ((WiredTrigger) item).onTrigger(player, obj)) {
                     this.lightItem(item);
                     if (!x2) {
                         this.itemTriggered((WiredTrigger) item, player, e.getKey());
@@ -144,8 +136,7 @@ public class WiredHandler {
         for (final Map.Entry<Vector2, ConcurrentHashMap<Integer, IWiredItem>> e : stack.entrySet()) {
             boolean x2 = false;
             for (final IWiredItem item : e.getValue().values()) {
-                if (item.getWiredType() == 1 && item instanceof WiredTriggerStateChanged
-                && ((WiredTrigger) item).onTrigger(player, obj)) {
+                if (item.getWiredType() == 1 && item instanceof WiredTriggerStateChanged && ((WiredTrigger) item).onTrigger(player, obj)) {
                     this.lightItem(item);
                     if (!x2) {
                         this.itemTriggered((WiredTrigger) item, player, e.getKey());
@@ -163,8 +154,7 @@ public class WiredHandler {
         for (final Map.Entry<Vector2, ConcurrentHashMap<Integer, IWiredItem>> e : stack.entrySet()) {
             boolean x2 = false;
             for (final IWiredItem item : e.getValue().values()) {
-                if (item.getWiredType() == 1 && item instanceof WiredTriggerUserWalksOffFurni
-                && ((WiredTrigger) item).onTrigger(player, obj)) {
+                if (item.getWiredType() == 1 && item instanceof WiredTriggerUserWalksOffFurni && ((WiredTrigger) item).onTrigger(player, obj)) {
                     this.lightItem(item);
                     if (!x2) {
                         this.itemTriggered((WiredTrigger) item, player, e.getKey());
@@ -182,8 +172,7 @@ public class WiredHandler {
         for (final Map.Entry<Vector2, ConcurrentHashMap<Integer, IWiredItem>> e : stack.entrySet()) {
             boolean x2 = false;
             for (final IWiredItem item : e.getValue().values()) {
-                if (item.getWiredType() == 1 && item instanceof WiredTriggerPeriodically
-                && ((WiredTrigger) item).onTrigger(null, null)) {
+                if (item.getWiredType() == 1 && item instanceof WiredTriggerPeriodically && ((WiredTrigger) item).onTrigger(null, null)) {
                     this.lightItem(item);
                     if (!x2) {
                         this.itemTriggered((WiredTrigger) item, null, e.getKey());
@@ -201,8 +190,7 @@ public class WiredHandler {
         for (final Map.Entry<Vector2, ConcurrentHashMap<Integer, IWiredItem>> e : stack.entrySet()) {
             boolean x2 = false;
             for (final IWiredItem item : e.getValue().values()) {
-                if (item.getWiredType() == 1 && item instanceof WiredTriggerGameEnds
-                && ((WiredTrigger) item).onTrigger(null, null)) {
+                if (item.getWiredType() == 1 && item instanceof WiredTriggerGameEnds && ((WiredTrigger) item).onTrigger(null, null)) {
                     this.lightItem(item);
                     if (!x2) {
                         this.itemTriggered((WiredTrigger) item, null, e.getKey());
@@ -220,8 +208,7 @@ public class WiredHandler {
         for (final Map.Entry<Vector2, ConcurrentHashMap<Integer, IWiredItem>> e : stack.entrySet()) {
             boolean x2 = false;
             for (final IWiredItem item : e.getValue().values()) {
-                if (item.getWiredType() == 1 && item instanceof WiredTriggerGameStarts
-                && ((WiredTrigger) item).onTrigger(null, null)) {
+                if (item.getWiredType() == 1 && item instanceof WiredTriggerGameStarts && ((WiredTrigger) item).onTrigger(null, null)) {
                     this.lightItem(item);
                     if (!x2) {
                         this.itemTriggered((WiredTrigger) item, null, e.getKey());
@@ -235,8 +222,9 @@ public class WiredHandler {
     }
 
     public void saveWired(final RoomItem item, final MessageReader reader) {
-        if (!this.stack.get(item.getPosition().getVector2()).containsKey(item.getItemId()))
+        if (!this.stack.get(item.getPosition().getVector2()).containsKey(item.getItemId())) {
             return;
+        }
 
         final IWiredItem wired = this.stack.get(item.getPosition().getVector2()).get(item.getItemId());
 

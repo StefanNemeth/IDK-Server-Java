@@ -4,12 +4,13 @@
  */
 package org.stevewinfield.suja.idk.communication.navigator.writers;
 
-import java.util.Collection;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.OperationCodes;
 import org.stevewinfield.suja.idk.game.rooms.RoomInformation;
 import org.stevewinfield.suja.idk.game.rooms.RoomInstance;
+
+import java.util.Collection;
 
 public class NavigatorListRoomsWriter extends MessageWriter {
 
@@ -23,8 +24,7 @@ public class NavigatorListRoomsWriter extends MessageWriter {
         writer.push(room.getName()); // also eventname todo
         writer.push(room.getOwnerName()); // owner name.. todo
         writer.push(room.getAccessType());
-        writer.push((room.getTotalPlayers() == 0 && instance != null ? instance.getInformation().getTotalPlayers()
-        : room.getTotalPlayers()));
+        writer.push((room.getTotalPlayers() == 0 && instance != null ? instance.getInformation().getTotalPlayers() : room.getTotalPlayers()));
         writer.push(room.getMaxPlayers());
         writer.push(room.getDescription()); // also eventdescription todo
         writer.push(0);
@@ -43,8 +43,7 @@ public class NavigatorListRoomsWriter extends MessageWriter {
         writer.push(1);
     }
 
-    public NavigatorListRoomsWriter(final int categoryId, final int mode, final String query,
-    final Collection<RoomInformation> rooms) {
+    public NavigatorListRoomsWriter(final int categoryId, final int mode, final String query, final Collection<RoomInformation> rooms) {
         super(OperationCodes.getOutgoingOpCode("NavigatorListRooms"));
         super.push(categoryId);
         super.push(mode);

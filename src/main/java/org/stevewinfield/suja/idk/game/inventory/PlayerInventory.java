@@ -4,13 +4,6 @@
  */
 package org.stevewinfield.suja.idk.game.inventory;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.log4j.Logger;
 import org.magicwerk.brownies.collections.GapList;
 import org.stevewinfield.suja.idk.Bootloader;
@@ -27,6 +20,13 @@ import org.stevewinfield.suja.idk.game.rooms.RoomItem;
 import org.stevewinfield.suja.idk.game.rooms.wired.WiredManager;
 import org.stevewinfield.suja.idk.network.sessions.Session;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class PlayerInventory {
     private static Logger logger = Logger.getLogger(PlayerInventory.class);
 
@@ -36,17 +36,21 @@ public class PlayerInventory {
 
     public GapList<PlayerItem> getFloorItems() {
         final GapList<PlayerItem> list = new GapList<PlayerItem>();
-        for (final PlayerItem item : this.items.values())
-            if (!item.getBase().getType().equals(FurnitureType.WALL))
+        for (final PlayerItem item : this.items.values()) {
+            if (!item.getBase().getType().equals(FurnitureType.WALL)) {
                 list.add(item);
+            }
+        }
         return list;
     }
 
     public GapList<PlayerItem> getWallItems() {
         final GapList<PlayerItem> list = new GapList<PlayerItem>();
-        for (final PlayerItem item : this.items.values())
-            if (item.getBase().getType().equals(FurnitureType.WALL))
+        for (final PlayerItem item : this.items.values()) {
+            if (item.getBase().getType().equals(FurnitureType.WALL)) {
                 list.add(item);
+            }
+        }
         return list;
     }
 
@@ -85,43 +89,43 @@ public class PlayerInventory {
         }
     }
 
-    public int addItem(final Furniture baseItem, final Session session, final int amount, final String flags,
-    final String secondaryData) {
+    public int addItem(final Furniture baseItem, final Session session, final int amount, final String flags, final String secondaryData) {
         return this.addItem(baseItem, session, amount, flags, null, null);
     }
 
-    public int addItem(final Furniture baseItem, final Session session, final int amount, String flags,
-    final String secondaryData, final CatalogItem catalogItem) {
+    public int addItem(final Furniture baseItem, final Session session, final int amount, String flags, final String secondaryData, final CatalogItem catalogItem) {
         final String insert = "INSERT INTO items (base_item, special_interactor) VALUES (" + baseItem.getId() + ", -1)";
 
         if (flags.length() < 1) {
             switch (baseItem.getInteractor()) {
-            default:
-                flags = "0";
-                break;
-            case FurnitureInteractor.POST_IT:
-                flags = "FFFF33" + (char) 10 + "" + (char) 10 + session.getPlayerInstance().getInformation().getId();
-                break;
-            case FurnitureInteractor.BATTLE_BANZAI_TIMER:
-                flags = IDK.BB_DEFAULT_TIMER_SECONDS + "";
-                break;
+                default:
+                    flags = "0";
+                    break;
+                case FurnitureInteractor.POST_IT:
+                    flags = "FFFF33" + (char) 10 + "" + (char) 10 + session.getPlayerInstance().getInformation().getId();
+                    break;
+                case FurnitureInteractor.BATTLE_BANZAI_TIMER:
+                    flags = IDK.BB_DEFAULT_TIMER_SECONDS + "";
+                    break;
             }
         }
 
         switch (baseItem.getInteractor()) {
-        case FurnitureInteractor.WALLPAPER:
-        case FurnitureInteractor.FLOOR:
-        case FurnitureInteractor.LANDSCAPE:
-            if (secondaryData != null)
-                flags = secondaryData;
-            break;
+            case FurnitureInteractor.WALLPAPER:
+            case FurnitureInteractor.FLOOR:
+            case FurnitureInteractor.LANDSCAPE:
+                if (secondaryData != null) {
+                    flags = secondaryData;
+                }
+                break;
         }
 
         final List<PlayerItem> floorItems = new GapList<PlayerItem>();
         final List<PlayerItem> wallItems = new GapList<PlayerItem>();
 
-        if (WiredManager.isWiredItem(baseItem))
+        if (WiredManager.isWiredItem(baseItem)) {
             flags = "";
+        }
 
         int returnValue = -1;
 
@@ -139,14 +143,16 @@ public class PlayerInventory {
                 termFlags = this.addItem(baseItem, session, 1, id + "", null) + "";
             }
             final PlayerItem playerItem = new PlayerItem(id, baseItem, termFlags, baseItem.getInteractor());
-            if (!playerItem.getBase().getType().equals(FurnitureType.WALL))
+            if (!playerItem.getBase().getType().equals(FurnitureType.WALL)) {
                 floorItems.add(playerItem);
-            else
+            } else {
                 wallItems.add(playerItem);
+            }
         }
 
-        if (catalogItem != null)
+        if (catalogItem != null) {
             session.writeMessage(new CatalogPurchaseResultWriter(catalogItem, false));
+        }
 
         for (final PlayerItem inItem : floorItems) {
             this.addItem(inItem);
@@ -163,30 +169,34 @@ public class PlayerInventory {
     }
 
     public void addItem(final RoomItem item, final Session session, final boolean setFlag) {
-        if (this.itemsToRemove.contains(item.getItemId()))
+        if (this.itemsToRemove.contains(item.getItemId())) {
             this.itemsToRemove.remove(new Integer(item.getItemId()));
+        }
         this.itemsToAdd.add(item.getItemId());
-        if (setFlag)
+        if (setFlag) {
             this.itemsToUpdate.add(item.getItemId());
+        }
         String flags = item.getFlags();
         if (item.getTermFlags() != null) {
             flags = "";
-            for (final String tFlag : item.getTermFlags())
+            for (final String tFlag : item.getTermFlags()) {
                 flags += tFlag + (char) 10;
+            }
         }
-        this.items.put(item.getItemId(),
-        new PlayerItem(item.getItemId(), item.getBase(), flags, item.getInteractorId()));
+        this.items.put(item.getItemId(), new PlayerItem(item.getItemId(), item.getBase(), flags, item.getInteractorId()));
         if (session != null) {
             session.writeMessage(new UpdatePlayerInventoryWriter());
         }
     }
 
     public void addItem(final PlayerItem item, final boolean setFlag) {
-        if (this.itemsToRemove.contains(item.getItemId()))
+        if (this.itemsToRemove.contains(item.getItemId())) {
             this.itemsToRemove.remove(new Integer(item.getItemId()));
+        }
         this.itemsToAdd.add(item.getItemId());
-        if (setFlag)
+        if (setFlag) {
             this.itemsToUpdate.add(item.getItemId());
+        }
         this.items.put(item.getItemId(), item);
     }
 
@@ -199,26 +209,28 @@ public class PlayerInventory {
         final StringBuilder addQuery = new StringBuilder();
         final StringBuilder updateQuery = new StringBuilder();
         List<String> flagList = new GapList<String>();
-        for (final Integer removeItem : this.itemsToRemove)
+        for (final Integer removeItem : this.itemsToRemove) {
             removeQuery.append(" OR item_id=" + removeItem);
-        for (final Integer addItem : this.itemsToAdd)
+        }
+        for (final Integer addItem : this.itemsToAdd) {
             addQuery.append(" ,(" + addItem + ", " + playerId + ")");
+        }
         for (final Integer updateItem : this.itemsToUpdate) {
             updateQuery.append(" ,(" + updateItem + ", ?)");
             flagList.add(this.items.get(updateItem).getFlags());
         }
-        if (addQuery.length() > 0)
-            Bootloader.getStorage().executeQuery(
-            "REPLACE INTO player_items (item_id, player_id) VALUES " + addQuery.toString().substring(2));
-        if (removeQuery.length() > 0)
-            Bootloader.getStorage().executeQuery(
-            "DELETE FROM player_items WHERE (" + removeQuery.toString().substring(4) + ") AND player_id=" + playerId);
+        if (addQuery.length() > 0) {
+            Bootloader.getStorage().executeQuery("REPLACE INTO player_items (item_id, player_id) VALUES " + addQuery.toString().substring(2));
+        }
+        if (removeQuery.length() > 0) {
+            Bootloader.getStorage().executeQuery("DELETE FROM player_items WHERE (" + removeQuery.toString().substring(4) + ") AND player_id=" + playerId);
+        }
         if (updateQuery.length() > 0) {
-            final PreparedStatement pn = Bootloader.getStorage().queryParams(
-            "REPLACE INTO item_flags (item_id, flag) VALUES " + updateQuery.toString().substring(2));
+            final PreparedStatement pn = Bootloader.getStorage().queryParams("REPLACE INTO item_flags (item_id, flag) VALUES " + updateQuery.toString().substring(2));
             try {
-                for (int i = 0; i < flagList.size(); i++)
+                for (int i = 0; i < flagList.size(); i++) {
                     pn.setString(i + 1, flagList.get(i));
+                }
                 pn.execute();
             } catch (final SQLException ex) {
                 logger.error("SQL Exception", ex);
@@ -237,11 +249,7 @@ public class PlayerInventory {
 
     public void load(final int playerId) {
         try {
-            final ResultSet row = Bootloader
-            .getStorage()
-            .queryParams(
-            "SELECT * FROM player_items, items WHERE player_id = " + playerId
-            + " AND items.id=item_id ORDER BY item_id").executeQuery();
+            final ResultSet row = Bootloader.getStorage().queryParams("SELECT * FROM player_items, items WHERE player_id = " + playerId + " AND items.id=item_id ORDER BY item_id").executeQuery();
             while (row.next()) {
                 final PlayerItem item = new PlayerItem();
                 item.set(row);

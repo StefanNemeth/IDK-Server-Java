@@ -17,10 +17,10 @@ public class ModerationPlayerInfoWriter extends MessageWriter {
         super.push(playerInfo.getId());
         super.push(playerInfo.getPlayerName());
         super.push(((int) (Bootloader.getTimestamp() - playerInfo.getRegisteredTimestamp())) / 60); // time
-                                                                                                    // registered
+        // registered
         super.push(((int) (Bootloader.getTimestamp() - playerInfo.getLastLoginTimestamp())) / 60); // time
-                                                                                                   // last
-                                                                                                   // login
+        // last
+        // login
         super.push(session != null);
         super.push(playerInfo.getTotalCFHS()); // created tickets
         super.push(playerInfo.getAbusiveCFHS()); // tickets abusive

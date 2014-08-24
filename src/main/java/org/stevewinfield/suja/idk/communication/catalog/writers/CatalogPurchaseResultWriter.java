@@ -10,8 +10,7 @@ import org.stevewinfield.suja.idk.game.catalog.CatalogItem;
 
 public class CatalogPurchaseResultWriter extends MessageWriter {
 
-    public CatalogPurchaseResultWriter(final int id, final String displayName, final int priceCredits,
-    final int pricePixels, final int priceExtra) {
+    public CatalogPurchaseResultWriter(final int id, final String displayName, final int priceCredits, final int pricePixels, final int priceExtra) {
         super(OperationCodes.getOutgoingOpCode("CatalogPurchaseResult"));
         super.push(id);
         super.push(displayName);

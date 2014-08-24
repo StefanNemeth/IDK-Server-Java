@@ -4,9 +4,6 @@
  */
 package org.stevewinfield.suja.idk.communication.moderation.readers;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.Translations;
@@ -17,13 +14,17 @@ import org.stevewinfield.suja.idk.game.miscellaneous.NotifyType;
 import org.stevewinfield.suja.idk.game.players.PlayerInformation;
 import org.stevewinfield.suja.idk.network.sessions.Session;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class GetModerationPlayerInfoReader implements IMessageReader {
     private static Logger logger = Logger.getLogger(GetModerationPlayerInfoReader.class);
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.getPlayerInstance().hasRight("moderation_tool"))
+        if (!session.isAuthenticated() || !session.getPlayerInstance().hasRight("moderation_tool")) {
             return;
+        }
 
         final int playerId = reader.readInteger();
 
@@ -32,8 +33,7 @@ public class GetModerationPlayerInfoReader implements IMessageReader {
 
         if (target == null || !target.isAuthenticated()) {
             try {
-                final ResultSet row = Bootloader.getStorage().queryParams("SELECT * FROM players WHERE id=" + playerId)
-                .executeQuery();
+                final ResultSet row = Bootloader.getStorage().queryParams("SELECT * FROM players WHERE id=" + playerId).executeQuery();
                 if (row.next()) {
                     info = new PlayerInformation();
                     info.set(row);
@@ -47,8 +47,7 @@ public class GetModerationPlayerInfoReader implements IMessageReader {
         }
 
         if (info == null) {
-            session.sendNotification(NotifyType.MOD_ALERT,
-            Translations.getTranslation("fail_load_user_information"));
+            session.sendNotification(NotifyType.MOD_ALERT, Translations.getTranslation("fail_load_user_information"));
             return;
         }
 

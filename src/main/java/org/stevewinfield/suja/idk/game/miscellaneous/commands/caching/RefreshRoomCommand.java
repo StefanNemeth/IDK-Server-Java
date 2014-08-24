@@ -20,8 +20,9 @@ public class RefreshRoomCommand implements IChatCommand {
     public boolean execute(final RoomPlayer player, final ChatCommandArguments arguments) {
         final RoomInstance room = player.getRoom();
 
-        if (room == null || !room.hasRights(player.getSession(), true))
+        if (room == null || !room.hasRights(player.getSession(), true)) {
             return false;
+        }
 
         room.refresh(); // TODO: player reloading
         return true;

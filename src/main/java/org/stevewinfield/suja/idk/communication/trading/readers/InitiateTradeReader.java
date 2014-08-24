@@ -18,30 +18,29 @@ public class InitiateTradeReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isInRoom())
+        if (!session.isAuthenticated() || !session.isInRoom()) {
             return;
+        }
 
         final int targetId = reader.readInteger();
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
-        if (room == null || !room.getRoomPlayers().containsKey(targetId))
+        if (room == null || !room.getRoomPlayers().containsKey(targetId)) {
             return;
+        }
 
         final RoomPlayer target = room.getRoomPlayers().get(targetId);
 
-        if (target == null || target.getSession() == null
-        || target.getVirtualId() == session.getRoomPlayer().getVirtualId())
+        if (target == null || target.getSession() == null || target.getVirtualId() == session.getRoomPlayer().getVirtualId()) {
             return;
+        }
 
-        if (!room.getTradeManager().initiateTrade(session.getRoomPlayer().getPlayerInformation().getId(),
-        target.getPlayerInformation().getId())) {
+        if (!room.getTradeManager().initiateTrade(session.getRoomPlayer().getPlayerInformation().getId(), target.getPlayerInformation().getId())) {
             session.writeMessage(new RoomTradeCannotInitiateWriter());
             return;
         }
 
-        final MessageWriter tradeInitiated = new TradeInitiatedWriter(session.getRoomPlayer().getPlayerInformation().getId(),
-        session.getRoomPlayer().getPlayerInformation().canTrade(), target.getPlayerInformation().getId(), target
-        .getPlayerInformation().canTrade()); // TODO: can trade?
+        final MessageWriter tradeInitiated = new TradeInitiatedWriter(session.getRoomPlayer().getPlayerInformation().getId(), session.getRoomPlayer().getPlayerInformation().canTrade(), target.getPlayerInformation().getId(), target.getPlayerInformation().canTrade()); // TODO: can trade?
 
         session.writeMessage(tradeInitiated);
         target.getSession().writeMessage(tradeInitiated);

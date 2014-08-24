@@ -14,13 +14,15 @@ public class ContinueLoadingAfterDoorbellReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(reader.readInteger());
 
-        if (room == null)
+        if (room == null) {
             return;
+        }
 
         session.enterRoom(room);
 

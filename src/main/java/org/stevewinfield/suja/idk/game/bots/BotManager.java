@@ -15,7 +15,6 @@ import org.stevewinfield.suja.idk.game.rooms.RoomInstance;
 import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
 
 import javax.script.Invocable;
-import javax.script.ScriptException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -98,7 +97,9 @@ public class BotManager {
 
             @Override
             public void onLoaded(final RoomInstance room, final RoomPlayer bot) {
-                if (onLoadedInterface == null) return;
+                if (onLoadedInterface == null) {
+                    return;
+                }
                 try {
                     onLoadedInterface.onLoaded(room, bot);
                 } catch (final Throwable t) {
@@ -108,7 +109,9 @@ public class BotManager {
 
             @Override
             public void onLeft(final RoomInstance room, final RoomPlayer bot) {
-                if (onLeftInterface == null) return;
+                if (onLeftInterface == null) {
+                    return;
+                }
                 try {
                     onLeftInterface.onLeft(room, bot);
                 } catch (final Throwable t) {
@@ -118,7 +121,9 @@ public class BotManager {
 
             @Override
             public void onCycle(final RoomPlayer bot) {
-                if (onCycleInterface == null) return;
+                if (onCycleInterface == null) {
+                    return;
+                }
                 try {
                     onCycleInterface.onCycle(bot);
                 } catch (final Throwable t) {
@@ -128,7 +133,9 @@ public class BotManager {
 
             @Override
             public void onPlayerSays(final RoomPlayer player, final RoomPlayer bot, final ChatMessage message) {
-                if (onPlayerSaysInterface == null) return;
+                if (onPlayerSaysInterface == null) {
+                    return;
+                }
                 try {
                     onPlayerSaysInterface.onPlayerSays(player, bot, message);
                 } catch (final Throwable t) {
@@ -140,8 +147,7 @@ public class BotManager {
     }
 
     private <T> T getInterface(final GamePlugin plugin, final String obj, Class<T> clazz) {
-        return ((Invocable) plugin.getScript()).getInterface(plugin.getScript()
-                .get(obj), clazz);
+        return ((Invocable) plugin.getScript()).getInterface(plugin.getScript().get(obj), clazz);
     }
 
     private final ConcurrentHashMap<Integer, BotInstance> bots;

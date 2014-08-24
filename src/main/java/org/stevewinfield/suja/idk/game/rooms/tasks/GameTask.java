@@ -4,14 +4,14 @@
  */
 package org.stevewinfield.suja.idk.game.rooms.tasks;
 
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.magicwerk.brownies.collections.GapList;
 import org.stevewinfield.suja.idk.game.rooms.GameTeam;
 import org.stevewinfield.suja.idk.game.rooms.RoomInstance;
 import org.stevewinfield.suja.idk.game.rooms.RoomItem;
 import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
+
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class GameTask {
     protected RoomInstance room;

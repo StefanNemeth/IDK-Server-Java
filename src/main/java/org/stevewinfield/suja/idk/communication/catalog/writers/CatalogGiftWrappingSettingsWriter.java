@@ -4,15 +4,14 @@
  */
 package org.stevewinfield.suja.idk.communication.catalog.writers;
 
-import java.util.Collection;
-
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.OperationCodes;
 
+import java.util.Collection;
+
 public class CatalogGiftWrappingSettingsWriter extends MessageWriter {
 
-    public CatalogGiftWrappingSettingsWriter(final boolean modernEnabled, final int modernPrice,
-    final Collection<Integer> baseItems, final int boxCount, final int ribbonCount) {
+    public CatalogGiftWrappingSettingsWriter(final boolean modernEnabled, final int modernPrice, final Collection<Integer> baseItems, final int boxCount, final int ribbonCount) {
         super(OperationCodes.getOutgoingOpCode("CatalogGiftWrappingSettings"));
         super.push(modernEnabled);
         super.push(modernPrice);

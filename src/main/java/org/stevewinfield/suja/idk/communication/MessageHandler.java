@@ -4,28 +4,37 @@
  */
 package org.stevewinfield.suja.idk.communication;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.IDK;
-import org.stevewinfield.suja.idk.communication.achievement.readers.*;
-import org.stevewinfield.suja.idk.communication.friendstream.readers.*;
-import org.stevewinfield.suja.idk.communication.global.readers.*;
-import org.stevewinfield.suja.idk.communication.handshake.readers.*;
+import org.stevewinfield.suja.idk.communication.achievement.readers.GetAchievementListReader;
+import org.stevewinfield.suja.idk.communication.catalog.readers.*;
+import org.stevewinfield.suja.idk.communication.catalog.recycler.readers.GetRecyclerConfigurationReader;
+import org.stevewinfield.suja.idk.communication.catalog.recycler.readers.GetRewardsListReader;
+import org.stevewinfield.suja.idk.communication.catalog.recycler.readers.RecycleItemsReader;
+import org.stevewinfield.suja.idk.communication.friendstream.readers.FriendStreamEventRequestReader;
+import org.stevewinfield.suja.idk.communication.friendstream.readers.ToggleFriendStreamReader;
+import org.stevewinfield.suja.idk.communication.global.readers.DebugEventReader;
+import org.stevewinfield.suja.idk.communication.global.readers.LatencyTestReader;
+import org.stevewinfield.suja.idk.communication.handshake.readers.AuthenticatePlayerReader;
+import org.stevewinfield.suja.idk.communication.handshake.readers.InitializeCryptoReader;
+import org.stevewinfield.suja.idk.communication.handshake.readers.ShowDayMessageReader;
+import org.stevewinfield.suja.idk.communication.inventory.readers.GetObjectInventoryReader;
 import org.stevewinfield.suja.idk.communication.messenger.readers.*;
-import org.stevewinfield.suja.idk.communication.moderation.readers.*;
+import org.stevewinfield.suja.idk.communication.moderation.readers.GetModerationPlayerInfoReader;
+import org.stevewinfield.suja.idk.communication.moderation.readers.GetModerationRoomInfoReader;
+import org.stevewinfield.suja.idk.communication.moderation.readers.ModerationPlayerMessageReader;
 import org.stevewinfield.suja.idk.communication.navigator.readers.*;
 import org.stevewinfield.suja.idk.communication.player.readers.*;
-import org.stevewinfield.suja.idk.communication.quests.readers.*;
+import org.stevewinfield.suja.idk.communication.quests.readers.GetQuestsListReader;
 import org.stevewinfield.suja.idk.communication.room.readers.*;
-import org.stevewinfield.suja.idk.communication.room.settings.readers.*;
-import org.stevewinfield.suja.idk.communication.inventory.readers.*;
-import org.stevewinfield.suja.idk.communication.catalog.readers.*;
-import org.stevewinfield.suja.idk.communication.catalog.recycler.readers.*;
-import org.stevewinfield.suja.idk.communication.room.wired.readers.*;
+import org.stevewinfield.suja.idk.communication.room.settings.readers.EditRoomReader;
+import org.stevewinfield.suja.idk.communication.room.settings.readers.RoomEditGetInfoReader;
+import org.stevewinfield.suja.idk.communication.room.wired.readers.SaveWiredReader;
 import org.stevewinfield.suja.idk.communication.trading.readers.*;
 import org.stevewinfield.suja.idk.network.sessions.Session;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MessageHandler {
     private static Logger logger = Logger.getLogger(MessageHandler.class);
@@ -143,8 +152,7 @@ public class MessageHandler {
         messages.put(OperationCodes.getIncomingOpCode("PlayerChangeRotation"), new PlayerChangeRotationReader());
         messages.put(OperationCodes.getIncomingOpCode("PlayerWhisper"), new PlayerWhisperReader());
         messages.put(OperationCodes.getIncomingOpCode("AnswerDoorbell"), new AnswerDoorbellReader());
-        messages.put(OperationCodes.getIncomingOpCode("ContinueLoadingAfterDoorbell"),
-        new ContinueLoadingAfterDoorbellReader());
+        messages.put(OperationCodes.getIncomingOpCode("ContinueLoadingAfterDoorbell"), new ContinueLoadingAfterDoorbellReader());
         messages.put(OperationCodes.getIncomingOpCode("RateRoom"), new RateRoomReader());
         messages.put(OperationCodes.getIncomingOpCode("SetHomeRoom"), new SetHomeRoomReader());
         messages.put(OperationCodes.getIncomingOpCode("GetRoomInformation"), new GetRoomInformationReader());
@@ -170,22 +178,19 @@ public class MessageHandler {
         messages.put(OperationCodes.getIncomingOpCode("GetMonthlyClubGifts"), new GetMonthlyClubGiftsReader());
         messages.put(OperationCodes.getIncomingOpCode("ChooseCatalogClubGift"), new ChooseCatalogClubGiftReader());
         messages.put(OperationCodes.getIncomingOpCode("CheckCanGift"), new CheckCanGiftReader());
-        messages.put(OperationCodes.getIncomingOpCode("GetCatalogGiftWrappingSettings"),
-        new GetCatalogGiftWrappingSettingsReader());
+        messages.put(OperationCodes.getIncomingOpCode("GetCatalogGiftWrappingSettings"), new GetCatalogGiftWrappingSettingsReader());
         messages.put(OperationCodes.getIncomingOpCode("PurchaseGiftItem"), new PurchaseGiftItemReader());
     }
 
     private static void putRecyclerMessages() {
         messages.put(OperationCodes.getIncomingOpCode("GetRewardsList"), new GetRewardsListReader());
-        messages
-        .put(OperationCodes.getIncomingOpCode("GetRecyclerConfiguration"), new GetRecyclerConfigurationReader());
+        messages.put(OperationCodes.getIncomingOpCode("GetRecyclerConfiguration"), new GetRecyclerConfigurationReader());
         messages.put(OperationCodes.getIncomingOpCode("RecycleItems"), new RecycleItemsReader());
     }
 
     private static void putFriendStreamMessages() {
         messages.put(OperationCodes.getIncomingOpCode("ToggleFriendStream"), new ToggleFriendStreamReader());
-        messages
-        .put(OperationCodes.getIncomingOpCode("FriendStreamEventRequest"), new FriendStreamEventRequestReader());
+        messages.put(OperationCodes.getIncomingOpCode("FriendStreamEventRequest"), new FriendStreamEventRequestReader());
     }
 
     private static void putModerationMessages() {
@@ -201,8 +206,7 @@ public class MessageHandler {
     public static void handleMessage(final Session session, final MessageReader reader) {
         final boolean contains = messages.containsKey(reader.getMessageId());
         if (IDK.DEBUG) {
-            logger.debug("REC #" + reader.getMessageId() + " " + (contains ? "[HANDLING]" : "") + " "
-            + reader.getDebugString());
+            logger.debug("REC #" + reader.getMessageId() + " " + (contains ? "[HANDLING]" : "") + " " + reader.getDebugString());
         }
         if (messages.containsKey(reader.getMessageId())) {
             messages.get(reader.getMessageId()).parse(session, reader);

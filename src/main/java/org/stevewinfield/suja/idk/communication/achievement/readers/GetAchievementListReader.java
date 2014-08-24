@@ -14,9 +14,9 @@ public class GetAchievementListReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
-        session.writeMessage(new AchievementListWriter(session.getPlayerInstance().getAchievements(), Bootloader
-        .getGame().getAchievementManager().getAchievements().values()));
+        }
+        session.writeMessage(new AchievementListWriter(session.getPlayerInstance().getAchievements(), Bootloader.getGame().getAchievementManager().getAchievements().values()));
     }
 }

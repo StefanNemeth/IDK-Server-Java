@@ -4,15 +4,15 @@
  */
 package org.stevewinfield.suja.idk.game.furnitures;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.game.furnitures.interactors.*;
 import org.stevewinfield.suja.idk.game.furnitures.interactors.games.banzai.*;
 import org.stevewinfield.suja.idk.game.furnitures.interactors.wired.*;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class FurnitureManager {
     private static Logger logger = Logger.getLogger(FurnitureManager.class);
@@ -82,14 +82,10 @@ public class FurnitureManager {
         this.interactors.put(FurnitureInteractor.BATTLE_BANZAI_GATE_GREEN, new BattleBanzaiGreenGateInteractor());
         this.interactors.put(FurnitureInteractor.BATTLE_BANZAI_GATE_BLUE, new BattleBanzaiBlueGateInteractor());
         this.interactors.put(FurnitureInteractor.BATTLE_BANZAI_GATE_ORANGE, new BattleBanzaiOrangeGateInteractor());
-        this.interactors.put(FurnitureInteractor.BATTLE_BANZAI_SCOREBOARD_PINK,
-        new BattleBanzaiPinkScoreboardInteractor());
-        this.interactors.put(FurnitureInteractor.BATTLE_BANZAI_SCOREBOARD_GREEN,
-        new BattleBanzaiGreenScoreboardInteractor());
-        this.interactors.put(FurnitureInteractor.BATTLE_BANZAI_SCOREBOARD_BLUE,
-        new BattleBanzaiBlueScoreboardInteractor());
-        this.interactors.put(FurnitureInteractor.BATTLE_BANZAI_SCOREBOARD_ORANGE,
-        new BattleBanzaiOrangeScoreboardInteractor());
+        this.interactors.put(FurnitureInteractor.BATTLE_BANZAI_SCOREBOARD_PINK, new BattleBanzaiPinkScoreboardInteractor());
+        this.interactors.put(FurnitureInteractor.BATTLE_BANZAI_SCOREBOARD_GREEN, new BattleBanzaiGreenScoreboardInteractor());
+        this.interactors.put(FurnitureInteractor.BATTLE_BANZAI_SCOREBOARD_BLUE, new BattleBanzaiBlueScoreboardInteractor());
+        this.interactors.put(FurnitureInteractor.BATTLE_BANZAI_SCOREBOARD_ORANGE, new BattleBanzaiOrangeScoreboardInteractor());
         this.interactors.put(FurnitureInteractor.EXCHANGE, new ExchangeInteractor());
         this.interactors.put(FurnitureInteractor.WF_TRG_STATE_CHANGED, new WiredTriggerStateChangedInteractor());
         this.interactors.put(FurnitureInteractor.WF_TRG_PERIODICALLY, new WiredTriggerPeriodicallyInteractor());

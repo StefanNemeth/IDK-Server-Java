@@ -4,10 +4,6 @@
  */
 package org.stevewinfield.suja.idk.game.achievements;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.log4j.Logger;
 import org.magicwerk.brownies.collections.GapList;
 import org.stevewinfield.suja.idk.Bootloader;
@@ -17,6 +13,10 @@ import org.stevewinfield.suja.idk.communication.player.writers.ActivityPointsWri
 import org.stevewinfield.suja.idk.game.friendstream.FriendStreamEventType;
 import org.stevewinfield.suja.idk.game.players.PlayerAchievement;
 import org.stevewinfield.suja.idk.network.sessions.Session;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AchievementManager {
     private static Logger logger = Logger.getLogger(AchievementManager.class);
@@ -49,16 +49,18 @@ public class AchievementManager {
                         break;
                     }
                 }
-                if (ach == null)
+                if (ach == null) {
                     continue;
+                }
                 ach.addLevel(row.getInt("level_reward"), row.getInt("level_score"), row.getInt("progress_needed"));
                 achievemntLevelsLoaded++;
             }
             row.close();
             final GapList<String> toRemove = new GapList<String>();
             for (final Achievement achievement : this.achievements.values()) {
-                if (achievement.getLevelCount() < 1)
+                if (achievement.getLevelCount() < 1) {
                     toRemove.add(achievement.getGroupName());
+                }
             }
             for (final String x : toRemove) {
                 this.achievements.remove(x);
@@ -71,26 +73,31 @@ public class AchievementManager {
     }
 
     public boolean progressAchievement(final Session session, final String achievementName, final int progressAmount) {
-        if (!this.achievements.containsKey(achievementName))
+        if (!this.achievements.containsKey(achievementName)) {
             return false;
+        }
 
         final Achievement achievement = this.achievements.get(achievementName);
 
-        if (achievement == null)
+        if (achievement == null) {
             return false;
+        }
 
         PlayerAchievement playerAchievement = null;
 
-        if (session.getPlayerInstance().getAchievements().containsKey(achievement.getId()))
+        if (session.getPlayerInstance().getAchievements().containsKey(achievement.getId())) {
             playerAchievement = session.getPlayerInstance().getAchievements().get(achievement.getId());
+        }
 
-        if (playerAchievement != null && playerAchievement.getLevel() == achievement.getLevelCount())
+        if (playerAchievement != null && playerAchievement.getLevel() == achievement.getLevelCount()) {
             return false;
+        }
 
         int targetLevel = playerAchievement != null ? playerAchievement.getLevel() + 1 : 1;
 
-        if (targetLevel > achievement.getLevelCount())
+        if (targetLevel > achievement.getLevelCount()) {
             targetLevel = achievement.getLevelCount();
+        }
 
         int newProgress = playerAchievement != null ? playerAchievement.getProgress() + progressAmount : progressAmount;
         final AchievementLevel level = achievement.getLevels().get(targetLevel);
@@ -98,8 +105,9 @@ public class AchievementManager {
         int newLevel = playerAchievement != null ? playerAchievement.getLevel() : 0;
         int newTarget = newLevel + 1;
 
-        if (newTarget > achievement.getLevelCount())
+        if (newTarget > achievement.getLevelCount()) {
             newTarget = achievement.getLevelCount();
+        }
 
         if (newProgress >= level.getRequirement()) {
             newLevel++;
@@ -107,32 +115,27 @@ public class AchievementManager {
 
             newProgress = 0;
 
-            if (newTarget > achievement.getLevelCount())
+            if (newTarget > achievement.getLevelCount()) {
                 newTarget = achievement.getLevelCount();
+            }
 
             if (level.getPixelsReward() > 0) {
                 session.getPlayerInstance().getInformation().setPixels(level.getPixelsReward());
-                session.writeMessage(new ActivityPointsWriter(session.getPlayerInstance().getInformation()
-                .getPixelsBalance(), session.getPlayerInstance().getInformation().getShellsBalance()));
+                session.writeMessage(new ActivityPointsWriter(session.getPlayerInstance().getInformation().getPixelsBalance(), session.getPlayerInstance().getInformation().getShellsBalance()));
                 session.getPlayerInstance().getInformation().updateCurrencies();
             }
 
-            session.writeMessage(new AchievementUnlockedWriter(achievement, targetLevel, level.getPointsReward(), level
-            .getPixelsReward()));
+            session.writeMessage(new AchievementUnlockedWriter(achievement, targetLevel, level.getPointsReward(), level.getPixelsReward()));
 
-            playerAchievement = session.getPlayerInstance().setAchievement(achievement.getId(), newLevel,
-            progressAmount);
+            playerAchievement = session.getPlayerInstance().setAchievement(achievement.getId(), newLevel, progressAmount);
 
-            session.writeMessage(new AchievementProgressWriter(achievement, newTarget, achievement.getLevels().get(
-            newTarget), achievement.getLevelCount(), playerAchievement));
+            session.writeMessage(new AchievementProgressWriter(achievement, newTarget, achievement.getLevels().get(newTarget), achievement.getLevelCount(), playerAchievement));
 
-            session.getFriendStream().broadcastEvent(session, FriendStreamEventType.GET_ACHIVEMENT_BADGE, 0,
-            new String[] { achievement.getGroupName() + newLevel });
+            session.getFriendStream().broadcastEvent(session, FriendStreamEventType.GET_ACHIVEMENT_BADGE, 0, new String[]{achievement.getGroupName() + newLevel});
             return true;
         }
         playerAchievement = session.getPlayerInstance().setAchievement(achievement.getId(), newLevel, progressAmount);
-        session.writeMessage(new AchievementProgressWriter(achievement, targetLevel, level,
-        achievement.getLevelCount(), playerAchievement));
+        session.writeMessage(new AchievementProgressWriter(achievement, targetLevel, level, achievement.getLevelCount(), playerAchievement));
         return false;
     }
 

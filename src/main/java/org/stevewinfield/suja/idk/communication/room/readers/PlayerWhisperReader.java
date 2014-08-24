@@ -16,36 +16,43 @@ public class PlayerWhisperReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isInRoom())
+        if (!session.isAuthenticated() || !session.isInRoom()) {
             return;
+        }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
-        if (room == null || session.getRoomPlayer().isGettingKicked())
+        if (room == null || session.getRoomPlayer().isGettingKicked()) {
             return;
+        }
 
         String message = reader.readUTF();
 
-        if (message.length() < 1)
+        if (message.length() < 1) {
             return;
+        }
 
         final String targetName = message.substring(0, message.indexOf(" "));
 
-        if (targetName.length() < 1 || message.length() < (targetName.length() + 1))
+        if (targetName.length() < 1 || message.length() < (targetName.length() + 1)) {
             return;
+        }
 
         message = InputFilter.filterString(message.substring(message.indexOf(" ") + 1));
 
-        if (message.length() < 1)
+        if (message.length() < 1) {
             return;
+        }
 
-        if (message.length() > 100)
+        if (message.length() > 100) {
             message = message.substring(0, 100);
+        }
 
         session.getRoomPlayer().whisper(session, session.getRoomPlayer().getVirtualId(), message);
 
-        if (targetName.equals(session.getPlayerInstance().getInformation().getPlayerName()))
+        if (targetName.equals(session.getPlayerInstance().getInformation().getPlayerName())) {
             return;
+        }
 
         RoomPlayer target = null;
 

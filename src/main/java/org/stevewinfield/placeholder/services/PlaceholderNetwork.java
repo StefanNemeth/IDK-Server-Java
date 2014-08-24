@@ -4,6 +4,15 @@
  */
 package org.stevewinfield.placeholder.services;
 
+import com.google.common.io.BaseEncoding;
+import org.apache.log4j.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.magicwerk.brownies.collections.GapList;
+import org.stevewinfield.suja.idk.Bootloader;
+import org.stevewinfield.suja.idk.IDK;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,16 +24,6 @@ import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Random;
-
-import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-import org.magicwerk.brownies.collections.GapList;
-import org.stevewinfield.suja.idk.Bootloader;
-import org.stevewinfield.suja.idk.IDK;
-
-import com.google.common.io.BaseEncoding;
 
 public class PlaceholderNetwork {
     private static Logger logger = Logger.getLogger(PlaceholderNetwork.class);
@@ -64,8 +63,9 @@ public class PlaceholderNetwork {
     public boolean authenticateIDK() {
         final ServerResult response = this.requestServer(this.authServer, "confirm");
 
-        if (response == null)
+        if (response == null) {
             return false;
+        }
 
         this.authenticated = true;
         return true;
@@ -78,19 +78,21 @@ public class PlaceholderNetwork {
     public boolean loadPlugins(final boolean showLog) {
         final ServerResult response = this.requestServer(this.pluginServer, "confirm");
 
-        if (response == null)
+        if (response == null) {
             return false;
+        }
 
         final JSONObject plugins = (JSONObject) response.getResponse().get("plugins");
         int counter = 0;
 
         for (final Object plugin : plugins.keySet()) {
-            if (Bootloader.getPluginManager().addPlugin((String) plugin,
-            new String(BaseEncoding.base64().decode((String) plugins.get(plugin))), showLog))
+            if (Bootloader.getPluginManager().addPlugin((String) plugin, new String(BaseEncoding.base64().decode((String) plugins.get(plugin))), showLog)) {
                 counter++;
+            }
         }
-        if (showLog)
+        if (showLog) {
             logger.info(counter + " plugin(s) external loaded from Placeholder Network.");
+        }
         return true;
 
     }
@@ -98,14 +100,15 @@ public class PlaceholderNetwork {
     public boolean updateConnectionList() {
         final ServerResult response = this.requestServer("", "expo-connection");
 
-        if (response == null)
+        if (response == null) {
             return false;
+        }
 
         final JSONObject servers = (JSONObject) response.getResponse().get("servers");
 
-        if (!servers.containsKey("auth") || !servers.containsKey("updates") || !servers.containsKey("plugins")
-        || !servers.containsKey("analytics"))
+        if (!servers.containsKey("auth") || !servers.containsKey("updates") || !servers.containsKey("plugins") || !servers.containsKey("analytics")) {
             return false;
+        }
 
         this.authServer = (String) servers.get("auth");
         this.updateServer = (String) servers.get("updates");
@@ -118,26 +121,22 @@ public class PlaceholderNetwork {
         return this.requestServer(serverURL, path, new GapList<Entry<String, String>>());
     }
 
-    public ServerResult requestServer(final String serverURL, final String path,
-    final List<Entry<String, String>> parameters) {
+    public ServerResult requestServer(final String serverURL, final String path, final List<Entry<String, String>> parameters) {
         final String randomToken = Bootloader.getHashedString(("rd" + (new Random().nextInt())).getBytes());
         try {
             String parameterString = "";
             if (path.startsWith("confirm")) {
-                parameters.add(new AbstractMap.SimpleEntry<String, String>("token", randomToken));
-                parameters.add(new AbstractMap.SimpleEntry<String, String>("key", uniqueKey));
-                parameters.add(new AbstractMap.SimpleEntry<String, String>("host", InetAddress.getLocalHost()
-                .toString()));
+                parameters.add(new AbstractMap.SimpleEntry<>("token", randomToken));
+                parameters.add(new AbstractMap.SimpleEntry<>("key", uniqueKey));
+                parameters.add(new AbstractMap.SimpleEntry<>("host", InetAddress.getLocalHost().toString()));
             }
             for (final Entry<String, String> parameter : parameters) {
                 parameterString += "&".concat(parameter.getKey()).concat("=").concat(parameter.getValue());
             }
-            if (parameterString.length() > 0)
+            if (parameterString.length() > 0) {
                 parameterString = parameterString.substring(1);
-            final URL url = new URL("http"
-            + (serverURL.isEmpty() ? "s" : "")
-            + ":".concat("" + SLASH + SLASH).concat(serverURL).concat(!serverURL.isEmpty() ? "." : "").concat(prefix)
-            .concat("" + SLASH).concat(path).concat("?").concat(parameterString));
+            }
+            final URL url = new URL("http" + (serverURL.isEmpty() ? "s" : "") + ":".concat("" + SLASH + SLASH).concat(serverURL).concat(!serverURL.isEmpty() ? "." : "").concat(prefix).concat("" + SLASH).concat(path).concat("?").concat(parameterString));
             final URLConnection conn = url.openConnection();
             final BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 
@@ -148,17 +147,16 @@ public class PlaceholderNetwork {
             }
             br.close();
             final JSONObject array = (JSONObject) ((new JSONParser()).parse(result.toString()));
-            if (!((String) array.get("responseCode")).startsWith("200"))
+            if (!((String) array.get("responseCode")).startsWith("200")) {
                 return null;
-            final ServerResult serverResult = new ServerResult((String) array.get("responseCode"),
-            (JSONObject) array.get("response"));
+            }
+            final ServerResult serverResult = new ServerResult((String) array.get("responseCode"), (JSONObject) array.get("response"));
             if (path.startsWith("confirm")) {
                 final int serverId = Integer.valueOf(serverURL.split("-")[2]);
                 final String hash = this.getNetworkHash(this.getAuthenticationData(randomToken));
-                if (hash == this.getNetworkHash(IDK.PLACEHOLDER_NETWORK_SALT)
-                || !hash.equals(serverResult.getResponse().get("hashcheck"))
-                || serverId != (Long) serverResult.getResponse().get("serverId"))
+                if (hash.equals(this.getNetworkHash(IDK.PLACEHOLDER_NETWORK_SALT)) || !hash.equals(serverResult.getResponse().get("hashcheck")) || serverId != (Long) serverResult.getResponse().get("serverId")) {
                     return null;
+                }
             }
             return serverResult;
         } catch (final MalformedURLException e) {

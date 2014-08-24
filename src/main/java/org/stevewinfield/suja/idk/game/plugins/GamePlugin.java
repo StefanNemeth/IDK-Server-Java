@@ -4,9 +4,9 @@
  */
 package org.stevewinfield.suja.idk.game.plugins;
 
-import javax.script.ScriptEngine;
-
 import org.stevewinfield.suja.idk.Bootloader;
+
+import javax.script.ScriptEngine;
 
 public class GamePlugin {
     public ScriptEngine getScript() {

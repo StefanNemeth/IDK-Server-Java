@@ -52,27 +52,27 @@ public class Heightmap {
                     floorHeight[x][y] = 0;
                 } else {
                     switch (value) {
-                    case '0':
-                        floorHeight[x][y] = 0;
-                        continue;
-                    case '1':
-                        floorHeight[x][y] = 1;
-                        continue;
-                    case '2':
-                        floorHeight[x][y] = 2;
-                        continue;
-                    case '3':
-                        floorHeight[x][y] = 3;
-                        continue;
-                    case '4':
-                        floorHeight[x][y] = 4;
-                        continue;
-                    case '5':
-                        floorHeight[x][y] = 5;
-                        continue;
-                    case '6':
-                        floorHeight[x][y] = 6;
-                        continue;
+                        case '0':
+                            floorHeight[x][y] = 0;
+                            continue;
+                        case '1':
+                            floorHeight[x][y] = 1;
+                            continue;
+                        case '2':
+                            floorHeight[x][y] = 2;
+                            continue;
+                        case '3':
+                            floorHeight[x][y] = 3;
+                            continue;
+                        case '4':
+                            floorHeight[x][y] = 4;
+                            continue;
+                        case '5':
+                            floorHeight[x][y] = 5;
+                            continue;
+                        case '6':
+                            floorHeight[x][y] = 6;
+                            continue;
                     }
                 }
             }

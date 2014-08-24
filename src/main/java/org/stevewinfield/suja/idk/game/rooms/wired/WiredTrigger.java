@@ -4,9 +4,9 @@
  */
 package org.stevewinfield.suja.idk.game.rooms.wired;
 
-import java.util.List;
-
 import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
+
+import java.util.List;
 
 public abstract class WiredTrigger implements IWiredItem {
     public abstract boolean onTrigger(RoomPlayer player, Object data);

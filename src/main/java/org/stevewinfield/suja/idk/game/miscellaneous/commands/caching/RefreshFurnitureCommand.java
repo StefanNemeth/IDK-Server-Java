@@ -21,8 +21,9 @@ public class RefreshFurnitureCommand implements IChatCommand {
     public boolean execute(final RoomPlayer player, final ChatCommandArguments arguments) {
         final RoomInstance room = player.getRoom();
 
-        if (room == null)
+        if (room == null) {
             return false;
+        }
 
         Bootloader.getGame().getFurnitureManager().loadCache();
         return true;

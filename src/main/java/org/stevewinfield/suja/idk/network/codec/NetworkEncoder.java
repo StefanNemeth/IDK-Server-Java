@@ -4,8 +4,6 @@
  */
 package org.stevewinfield.suja.idk.network.codec;
 
-import java.nio.charset.Charset;
-
 import org.apache.log4j.Logger;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -15,6 +13,8 @@ import org.jboss.netty.channel.SimpleChannelHandler;
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.QueuedMessageWriter;
 
+import java.nio.charset.Charset;
+
 public class NetworkEncoder extends SimpleChannelHandler {
     private static Logger logger = Logger.getLogger(NetworkDecoder.class);
 
@@ -22,8 +22,7 @@ public class NetworkEncoder extends SimpleChannelHandler {
     public void writeRequested(final ChannelHandlerContext ctx, final MessageEvent e) {
         try {
             if (e.getMessage() instanceof String) {
-                Channels.write(ctx, e.getFuture(),
-                ChannelBuffers.copiedBuffer((String) e.getMessage(), Charset.forName("UTF-8")));
+                Channels.write(ctx, e.getFuture(), ChannelBuffers.copiedBuffer((String) e.getMessage(), Charset.forName("UTF-8")));
             } else if (e.getMessage() instanceof MessageWriter) {
                 final MessageWriter msg = (MessageWriter) e.getMessage();
                 Channels.write(ctx, e.getFuture(), msg.getBytes());

@@ -4,13 +4,9 @@
  */
 package org.stevewinfield.suja.idk.threadpools;
 
-import java.util.concurrent.Executor;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.log4j.Logger;
+
+import java.util.concurrent.*;
 
 public class WorkerTasks {
     private static Logger logger = Logger.getLogger(WorkerTasks.class);
@@ -48,8 +44,7 @@ public class WorkerTasks {
         logger.info("Worker Tasks initialized.");
     }
 
-    public static ScheduledFuture<?> addTask(final ServerTask task, final int initialDelay, final int period,
-    final ScheduledThreadPoolExecutor worker) {
+    public static ScheduledFuture<?> addTask(final ServerTask task, final int initialDelay, final int period, final ScheduledThreadPoolExecutor worker) {
         return worker.scheduleAtFixedRate(task, initialDelay, period, TimeUnit.MILLISECONDS);
     }
 

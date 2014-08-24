@@ -21,8 +21,7 @@ public class ModerationRoomInfoWriter extends MessageWriter {
 
         if (instance != null) {
             for (final RoomPlayer player : instance.getRoomPlayers().values()) {
-                if (!player.isBot() && player.getSession() != null
-                && player.getPlayerInformation().getId() == roomInfo.getOwnerId()) {
+                if (!player.isBot() && player.getSession() != null && player.getPlayerInformation().getId() == roomInfo.getOwnerId()) {
                     foundOwner = true;
                     break;
                 }

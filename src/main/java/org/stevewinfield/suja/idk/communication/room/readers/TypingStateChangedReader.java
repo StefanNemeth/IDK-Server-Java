@@ -16,16 +16,17 @@ public class TypingStateChangedReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isInRoom())
+        if (!session.isAuthenticated() || !session.isInRoom()) {
             return;
+        }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
-        if (room == null)
+        if (room == null) {
             return;
+        }
 
-        room.writeMessage(new RoomPlayerTypingWriter(session.getRoomPlayer().getVirtualId(),
-        reader.getMessageId() == OperationCodes.getIncomingOpCode("RoomPlayerStartTyping")), session);
+        room.writeMessage(new RoomPlayerTypingWriter(session.getRoomPlayer().getVirtualId(), reader.getMessageId() == OperationCodes.getIncomingOpCode("RoomPlayerStartTyping")), session);
     }
 
 }

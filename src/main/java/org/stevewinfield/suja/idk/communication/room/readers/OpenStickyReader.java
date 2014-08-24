@@ -17,23 +17,27 @@ public class OpenStickyReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isInRoom())
+        if (!session.isAuthenticated() || !session.isInRoom()) {
             return;
+        }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
-        if (room == null)
+        if (room == null) {
             return;
+        }
 
         final int itemId = reader.readInteger();
 
-        if (!room.getRoomItems().containsKey(itemId))
+        if (!room.getRoomItems().containsKey(itemId)) {
             return;
+        }
 
         final RoomItem item = room.getRoomItems().get(itemId);
 
-        if (item.getInteractorId() != FurnitureInteractor.POST_IT)
+        if (item.getInteractorId() != FurnitureInteractor.POST_IT) {
             return;
+        }
 
         session.writeMessage(new StickyDataWriter(item));
     }

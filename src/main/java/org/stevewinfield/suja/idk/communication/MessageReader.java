@@ -22,8 +22,9 @@ public class MessageReader {
     }
 
     public void initialize(final short messageId, byte[] body) {
-        if (body == null)
+        if (body == null) {
             body = new byte[0];
+        }
 
         this.messageId = messageId;
         this.body = body;
@@ -31,8 +32,9 @@ public class MessageReader {
     }
 
     public byte[] readBytes(int bytes) {
-        if (bytes > this.getRemainingLength())
+        if (bytes > this.getRemainingLength()) {
             bytes = this.getRemainingLength();
+        }
 
         final byte[] data = new byte[bytes];
 
@@ -48,13 +50,15 @@ public class MessageReader {
     }
 
     public byte[] plainReadBytes(int bytes) {
-        if (bytes > this.getRemainingLength())
+        if (bytes > this.getRemainingLength()) {
             bytes = this.getRemainingLength();
+        }
 
         final byte[] data = new byte[bytes];
 
-        for (int x = 0, y = pointer; x < bytes; x++, y++)
+        for (int x = 0, y = pointer; x < bytes; x++, y++) {
             data[x] = this.body[y];
+        }
 
         return data;
     }

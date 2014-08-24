@@ -13,8 +13,7 @@ public class WiredTriggerPeriodicallyInteractor extends WiredInteractor {
 
     @Override
     public MessageWriter getWiredDialog(final RoomItem item) {
-        return new WiredTriggerPeriodicallyWriter(item, item.getTermFlags().length > 0
-        && item.getTermFlags()[0].length() > 0 ? Integer.valueOf(item.getTermFlags()[0]) : 10);
+        return new WiredTriggerPeriodicallyWriter(item, item.getTermFlags().length > 0 && item.getTermFlags()[0].length() > 0 ? Integer.valueOf(item.getTermFlags()[0]) : 10);
     }
 
 }

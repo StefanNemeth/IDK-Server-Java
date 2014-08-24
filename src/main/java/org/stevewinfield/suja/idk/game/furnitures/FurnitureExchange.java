@@ -4,10 +4,10 @@
  */
 package org.stevewinfield.suja.idk.game.furnitures;
 
+import org.apache.log4j.Logger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import org.apache.log4j.Logger;
 
 public class FurnitureExchange {
     private static Logger logger = Logger.getLogger(FurnitureExchange.class);

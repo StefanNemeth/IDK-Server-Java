@@ -4,14 +4,14 @@
  */
 package org.stevewinfield.suja.idk.game.rooms;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.room.writers.RoomItemHeightmapWriter;
 import org.stevewinfield.suja.idk.game.rooms.coordination.Heightmap;
 import org.stevewinfield.suja.idk.game.rooms.coordination.Vector3;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class RoomModel {
     private static Logger logger = Logger.getLogger(RoomModel.class);

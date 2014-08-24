@@ -13,16 +13,18 @@ public class DefaultSwitchInteractor extends DefaultInteractor {
     public void onTrigger(final RoomPlayer player, final RoomItem item, final int request, final boolean hasRights) {
         super.onTrigger(player, item, request, hasRights);
 
-        if (!hasRights && item.getBase().hasRightCheck())
+        if (!hasRights && item.getBase().hasRightCheck()) {
             return;
+        }
 
         final int cycles = item.getBase().getCycleCount();
         int state = item.getFlagsState();
 
-        if (state >= cycles)
+        if (state >= cycles) {
             state = 0;
-        else
+        } else {
             state++;
+        }
 
         item.setFlags(state);
         item.update(player == null ? null : player.getSession());

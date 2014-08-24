@@ -14,15 +14,16 @@ public class GetCatalogPageReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
         final int pageId = reader.readInteger();
-        CatalogPage page = null;
+        CatalogPage page;
 
-        if (!Bootloader.getGame().getCatalogManager().getCatalogPages().containsKey(pageId)
-        || !(page = Bootloader.getGame().getCatalogManager().getCatalogPages().get(pageId)).isEnabled())
+        if (!Bootloader.getGame().getCatalogManager().getCatalogPages().containsKey(pageId) || !(page = Bootloader.getGame().getCatalogManager().getCatalogPages().get(pageId)).isEnabled()) {
             return;
+        }
 
         session.writeMessage(page.getCachedMessage());
     }

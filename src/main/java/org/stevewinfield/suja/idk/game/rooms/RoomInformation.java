@@ -4,12 +4,12 @@
  */
 package org.stevewinfield.suja.idk.game.rooms;
 
+import org.apache.log4j.Logger;
+import org.stevewinfield.suja.idk.Bootloader;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.log4j.Logger;
-import org.stevewinfield.suja.idk.Bootloader;
 
 public class RoomInformation {
     private static Logger logger = Logger.getLogger(RoomInformation.class);
@@ -113,10 +113,12 @@ public class RoomInformation {
 
     @Override
     public boolean equals(final Object o) {
-        if (o == null)
+        if (o == null) {
             return false;
-        if (o == this)
+        }
+        if (o == this) {
             return true;
+        }
 
         final RoomInformation a = (RoomInformation) o;
         return this.id == a.id;
@@ -140,10 +142,7 @@ public class RoomInformation {
         this.set(row, "");
     }
 
-    public void set(final String name, final String description, final String[] tags, final int accessType,
-    final String password, final int maxPlayers, final int categoryId, final boolean allowPets,
-    final boolean allowPetsEating, final boolean hideWalls, final int wallThickness, final int floorThickness,
-    final boolean disableBlocking, final boolean tradingEnabled) {
+    public void set(final String name, final String description, final String[] tags, final int accessType, final String password, final int maxPlayers, final int categoryId, final boolean allowPets, final boolean allowPetsEating, final boolean hideWalls, final int wallThickness, final int floorThickness, final boolean disableBlocking, final boolean tradingEnabled) {
         this.name = name;
         this.description = description;
         this.tags = tags;
@@ -187,8 +186,9 @@ public class RoomInformation {
                 this.decorations.put(entry.split("=")[0], entry.split("=")[1]);
             }
             RoomCategory category = null;
-            if ((category = Bootloader.getGame().getRoomManager().getRoomCategory(categoryId)) != null)
+            if ((category = Bootloader.getGame().getRoomManager().getRoomCategory(categoryId)) != null) {
                 this.tradingEnabled = category.isTradingEnabled();
+            }
         } catch (final SQLException e) {
             logger.error("SQL Exception", e);
         }

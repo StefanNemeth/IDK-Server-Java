@@ -4,9 +4,6 @@
  */
 package org.stevewinfield.suja.idk.communication.navigator.writers;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.apache.log4j.Logger;
 import org.magicwerk.brownies.collections.GapList;
 import org.stevewinfield.suja.idk.Bootloader;
@@ -16,6 +13,9 @@ import org.stevewinfield.suja.idk.game.navigator.OfficialItem;
 import org.stevewinfield.suja.idk.game.navigator.OfficialItemImageType;
 import org.stevewinfield.suja.idk.game.rooms.RoomInformation;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class NavigatorOfficialRoomsWriter extends MessageWriter {
     private static Logger logger = Logger.getLogger(NavigatorOfficialRoomsWriter.class);
 
@@ -24,13 +24,10 @@ public class NavigatorOfficialRoomsWriter extends MessageWriter {
 
         if (!item.isCategory()) {
             if (Bootloader.getGame().getRoomManager().getLoadedRoomInstance(item.getRoomId()) != null) {
-                instance = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(item.getRoomId())
-                .getInformation();
+                instance = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(item.getRoomId()).getInformation();
             } else {
                 try {
-                    final ResultSet roomRow = Bootloader.getStorage()
-                    .queryParams("SELECT rooms.*, nickname FROM rooms, players WHERE rooms.id=" + item.getRoomId())
-                    .executeQuery();
+                    final ResultSet roomRow = Bootloader.getStorage().queryParams("SELECT rooms.*, nickname FROM rooms, players WHERE rooms.id=" + item.getRoomId()).executeQuery();
                     if (roomRow.next()) {
                         final RoomInformation info = new RoomInformation();
                         info.set(roomRow);
@@ -45,10 +42,11 @@ public class NavigatorOfficialRoomsWriter extends MessageWriter {
 
         int type = 3;
 
-        if (item.isCategory())
+        if (item.isCategory()) {
             type = 4;
-        else
+        } else {
             type = 2;
+        }
 
         writer.push(item.getId());
         writer.push(item.getName());
@@ -60,11 +58,13 @@ public class NavigatorOfficialRoomsWriter extends MessageWriter {
         writer.push(instance != null ? instance.getTotalPlayers() : 0);
         writer.push(type);
 
-        if (item.isCategory())
+        if (item.isCategory()) {
             writer.push(item.autoExpand());
+        }
 
-        if (instance != null)
+        if (instance != null) {
             NavigatorListRoomsWriter.serializeRoom(writer, instance);
+        }
     }
 
     public NavigatorOfficialRoomsWriter(final GapList<OfficialItem> items) {
@@ -72,15 +72,17 @@ public class NavigatorOfficialRoomsWriter extends MessageWriter {
         super.push(items.size());
 
         for (final OfficialItem item : items) {
-            if (item.getParentId() > 0)
+            if (item.getParentId() > 0) {
                 continue;
+            }
 
             NavigatorOfficialRoomsWriter.serializeItem(this, item);
 
             if (item.isCategory()) {
                 for (final OfficialItem child : items) {
-                    if (child.getParentId() != item.getId())
+                    if (child.getParentId() != item.getId()) {
                         continue;
+                    }
 
                     NavigatorOfficialRoomsWriter.serializeItem(this, child);
                 }

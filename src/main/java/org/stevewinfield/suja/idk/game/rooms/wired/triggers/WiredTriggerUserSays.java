@@ -31,8 +31,7 @@ public class WiredTriggerUserSays extends WiredTrigger {
 
     @Override
     public boolean onTrigger(final RoomPlayer player, final Object data) {
-        return ((String) data).toLowerCase().contains(this.message) && this.message.length() > 0
-        && (!this.onlyRoomOwner || (room.hasRights(player.getSession(), true)));
+        return ((String) data).toLowerCase().contains(this.message) && this.message.length() > 0 && (!this.onlyRoomOwner || (room.hasRights(player.getSession(), true)));
     }
 
     @Override
@@ -41,7 +40,7 @@ public class WiredTriggerUserSays extends WiredTrigger {
         final boolean onlyOwner_ = reader.readBoolean();
         String message_ = InputFilter.filterString(reader.readUTF(), true);
         message_ = message_.length() > 100 ? message_.substring(0, 100) : message_;
-        return new String[] { message_, onlyOwner_ ? "1" : "0" };
+        return new String[]{message_, onlyOwner_ ? "1" : "0"};
     }
 
     @Override

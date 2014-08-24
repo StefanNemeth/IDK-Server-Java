@@ -15,18 +15,20 @@ public class SwitchMoodlightReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isInRoom())
+        if (!session.isAuthenticated() || !session.isInRoom()) {
             return;
+        }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
-        if (room == null || !room.hasRights(session, true) || room.getMoodlight() == null)
+        if (room == null || !room.hasRights(session, true) || room.getMoodlight() == null) {
             return;
+        }
 
         final MoodlightData data = MoodlightData.getInstance(room.getMoodlight().getTermFlags()[0]);
         data.setEnabled(!data.isEnabled());
 
-        room.getMoodlight().setTermFlags(new String[] { data.getFlagData() });
+        room.getMoodlight().setTermFlags(new String[]{data.getFlagData()});
         room.getMoodlight().setFlags(data.getDisplayData());
         room.getMoodlight().update(session);
     }

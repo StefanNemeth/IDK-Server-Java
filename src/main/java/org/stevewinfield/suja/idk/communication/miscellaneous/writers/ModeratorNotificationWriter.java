@@ -12,8 +12,9 @@ public class ModeratorNotificationWriter extends MessageWriter {
     public ModeratorNotificationWriter(final String message, final String url) {
         super(OperationCodes.getOutgoingOpCode("ModeratorNotification"));
         super.push(message);
-        if (url.length() > 0)
+        if (url.length() > 0) {
             super.push(url);
+        }
     }
 
     public ModeratorNotificationWriter(final String message) {

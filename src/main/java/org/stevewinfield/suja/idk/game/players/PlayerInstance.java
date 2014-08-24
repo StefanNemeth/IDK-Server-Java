@@ -4,11 +4,6 @@
  */
 package org.stevewinfield.suja.idk.game.players;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.log4j.Logger;
 import org.magicwerk.brownies.collections.GapList;
 import org.stevewinfield.suja.idk.Bootloader;
@@ -18,6 +13,11 @@ import org.stevewinfield.suja.idk.game.levels.ClubSubscription;
 import org.stevewinfield.suja.idk.game.levels.ClubSubscriptionLevel;
 import org.stevewinfield.suja.idk.game.levels.LevelRight;
 import org.stevewinfield.suja.idk.game.rooms.RoomInformation;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerInstance {
     private static Logger logger = Logger.getLogger(PlayerInstance.class);
@@ -72,36 +72,23 @@ public class PlayerInstance {
                 final Integer today = cal.get(Calendar.DATE);
 
                 if (today != lastUpdate) {
-                    Bootloader.getStorage().executeQuery(
-                    "UPDATE players SET available_respects=3, last_update=" + Bootloader.getTimestamp() + " WHERE id="
-                    + information.getId());
+                    Bootloader.getStorage().executeQuery("UPDATE players SET available_respects=3, last_update=" + Bootloader.getTimestamp() + " WHERE id=" + information.getId());
                     information.setAvailableRespects(3);
                 }
             }
             this.subscriptionManager = new ClubSubscription(this.getInformation().getId());
-            final ResultSet subscription = Bootloader.getStorage()
-            .queryParams("SELECT * FROM player_subscriptions WHERE player_id=" + this.getInformation().getId())
-            .executeQuery();
+            final ResultSet subscription = Bootloader.getStorage().queryParams("SELECT * FROM player_subscriptions WHERE player_id=" + this.getInformation().getId()).executeQuery();
 
             if (subscription.next()) {
                 this.subscriptionManager.set(subscription);
             }
 
-            final ResultSet favorite = Bootloader
-            .getStorage()
-            .queryParams(
-            "SELECT * FROM player_room_favorites WHERE player_id=" + information.getId() + " ORDER BY id DESC LIMIT "
-            + IDK.NAV_MAX_FAVORITES).executeQuery();
+            final ResultSet favorite = Bootloader.getStorage().queryParams("SELECT * FROM player_room_favorites WHERE player_id=" + information.getId() + " ORDER BY id DESC LIMIT " + IDK.NAV_MAX_FAVORITES).executeQuery();
             while (favorite.next()) {
                 this.favoriteRooms.add(favorite.getInt("room_id"));
             }
             favorite.close();
-            final ResultSet roomRow = Bootloader
-            .getStorage()
-            .queryParams(
-            "SELECT rooms.*, nickname FROM rooms, players WHERE owner_id=" + information.getId()
-            + " AND players.id=owner_id ORDER BY name ASC"
-            + (!this.hasRight("unlimited_rooms") ? " LIMIT " + IDK.NAV_MAX_ROOMS_PER_PLAYER : "")).executeQuery();
+            final ResultSet roomRow = Bootloader.getStorage().queryParams("SELECT rooms.*, nickname FROM rooms, players WHERE owner_id=" + information.getId() + " AND players.id=owner_id ORDER BY name ASC" + (!this.hasRight("unlimited_rooms") ? " LIMIT " + IDK.NAV_MAX_ROOMS_PER_PLAYER : "")).executeQuery();
             while (roomRow.next()) {
                 final RoomInformation info = new RoomInformation();
                 info.set(roomRow);
@@ -109,11 +96,11 @@ public class PlayerInstance {
             }
             roomRow.close();
             this.inventory.load(this.information.getId());
-            final ResultSet achievements = Bootloader.getStorage()
-            .queryParams("SELECT * FROM player_achievements WHERE player_id=" + information.getId()).executeQuery();
+            final ResultSet achievements = Bootloader.getStorage().queryParams("SELECT * FROM player_achievements WHERE player_id=" + information.getId()).executeQuery();
             while (achievements.next()) {
-                if (this.achievements.containsKey(achievements.getInt("achievement_id")))
+                if (this.achievements.containsKey(achievements.getInt("achievement_id"))) {
                     continue;
+                }
                 final PlayerAchievement achievement = new PlayerAchievement();
                 achievement.set(achievements);
                 this.achievements.put(achievements.getInt("achievement_id"), achievement);
@@ -125,8 +112,7 @@ public class PlayerInstance {
         for (final LevelRight right : this.information.getLevel().getRights()) {
             this.rights.put(right.getLabel(), right);
         }
-        for (final LevelRight right : Bootloader.getGame().getLevelManager()
-        .getSpecialRights(this.information.getPlayerName())) {
+        for (final LevelRight right : Bootloader.getGame().getLevelManager().getSpecialRights(this.information.getPlayerName())) {
             this.rights.put(right.getLabel(), right);
         }
     }

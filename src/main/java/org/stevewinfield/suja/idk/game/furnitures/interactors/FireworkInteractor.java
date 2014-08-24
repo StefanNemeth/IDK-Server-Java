@@ -19,8 +19,9 @@ public class FireworkInteractor extends DefaultInteractor {
     public void onTrigger(final RoomPlayer player, final RoomItem item, final int request, final boolean hasRights) {
         super.onTrigger(player, item, request, hasRights);
 
-        if (!hasRights && item.getBase().hasRightCheck())
+        if (!hasRights && item.getBase().hasRightCheck()) {
             return;
+        }
 
         int currentCharges = 0;
         try {
@@ -33,11 +34,13 @@ public class FireworkInteractor extends DefaultInteractor {
             boolean creditsError = false;
             boolean pixelsError = false;
 
-            if (player.getSession().getPlayerInstance().getInformation().getCreditsBalance() < IDK.CATA_FIREWORKS_CHARGES_CREDITS)
+            if (player.getSession().getPlayerInstance().getInformation().getCreditsBalance() < IDK.CATA_FIREWORKS_CHARGES_CREDITS) {
                 creditsError = true;
+            }
 
-            if (player.getSession().getPlayerInstance().getInformation().getPixelsBalance() < IDK.CATA_FIREWORKS_CHARGES_PIXELS)
+            if (player.getSession().getPlayerInstance().getInformation().getPixelsBalance() < IDK.CATA_FIREWORKS_CHARGES_PIXELS) {
                 pixelsError = true;
+            }
 
             if (creditsError || pixelsError) {
                 player.getSession().writeMessage(new CurrencyErrorWriter(creditsError, pixelsError, false));
@@ -45,38 +48,26 @@ public class FireworkInteractor extends DefaultInteractor {
             }
 
             if (IDK.CATA_FIREWORKS_CHARGES_CREDITS > 0) {
-                player.getSession().getPlayerInstance().getInformation()
-                .setCredits(-IDK.CATA_FIREWORKS_CHARGES_CREDITS);
-                player.getSession().writeMessage(
-                new CreditsBalanceWriter(player.getSession().getPlayerInstance().getInformation().getCreditsBalance()));
+                player.getSession().getPlayerInstance().getInformation().setCredits(-IDK.CATA_FIREWORKS_CHARGES_CREDITS);
+                player.getSession().writeMessage(new CreditsBalanceWriter(player.getSession().getPlayerInstance().getInformation().getCreditsBalance()));
             }
 
             if (IDK.CATA_FIREWORKS_CHARGES_PIXELS > 0) {
                 player.getSession().getPlayerInstance().getInformation().setPixels(-IDK.CATA_FIREWORKS_CHARGES_PIXELS);
-                player.getSession().writeMessage(
-                new ActivityPointsWriter(player.getSession().getPlayerInstance().getInformation().getPixelsBalance(),
-                player.getSession().getPlayerInstance().getInformation().getShellsBalance()));
+                player.getSession().writeMessage(new ActivityPointsWriter(player.getSession().getPlayerInstance().getInformation().getPixelsBalance(), player.getSession().getPlayerInstance().getInformation().getShellsBalance()));
             }
 
-            item.setTermFlags(new String[] { (currentCharges += 10) + "" });
+            item.setTermFlags(new String[]{(currentCharges += 10) + ""});
             item.update(true, false);
-            player.getSession().writeMessage(
-            new OpenFireworkChargeDialogWriter(item.getItemId(), currentCharges, IDK.CATA_FIREWORKS_CHARGES_CREDITS,
-            IDK.CATA_FIREWORKS_CHARGES_PIXELS, IDK.CATA_FIREWORKS_CHARGES_AMOUNT));
-            player.getSession().writeMessage(
-            new CatalogPurchaseResultWriter(item.getItemId(), "fireworks_charge_01",
-            IDK.CATA_FIREWORKS_CHARGES_CREDITS, IDK.CATA_FIREWORKS_CHARGES_PIXELS, 0));
+            player.getSession().writeMessage(new OpenFireworkChargeDialogWriter(item.getItemId(), currentCharges, IDK.CATA_FIREWORKS_CHARGES_CREDITS, IDK.CATA_FIREWORKS_CHARGES_PIXELS, IDK.CATA_FIREWORKS_CHARGES_AMOUNT));
+            player.getSession().writeMessage(new CatalogPurchaseResultWriter(item.getItemId(), "fireworks_charge_01", IDK.CATA_FIREWORKS_CHARGES_CREDITS, IDK.CATA_FIREWORKS_CHARGES_PIXELS, 0));
         } else if (request == 1 && player != null) {
-            player.getSession().writeMessage(
-            new OpenFireworkChargeDialogWriter(item.getItemId(), currentCharges, IDK.CATA_FIREWORKS_CHARGES_CREDITS,
-            IDK.CATA_FIREWORKS_CHARGES_PIXELS, IDK.CATA_FIREWORKS_CHARGES_AMOUNT));
+            player.getSession().writeMessage(new OpenFireworkChargeDialogWriter(item.getItemId(), currentCharges, IDK.CATA_FIREWORKS_CHARGES_CREDITS, IDK.CATA_FIREWORKS_CHARGES_PIXELS, IDK.CATA_FIREWORKS_CHARGES_AMOUNT));
         } else {
             if (currentCharges <= 0) {
-                if (player != null)
-                    player.getSession().writeMessage(
-                    new OpenFireworkChargeDialogWriter(item.getItemId(), currentCharges,
-                    IDK.CATA_FIREWORKS_CHARGES_CREDITS, IDK.CATA_FIREWORKS_CHARGES_PIXELS,
-                    IDK.CATA_FIREWORKS_CHARGES_AMOUNT));
+                if (player != null) {
+                    player.getSession().writeMessage(new OpenFireworkChargeDialogWriter(item.getItemId(), currentCharges, IDK.CATA_FIREWORKS_CHARGES_CREDITS, IDK.CATA_FIREWORKS_CHARGES_PIXELS, IDK.CATA_FIREWORKS_CHARGES_AMOUNT));
+                }
                 return;
             }
 
@@ -90,17 +81,18 @@ public class FireworkInteractor extends DefaultInteractor {
                     player.moveTo(item.getFrontPosition(), item.getFrontRotation(), item);
                 }
 
-                item.setTermFlags(new String[] { (currentCharges -= 1) + "" });
+                item.setTermFlags(new String[]{(currentCharges -= 1) + ""});
                 item.setFlags(2);
                 item.update();
 
                 int time = 10;
 
                 // Hardcoding? Well, no need to change.
-                if (item.getBase().getName() == "fireworks_01")
+                if (item.getBase().getName() == "fireworks_01") {
                     time = 6;
-                else if (item.getBase().getName() == "fireworks_07")
+                } else if (item.getBase().getName() == "fireworks_07") {
                     time = 20;
+                }
 
                 item.requestCycles(time);
 

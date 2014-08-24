@@ -4,11 +4,11 @@
  */
 package org.stevewinfield.suja.idk.communication.navigator.writers;
 
-import java.util.Map.Entry;
-import java.util.TreeMap;
-
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.OperationCodes;
+
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 public class NavigatorPopularTagListWriter extends MessageWriter {
 

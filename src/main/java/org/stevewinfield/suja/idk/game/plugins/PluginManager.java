@@ -6,7 +6,10 @@ package org.stevewinfield.suja.idk.game.plugins;
 
 import org.apache.log4j.Logger;
 
-import javax.script.*;
+import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.io.File;
 import java.io.FileReader;
 import java.net.MalformedURLException;
@@ -49,11 +52,7 @@ public class PluginManager {
                 if (engine.getFactory().getEngineName().equals("Oracle Nashorn")) {
                     engine.eval("load(\"nashorn:mozilla_compat.js\");");
                 }
-                engine.eval("importClass(org.stevewinfield.suja.idk.Bootloader);"
-                        + "importPackage(org.stevewinfield.suja.idk.game.miscellaneous);"
-                        + "importPackage(org.stevewinfield.suja.idk.game.players);"
-                        + "importPackage(org.stevewinfield.suja.idk.game.rooms);"
-                        + "importClass(org.stevewinfield.suja.idk.game.plugins.PluginManager);");
+                engine.eval("importClass(org.stevewinfield.suja.idk.Bootloader);" + "importPackage(org.stevewinfield.suja.idk.game.miscellaneous);" + "importPackage(org.stevewinfield.suja.idk.game.players);" + "importPackage(org.stevewinfield.suja.idk.game.rooms);" + "importClass(org.stevewinfield.suja.idk.game.plugins.PluginManager);");
             }
             GamePlugin plugin = new GamePlugin(name, engine);
             engine.put("IDK", plugin);
@@ -81,14 +80,14 @@ public class PluginManager {
             logger.warn("A plugin by the name " + name + " already exists. Replacing it by " + filename);
         }
         this.plugins.put(name, (GamePlugin) engine.get("IDK"));
-        if (showLog)
+        if (showLog) {
             logger.info("Loaded the plugin \"" + name + "\".");
+        }
         return true;
     }
 
     public void load(final File pluginDir) {
-        ClassLoader oldLoader = Thread.currentThread()
-                .getContextClassLoader();
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(urlClassLoader);
 
@@ -110,8 +109,7 @@ public class PluginManager {
 
             logger.info(plugins.size() + " plugin(s) local loaded from /" + pluginDir.getPath());
         } finally {
-            Thread.currentThread().setContextClassLoader(
-                    oldLoader);
+            Thread.currentThread().setContextClassLoader(oldLoader);
         }
     }
 
@@ -134,11 +132,8 @@ public class PluginManager {
                 if (!directoryFile.isDirectory()) {
                     continue;
                 }
-                for (File pathname : directoryFile
-                        .listFiles()) {
-                    if (pathname.isFile()
-                            && pathname.toString().toLowerCase()
-                            .endsWith(".jar")) {
+                for (File pathname : directoryFile.listFiles()) {
+                    if (pathname.isFile() && pathname.toString().toLowerCase().endsWith(".jar")) {
                         URL url = pathname.toURI().toURL();
                         classPath.add(url);
                     }

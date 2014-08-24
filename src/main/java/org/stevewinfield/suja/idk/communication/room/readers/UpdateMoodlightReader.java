@@ -17,19 +17,22 @@ public class UpdateMoodlightReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isInRoom())
+        if (!session.isAuthenticated() || !session.isInRoom()) {
             return;
+        }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
-        if (room == null || !room.hasRights(session, true) || room.getMoodlight() == null)
+        if (room == null || !room.hasRights(session, true) || room.getMoodlight() == null) {
             return;
+        }
 
         final MoodlightData data = MoodlightData.getInstance(room.getMoodlight().getTermFlags()[0]);
         final int presetId = reader.readInteger();
 
-        if (!data.getPresets().containsKey(presetId))
+        if (!data.getPresets().containsKey(presetId)) {
             return;
+        }
 
         final MoodlightPreset preset = data.getPresets().get(presetId);
 
@@ -39,10 +42,11 @@ public class UpdateMoodlightReader implements IMessageReader {
 
         data.setCurrentPreset(presetId);
 
-        if (!MoodlightData.isValidColor(preset.getColorCode()))
+        if (!MoodlightData.isValidColor(preset.getColorCode())) {
             return;
+        }
 
-        room.getMoodlight().setTermFlags(new String[] { data.getFlagData() });
+        room.getMoodlight().setTermFlags(new String[]{data.getFlagData()});
         room.getMoodlight().setFlags(data.getDisplayData());
         room.getMoodlight().update(session);
     }

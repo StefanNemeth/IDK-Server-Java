@@ -16,18 +16,19 @@ public class BattleBanzaiTimerInteractor extends DefaultInteractor {
         super.onLoaded(room, item);
         int seconds = item.getFlagsState();
 
-        if (seconds <= 30)
+        if (seconds <= 30) {
             seconds = 30;
-        else if (seconds <= 60)
+        } else if (seconds <= 60) {
             seconds = 60;
-        else if (seconds <= 120)
+        } else if (seconds <= 120) {
             seconds = 120;
-        else if (seconds <= 180)
+        } else if (seconds <= 180) {
             seconds = 180;
-        else if (seconds <= 300)
+        } else if (seconds <= 300) {
             seconds = 300;
-        else if (seconds <= 600)
+        } else if (seconds <= 600) {
             seconds = 600;
+        }
 
         item.setFlags(seconds + "");
         item.update(false, true);
@@ -48,39 +49,40 @@ public class BattleBanzaiTimerInteractor extends DefaultInteractor {
 
         if (request == 2 && !item.getRoom().getRoomTask().getBanzaiTask().isRunning()) {
 
-            if (seconds <= 30)
+            if (seconds <= 30) {
                 seconds = 30;
-            else if (seconds <= 60)
+            } else if (seconds <= 60) {
                 seconds = 60;
-            else if (seconds <= 120)
+            } else if (seconds <= 120) {
                 seconds = 120;
-            else if (seconds <= 180)
+            } else if (seconds <= 180) {
                 seconds = 180;
-            else if (seconds <= 300)
+            } else if (seconds <= 300) {
                 seconds = 300;
-            else if (seconds <= 600)
+            } else if (seconds <= 600) {
                 seconds = 600;
+            }
 
             if (item.getRoom().getRoomTask().getBanzaiTask().hasEnded()) {
                 switch (seconds) {
-                case 600:
-                    seconds = 30;
-                    break;
-                case 300:
-                    seconds = 600;
-                    break;
-                case 180:
-                    seconds = 300;
-                    break;
-                case 120:
-                    seconds = 180;
-                    break;
-                case 60:
-                    seconds = 120;
-                    break;
-                case 30:
-                    seconds = 60;
-                    break;
+                    case 600:
+                        seconds = 30;
+                        break;
+                    case 300:
+                        seconds = 600;
+                        break;
+                    case 180:
+                        seconds = 300;
+                        break;
+                    case 120:
+                        seconds = 180;
+                        break;
+                    case 60:
+                        seconds = 120;
+                        break;
+                    case 30:
+                        seconds = 60;
+                        break;
                 }
 
                 dbUpdate = true;

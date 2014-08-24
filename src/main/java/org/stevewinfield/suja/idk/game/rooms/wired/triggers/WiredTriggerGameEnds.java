@@ -34,7 +34,7 @@ public class WiredTriggerGameEnds extends WiredTrigger {
 
     @Override
     public String[] getObject(final MessageReader reader) {
-        return new String[] {};
+        return new String[]{};
     }
 
     @Override

@@ -15,23 +15,27 @@ public class RoomKickReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isInRoom())
+        if (!session.isAuthenticated() || !session.isInRoom()) {
             return;
+        }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
-        if (room == null || !room.hasRights(session))
+        if (room == null || !room.hasRights(session)) {
             return;
+        }
 
         final Session target = Bootloader.getSessionManager().getAuthenticatedSession(reader.readInteger());
 
-        if (target == null || !target.isInRoom() || room.hasRights(target, true))
+        if (target == null || !target.isInRoom() || room.hasRights(target, true)) {
             return;
+        }
 
         final RoomPlayer roomTarget = target.getRoomPlayer();
 
-        if (roomTarget.getRoom().getInformation().getId() != room.getInformation().getId())
+        if (roomTarget.getRoom().getInformation().getId() != room.getInformation().getId()) {
             return;
+        }
 
         roomTarget.setKicked(true);
         roomTarget.moveTo(room.getInformation().getModel().getDoorPosition().getVector2(), true, false);

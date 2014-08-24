@@ -46,8 +46,7 @@ public class RollerInteractor extends DefaultInteractor {
                 continue;
             }
             if (player.moveTo(front, true)) {
-                room.writeMessage(new RollerEventWriter(player.getPosition(), frontPosition, player.getVirtualId(),
-                roller.getItemId(), 0, false), null);
+                room.writeMessage(new RollerEventWriter(player.getPosition(), frontPosition, player.getVirtualId(), roller.getItemId(), 0, false), null);
             } else {
                 reCycle = true;
                 break;
@@ -128,11 +127,8 @@ public class RollerInteractor extends DefaultInteractor {
                      * (roller.getBase().getWidth() - 1); }
                      */
 
-                    if (item.getItemId() != roller.getItemId()
-                    && item.getPosition().getAltitude() > roller.getPosition().getAltitude()) {
-                        if (!room.setFloorItem(null, item, new Vector2(x, y), item.getRotation(), false,
-                        roller.getItemId(), roller.getAbsoluteHeight())
-                        || items.size() > 1) {
+                    if (item.getItemId() != roller.getItemId() && item.getPosition().getAltitude() > roller.getPosition().getAltitude()) {
+                        if (!room.setFloorItem(null, item, new Vector2(x, y), item.getRotation(), false, roller.getItemId(), roller.getAbsoluteHeight()) || items.size() > 1) {
                             reCycle = true;
                         }
                     }

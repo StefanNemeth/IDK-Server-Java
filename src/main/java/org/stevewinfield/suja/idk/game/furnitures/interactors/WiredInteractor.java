@@ -14,8 +14,9 @@ public abstract class WiredInteractor extends DefaultInteractor {
     public void onTrigger(final RoomPlayer player, final RoomItem item, final int request, final boolean hasRights) {
         super.onTrigger(player, item, request, hasRights);
 
-        if (!hasRights && item.getBase().hasRightCheck())
+        if (!hasRights && item.getBase().hasRightCheck()) {
             return;
+        }
 
         item.setFlags(1);
         item.update(false);
@@ -23,8 +24,9 @@ public abstract class WiredInteractor extends DefaultInteractor {
 
         final MessageWriter wiredDialog = this.getWiredDialog(item);
 
-        if (wiredDialog != null)
+        if (wiredDialog != null) {
             player.getSession().writeMessage(wiredDialog);
+        }
     }
 
     public abstract MessageWriter getWiredDialog(RoomItem item);

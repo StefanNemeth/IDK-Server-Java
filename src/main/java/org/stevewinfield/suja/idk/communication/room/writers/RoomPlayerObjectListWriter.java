@@ -4,12 +4,12 @@
  */
 package org.stevewinfield.suja.idk.communication.room.writers;
 
-import java.util.List;
-
 import org.magicwerk.brownies.collections.GapList;
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.OperationCodes;
 import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
+
+import java.util.List;
 
 public class RoomPlayerObjectListWriter extends MessageWriter {
 

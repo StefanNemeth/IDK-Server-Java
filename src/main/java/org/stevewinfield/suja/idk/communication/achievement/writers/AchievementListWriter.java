@@ -4,27 +4,27 @@
  */
 package org.stevewinfield.suja.idk.communication.achievement.writers;
 
-import java.util.Collection;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.OperationCodes;
 import org.stevewinfield.suja.idk.game.achievements.Achievement;
 import org.stevewinfield.suja.idk.game.achievements.AchievementLevel;
 import org.stevewinfield.suja.idk.game.players.PlayerAchievement;
 
+import java.util.Collection;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class AchievementListWriter extends MessageWriter {
 
-    public AchievementListWriter(final ConcurrentHashMap<Integer, PlayerAchievement> playerAchievements,
-    final Collection<Achievement> achievements) {
+    public AchievementListWriter(final ConcurrentHashMap<Integer, PlayerAchievement> playerAchievements, final Collection<Achievement> achievements) {
         super(OperationCodes.getOutgoingOpCode("AchievementList"));
         super.push(achievements.size());
 
         for (final Achievement achievement : achievements) {
             PlayerAchievement playerAchievement = null;
 
-            if (playerAchievements.containsKey(achievement.getId()))
+            if (playerAchievements.containsKey(achievement.getId())) {
                 playerAchievement = playerAchievements.get(achievement.getId());
+            }
 
             int targetLevel = playerAchievement != null ? playerAchievement.getLevel() + 1 : 1;
 

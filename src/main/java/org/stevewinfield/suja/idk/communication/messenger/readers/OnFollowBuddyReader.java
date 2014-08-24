@@ -14,8 +14,9 @@ public class OnFollowBuddyReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
         final int friendId = reader.readInteger();
 
@@ -25,8 +26,9 @@ public class OnFollowBuddyReader implements IMessageReader {
 
         final MessengerBuddy buddy = session.getPlayerMessenger().getOnlineBuddies().get(friendId);
 
-        if (buddy == null || !buddy.isInRoom() || buddy.getSession().getRoomId() == session.getRoomId())
+        if (buddy == null || !buddy.isInRoom() || buddy.getSession().getRoomId() == session.getRoomId()) {
             return;
+        }
 
         session.writeMessage(new MessengerFollowResultWriter(buddy.getSession().getRoomId()));
     }

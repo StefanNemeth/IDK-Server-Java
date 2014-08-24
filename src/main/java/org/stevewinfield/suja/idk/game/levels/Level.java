@@ -4,12 +4,12 @@
  */
 package org.stevewinfield.suja.idk.game.levels;
 
+import org.apache.log4j.Logger;
+import org.magicwerk.brownies.collections.GapList;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-
-import org.apache.log4j.Logger;
-import org.magicwerk.brownies.collections.GapList;
 
 public class Level {
     private static Logger logger = Logger.getLogger(Level.class);
@@ -57,8 +57,9 @@ public class Level {
     }
 
     public void loadRights() {
-        if (this.id < 1)
+        if (this.id < 1) {
             return;
+        }
 
     }
 

@@ -22,13 +22,15 @@ public class PlaceItemReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isInRoom())
+        if (!session.isAuthenticated() || !session.isInRoom()) {
             return;
+        }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
-        if (room == null)
+        if (room == null) {
             return;
+        }
 
         final String[] itemData;
         boolean breakOut = true;
@@ -40,8 +42,9 @@ public class PlaceItemReader implements IMessageReader {
             }
             int stickieCount = 0;
             for (final RoomItem item : room.getRoomItems().values()) {
-                if (item.getInteractorId() == FurnitureInteractor.POST_IT)
+                if (item.getInteractorId() == FurnitureInteractor.POST_IT) {
                     ++stickieCount;
+                }
             }
             if (stickieCount >= IDK.CATA_STICKIES_MAX_COUNT) {
                 session.writeMessage(new RoomItemPlacementErrorWriter(12));
@@ -66,8 +69,9 @@ public class PlaceItemReader implements IMessageReader {
 
         final PlayerItem item = session.getPlayerInstance().getInventory().getItem(itemId);
 
-        if (item == null)
+        if (item == null) {
             return;
+        }
 
         final RoomItem roomItem = new RoomItem(room, itemId, item.getBase(), item.getInteractorId(), item.getFlags());
 
@@ -87,36 +91,38 @@ public class PlaceItemReader implements IMessageReader {
         }
 
         switch (item.getBase().getType()) {
-        default:
-        case FurnitureType.FLOOR: {
-            final Vector2 itemPosition = new Vector2(Integer.valueOf(itemData[1]), Integer.valueOf(itemData[2]));
-            final int itemRotation = Integer.valueOf(itemData[3]);
+            default:
+            case FurnitureType.FLOOR: {
+                final Vector2 itemPosition = new Vector2(Integer.valueOf(itemData[1]), Integer.valueOf(itemData[2]));
+                final int itemRotation = Integer.valueOf(itemData[3]);
 
-            if (!session.getPlayerInstance().getInventory().hasItem(itemId) || room.getRoomItems().containsKey(itemId))
-                return;
+                if (!session.getPlayerInstance().getInventory().hasItem(itemId) || room.getRoomItems().containsKey(itemId)) {
+                    return;
+                }
 
-            if (room.setFloorItem(session, roomItem, itemPosition, itemRotation, session.getPlayerInstance()
-            .getInventory().itemHasToUpdate(item.getItemId()))) {
-                goneRight = true;
+                if (room.setFloorItem(session, roomItem, itemPosition, itemRotation, session.getPlayerInstance().getInventory().itemHasToUpdate(item.getItemId()))) {
+                    goneRight = true;
+                }
+                break;
             }
-            break;
+            case FurnitureType.WALL: {
+                final String[] correctedData = new String[itemData.length - 1];
+
+                for (int i = 1; i < itemData.length; i++) {
+                    correctedData[i - 1] = itemData[i];
+                }
+
+                if (room.setWallItem(session, roomItem, correctedData, session.getPlayerInstance().getInventory().itemHasToUpdate(item.getItemId()))) {
+                    goneRight = true;
+                }
+
+                break;
+            }
         }
-        case FurnitureType.WALL: {
-            final String[] correctedData = new String[itemData.length - 1];
 
-            for (int i = 1; i < itemData.length; i++)
-                correctedData[i - 1] = itemData[i];
-
-            if (room.setWallItem(session, roomItem, correctedData, session.getPlayerInstance().getInventory()
-            .itemHasToUpdate(item.getItemId())))
-                goneRight = true;
-
-            break;
-        }
-        }
-
-        if (goneRight)
+        if (goneRight) {
             session.getPlayerInstance().getInventory().removeItem(itemId, session);
+        }
 
     }
 

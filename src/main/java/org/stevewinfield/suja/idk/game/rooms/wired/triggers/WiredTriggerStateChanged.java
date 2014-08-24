@@ -37,8 +37,9 @@ public class WiredTriggerStateChanged extends WiredTrigger {
         this.items = new GapList<Integer>();
         try {
             if (obj.length > 0 && obj[0].length() > 0) {
-                for (final String furni : obj[0].split(","))
+                for (final String furni : obj[0].split(",")) {
                     items.add(Integer.valueOf(furni));
+                }
             }
         } catch (final NumberFormatException e) {
             logger.error("NumberFormatException", e);
@@ -54,12 +55,12 @@ public class WiredTriggerStateChanged extends WiredTrigger {
         final int furniAmount = reader.readInteger();
         for (int i = 0; i < furniAmount; i++) {
             final int furniId = reader.readInteger();
-            if (!item.getRoom().getRoomItems().containsKey(furniId)
-            || WiredManager.isWiredItem(item.getRoom().getRoomItems().get(furniId).getBase()))
+            if (!item.getRoom().getRoomItems().containsKey(furniId) || WiredManager.isWiredItem(item.getRoom().getRoomItems().get(furniId).getBase())) {
                 continue;
+            }
             furniString += "," + furniId;
         }
-        return new String[] { furniString.length() > 0 ? furniString.substring(1) : furniString };
+        return new String[]{furniString.length() > 0 ? furniString.substring(1) : furniString};
     }
 
     @Override

@@ -4,10 +4,6 @@
  */
 package org.stevewinfield.suja.idk.communication.moderation.writers;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.magicwerk.brownies.collections.GapList;
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.OperationCodes;
@@ -16,10 +12,13 @@ import org.stevewinfield.suja.idk.game.moderation.ModerationPresetMessage;
 import org.stevewinfield.suja.idk.game.moderation.ModerationPresetMessageType;
 import org.stevewinfield.suja.idk.game.players.PlayerInstance;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class ModerationToolWriter extends MessageWriter {
 
-    public ModerationToolWriter(final PlayerInstance player, final Collection<ModerationPresetMessage> presetMessages,
-    final ConcurrentHashMap<Integer, ModerationPresetAction> actions) {
+    public ModerationToolWriter(final PlayerInstance player, final Collection<ModerationPresetMessage> presetMessages, final ConcurrentHashMap<Integer, ModerationPresetAction> actions) {
         super(OperationCodes.getOutgoingOpCode("ModerationTool"));
         super.push(-1);
 
@@ -27,10 +26,11 @@ public class ModerationToolWriter extends MessageWriter {
         final List<ModerationPresetMessage> roomPresetMessages = new GapList<ModerationPresetMessage>();
 
         for (final ModerationPresetMessage presetMessage : presetMessages) {
-            if (presetMessage.getType() == ModerationPresetMessageType.ROOM_MESSAGE)
+            if (presetMessage.getType() == ModerationPresetMessageType.ROOM_MESSAGE) {
                 roomPresetMessages.add(presetMessage);
-            else
+            } else {
                 playerPresetMessages.add(presetMessage);
+            }
         }
 
         super.push(playerPresetMessages.size());

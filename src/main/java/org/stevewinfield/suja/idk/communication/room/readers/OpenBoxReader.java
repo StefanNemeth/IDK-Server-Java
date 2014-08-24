@@ -20,8 +20,9 @@ public class OpenBoxReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated() || !session.isInRoom())
+        if (!session.isAuthenticated() || !session.isInRoom()) {
             return;
+        }
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
@@ -38,14 +39,15 @@ public class OpenBoxReader implements IMessageReader {
         final RoomItem box = room.getRoomItems().get(boxId);
 
         if (box.getBase().getId() == IDK.CATA_RECYCLER_BOX_ID) {
-            if (box.getTermFlags() == null || box.getTermFlags().length < 2)
+            if (box.getTermFlags() == null || box.getTermFlags().length < 2) {
                 return;
+            }
 
-            final Furniture furni = Bootloader.getGame().getFurnitureManager()
-            .getFurniture(Integer.valueOf(box.getTermFlags()[1]));
+            final Furniture furni = Bootloader.getGame().getFurnitureManager().getFurniture(Integer.valueOf(box.getTermFlags()[1]));
 
-            if (furni == null)
+            if (furni == null) {
                 return;
+            }
 
             room.removeItem(box, session);
             session.writeMessage(new GiftOpenedWriter(furni));
@@ -77,11 +79,7 @@ public class OpenBoxReader implements IMessageReader {
         room.removeItem(box, session);
         session.writeMessage(new GiftOpenedWriter(item.getBaseItem()));
 
-        session
-        .getPlayerInstance()
-        .getInventory()
-        .addItem(item.getBaseItem(), session, item.getAmount(),
-        (box.getTermFlags().length > 4 ? box.getTermFlags()[4] : ""), item.getSecondaryData(), null);
+        session.getPlayerInstance().getInventory().addItem(item.getBaseItem(), session, item.getAmount(), (box.getTermFlags().length > 4 ? box.getTermFlags()[4] : ""), item.getSecondaryData(), null);
 
         Bootloader.getStorage().executeQuery("DELETE FROM items WHERE id=" + boxId);
     }

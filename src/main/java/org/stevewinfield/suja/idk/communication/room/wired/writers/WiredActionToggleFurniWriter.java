@@ -19,8 +19,9 @@ public class WiredActionToggleFurniWriter extends RoomWiredEffectWriter {
 
         if (furnis.length() > 0) {
             try {
-                for (final String furni : furnis.split(","))
+                for (final String furni : furnis.split(",")) {
                     items.add(Integer.valueOf(furni));
+                }
             } catch (final NumberFormatException e) {
                 logger.error("NumberFormatException", e);
             }
@@ -28,8 +29,9 @@ public class WiredActionToggleFurniWriter extends RoomWiredEffectWriter {
 
         super.push(items.size());
 
-        for (final int furni : items)
+        for (final int furni : items) {
             super.push(furni);
+        }
 
         super.push(item.getBase().getSpriteId());
         super.push(item.getItemId());

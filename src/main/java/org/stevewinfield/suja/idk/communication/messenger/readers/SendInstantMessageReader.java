@@ -14,14 +14,16 @@ public class SendInstantMessageReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
         final int friendId = reader.readInteger();
         final String message = InputFilter.filterString(reader.readUTF());
 
-        if (friendId < 1 || message.length() < 1)
+        if (friendId < 1 || message.length() < 1) {
             return;
+        }
 
         if (!session.getPlayerMessenger().getBuddies().containsKey(friendId)) {
             session.writeMessage(new MessengerErrorWriter(6, friendId));
@@ -33,8 +35,7 @@ public class SendInstantMessageReader implements IMessageReader {
             return;
         }
 
-        session.getPlayerMessenger().getOnlineBuddies().get(friendId).getSession().getPlayerMessenger()
-        .onMessageReceived(session.getPlayerInstance().getInformation().getId(), message);
+        session.getPlayerMessenger().getOnlineBuddies().get(friendId).getSession().getPlayerMessenger().onMessageReceived(session.getPlayerInstance().getInformation().getId(), message);
     }
 
 }

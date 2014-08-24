@@ -13,7 +13,7 @@ public class WireEncryption {
             i *= -1;
         }
 
-        final byte[] wf = new byte[] { (byte) (64 + (i & 3)), 0, 0, 0, 0, 0 };
+        final byte[] wf = new byte[]{(byte) (64 + (i & 3)), 0, 0, 0, 0, 0};
 
         for (i >>= 2; i > 0; i >>= 6, ++numBytes) {
             wf[++pos] = (byte) (64 + (i & 63));
@@ -49,11 +49,12 @@ public class WireEncryption {
                 pos++;
             }
 
-            if (negative == true)
+            if (negative == true) {
                 v *= -1;
-            return new int[] { totalBytes, v };
+            }
+            return new int[]{totalBytes, v};
         } catch (final Exception e) {
-            return new int[] { 0, 0 };
+            return new int[]{0, 0};
         }
     }
 }

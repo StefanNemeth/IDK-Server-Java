@@ -4,12 +4,12 @@
  */
 package org.stevewinfield.suja.idk.game.trading;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.inventory.writers.UpdatePlayerInventoryWriter;
 import org.stevewinfield.suja.idk.game.inventory.PlayerItem;
 import org.stevewinfield.suja.idk.network.sessions.Session;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Trade {
     public int getPlayerOne() {
@@ -40,16 +40,17 @@ public class Trade {
     }
 
     public boolean offerItem(final int playerId, final PlayerItem item) {
-        if (stage != TradeStage.NEGOTIATING
-        || ((playerId == playerOne && playerOneAccepted) || (playerId == playerTwo && playerTwoAccepted)))
+        if (stage != TradeStage.NEGOTIATING || ((playerId == playerOne && playerOneAccepted) || (playerId == playerTwo && playerTwoAccepted))) {
             return false;
+        }
 
-        if (item.getBase().isInventoryStackable()
-        && ((playerId == playerOne && playerOneStackCount >= 9) || (playerId == playerTwo && playerTwoStackCount >= 9)))
+        if (item.getBase().isInventoryStackable() && ((playerId == playerOne && playerOneStackCount >= 9) || (playerId == playerTwo && playerTwoStackCount >= 9))) {
             return false;
+        }
 
-        if (offersPlayerOne.containsKey(item.getItemId()) || offersPlayerTwo.containsKey(item.getItemId()))
+        if (offersPlayerOne.containsKey(item.getItemId()) || offersPlayerTwo.containsKey(item.getItemId())) {
             return false;
+        }
 
         boolean addStack = true;
 
@@ -61,8 +62,9 @@ public class Trade {
                 }
             }
             offersPlayerOne.put(item.getItemId(), item);
-            if (addStack)
+            if (addStack) {
                 ++playerOneStackCount;
+            }
         } else {
             for (final PlayerItem target : offersPlayerTwo.values()) {
                 if (target.getBase().getId() == target.getBase().getId() && target.getBase().isInventoryStackable()) {
@@ -71,8 +73,9 @@ public class Trade {
                 }
             }
             offersPlayerTwo.put(item.getItemId(), item);
-            if (addStack)
+            if (addStack) {
                 ++playerTwoStackCount;
+            }
         }
 
         playerOneAccepted = false;
@@ -81,8 +84,9 @@ public class Trade {
     }
 
     public boolean modifyTrade(final int playerId) {
-        if (this.stage != TradeStage.NEGOTIATING)
+        if (this.stage != TradeStage.NEGOTIATING) {
             return false;
+        }
 
         if (playerId == playerOne) {
             playerOneAccepted = false;
@@ -107,13 +111,15 @@ public class Trade {
     }
 
     public boolean acceptTrade(final int playerId) {
-        if (stage == TradeStage.FINALIZED)
+        if (stage == TradeStage.FINALIZED) {
             return false;
+        }
 
-        if (playerId == playerOne)
+        if (playerId == playerOne) {
             playerOneAccepted = true;
-        else
+        } else {
             playerTwoAccepted = true;
+        }
 
         if (playerOneAccepted && playerTwoAccepted) {
             stage = stage == TradeStage.FINALIZING ? TradeStage.FINALIZED : TradeStage.FINALIZING;
@@ -124,18 +130,20 @@ public class Trade {
     }
 
     public boolean takeBackItem(final int playerId, final int itemId) {
-        if (stage != TradeStage.NEGOTIATING
-        || ((playerId == playerOne && playerOneAccepted) || (playerId == playerTwo && playerTwoAccepted)))
+        if (stage != TradeStage.NEGOTIATING || ((playerId == playerOne && playerOneAccepted) || (playerId == playerTwo && playerTwoAccepted))) {
             return false;
+        }
 
         if (playerId == playerOne) {
-            if (!this.offersPlayerOne.containsKey(itemId))
+            if (!this.offersPlayerOne.containsKey(itemId)) {
                 return false;
+            }
             this.offersPlayerOne.remove(itemId);
             --playerOneStackCount;
         } else {
-            if (!this.offersPlayerTwo.containsKey(itemId))
+            if (!this.offersPlayerTwo.containsKey(itemId)) {
                 return false;
+            }
             this.offersPlayerTwo.remove(itemId);
             --playerTwoStackCount;
         }

@@ -4,16 +4,16 @@
  */
 package org.stevewinfield.suja.idk.game.navigator;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.log4j.Logger;
 import org.magicwerk.brownies.collections.GapList;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.navigator.writers.NavigatorOfficialRoomsWriter;
 import org.stevewinfield.suja.idk.game.rooms.RoomInformation;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NavigatorListManager {
     private static Logger logger = Logger.getLogger(NavigatorListManager.class);

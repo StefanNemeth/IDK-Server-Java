@@ -4,14 +4,14 @@
  */
 package org.stevewinfield.suja.idk.game.furnitures.interactors;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.game.rooms.RoomInstance;
 import org.stevewinfield.suja.idk.game.rooms.RoomItem;
 import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class TeleporterInteractor extends DefaultInteractor {
     private static Logger logger = Logger.getLogger(TeleporterInteractor.class);
@@ -34,8 +34,7 @@ public class TeleporterInteractor extends DefaultInteractor {
     public void onTrigger(final RoomPlayer player, final RoomItem item, final int request, final boolean hasRights) {
         super.onTrigger(player, item, request, hasRights);
 
-        if (player != null
-        && !item.isTouching(player.getPosition(), player.getRotation(), item.getPosition().getAltitude())) {
+        if (player != null && !item.isTouching(player.getPosition(), player.getRotation(), item.getPosition().getAltitude())) {
             player.moveTo(item.getFrontPosition(), item.getFrontRotation(), item);
             return;
         }
@@ -56,16 +55,14 @@ public class TeleporterInteractor extends DefaultInteractor {
         RoomPlayer incomingPlayer = null;
 
         if (item.getInteractingPlayers().containsKey(1)) {
-            outgoingPlayer = item.getRoom().getRoomPlayers().containsKey(item.getInteractingPlayers().get(1)) ? item
-            .getRoom().getRoomPlayers().get(item.getInteractingPlayers().get(1)) : null;
+            outgoingPlayer = item.getRoom().getRoomPlayers().containsKey(item.getInteractingPlayers().get(1)) ? item.getRoom().getRoomPlayers().get(item.getInteractingPlayers().get(1)) : null;
             if (outgoingPlayer == null) {
                 item.getInteractingPlayers().get(1);
             }
         }
 
         if (item.getInteractingPlayers().containsKey(2)) {
-            incomingPlayer = item.getRoom().getRoomPlayers().containsKey(item.getInteractingPlayers().get(2)) ? item
-            .getRoom().getRoomPlayers().get(item.getInteractingPlayers().get(2)) : null;
+            incomingPlayer = item.getRoom().getRoomPlayers().containsKey(item.getInteractingPlayers().get(2)) ? item.getRoom().getRoomPlayers().get(item.getInteractingPlayers().get(2)) : null;
             if (incomingPlayer == null) {
                 item.getInteractingPlayers().get(2);
             }
@@ -76,9 +73,7 @@ public class TeleporterInteractor extends DefaultInteractor {
         if (outgoingPlayer != null) {
             if (item.getFlagsState() == 2) {
                 if (outgoingPlayer.getSession().isTeleporting()) {
-                    outgoingPlayer.getSession().prepareRoom(
-                    Bootloader.getGame().getRoomManager()
-                    .loadRoomInstance(outgoingPlayer.getSession().getTargetTeleporterRoom()), "", true);
+                    outgoingPlayer.getSession().prepareRoom(Bootloader.getGame().getRoomManager().loadRoomInstance(outgoingPlayer.getSession().getTargetTeleporterRoom()), "", true);
                     outgoingPlayer.getSession().setTargetTeleporterRoom(0);
                 }
                 item.getInteractingPlayers().remove(1);
@@ -96,8 +91,7 @@ public class TeleporterInteractor extends DefaultInteractor {
                         roomId = Bootloader.getGame().getRoomManager().getTeleporterCache().get(itemId);
                     } else if (itemId > 0) {
                         try {
-                            final ResultSet row = Bootloader.getStorage()
-                            .queryParams("SELECT room_id FROM room_items WHERE item_id=" + itemId).executeQuery();
+                            final ResultSet row = Bootloader.getStorage().queryParams("SELECT room_id FROM room_items WHERE item_id=" + itemId).executeQuery();
                             if (row.next()) {
                                 roomId = row.getInt("room_id");
                             }
@@ -112,8 +106,7 @@ public class TeleporterInteractor extends DefaultInteractor {
                     }
                 }
 
-                if (outgoingPlayer.getPosition().getX() != item.getPosition().getX()
-                || outgoingPlayer.getPosition().getY() != item.getPosition().getY()) {
+                if (outgoingPlayer.getPosition().getX() != item.getPosition().getX() || outgoingPlayer.getPosition().getY() != item.getPosition().getY()) {
                     outgoingPlayer.setWalkingBlocked(false);
                     item.getInteractingPlayers().remove(1);
                 } else if (showUpdate) {
@@ -143,8 +136,7 @@ public class TeleporterInteractor extends DefaultInteractor {
         }
 
         if (incomingPlayer != null) {
-            if (incomingPlayer.getPosition().getX() != item.getPosition().getX()
-            || incomingPlayer.getPosition().getY() != item.getPosition().getY()) {
+            if (incomingPlayer.getPosition().getX() != item.getPosition().getX() || incomingPlayer.getPosition().getY() != item.getPosition().getY()) {
                 incomingPlayer.setWalkingBlocked(false);
                 item.getInteractingPlayers().remove(2);
             } else {

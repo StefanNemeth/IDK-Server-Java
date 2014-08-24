@@ -18,8 +18,9 @@ public class MessageReaderFactory {
                 reader = freeObjects.poll();
             }
 
-            if (reader == null)
+            if (reader == null) {
                 return new MessageReader(messageId, body);
+            }
 
             reader.initialize(messageId, body);
             return reader;

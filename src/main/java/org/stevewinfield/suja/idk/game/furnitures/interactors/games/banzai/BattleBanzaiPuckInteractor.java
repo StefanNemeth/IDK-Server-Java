@@ -4,8 +4,6 @@
  */
 package org.stevewinfield.suja.idk.game.furnitures.interactors.games.banzai;
 
-import java.util.List;
-
 import org.stevewinfield.suja.idk.game.furnitures.interactors.DefaultInteractor;
 import org.stevewinfield.suja.idk.game.rooms.RoomItem;
 import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
@@ -13,20 +11,21 @@ import org.stevewinfield.suja.idk.game.rooms.coordination.Rotation;
 import org.stevewinfield.suja.idk.game.rooms.coordination.TileState;
 import org.stevewinfield.suja.idk.game.rooms.coordination.Vector2;
 
+import java.util.List;
+
 public class BattleBanzaiPuckInteractor extends DefaultInteractor {
 
     @Override
     public void onTrigger(final RoomPlayer player, final RoomItem item, final int request, final boolean hasRights) {
         super.onTrigger(player, item, request, hasRights);
 
-        if (!hasRights && item.getBase().hasRightCheck())
+        if (!hasRights && item.getBase().hasRightCheck()) {
             return;
+        }
 
         if (!item.isTouching(player.getPosition())) {
             final Vector2 goal = item.getFrontPosition(player.getPosition().getVector2());
-            player.moveTo(goal,
-            Rotation.calculate(player.getPosition().getX(), player.getPosition().getY(), goal.getX(), goal.getY()),
-            item);
+            player.moveTo(goal, Rotation.calculate(player.getPosition().getX(), player.getPosition().getY(), goal.getX(), goal.getY()), item);
             return;
         }
 
@@ -35,8 +34,7 @@ public class BattleBanzaiPuckInteractor extends DefaultInteractor {
             return;
         }
 
-        final int rotation = Rotation.calculate(player.getPosition().getX(), player.getPosition().getY(), item.getPosition()
-        .getX(), item.getPosition().getY());
+        final int rotation = Rotation.calculate(player.getPosition().getX(), player.getPosition().getY(), item.getPosition().getX(), item.getPosition().getY());
         int newX = 0;
         int newY = 0;
 
@@ -158,8 +156,7 @@ public class BattleBanzaiPuckInteractor extends DefaultInteractor {
             return;
         }
 
-        final int rotation = Rotation.calculate(player.getPosition().getX(), player.getPosition().getY(), item.getPosition()
-        .getX(), item.getPosition().getY());
+        final int rotation = Rotation.calculate(player.getPosition().getX(), player.getPosition().getY(), item.getPosition().getX(), item.getPosition().getY());
         int newX = 0;
         int newY = 0;
 

@@ -35,7 +35,7 @@ public class RoomEditInfoWriter extends MessageWriter {
         super.push(room.getInformation().petsAreAllowed());
         super.push(room.getInformation().petsEatingAllowed());
         super.push(room.getInformation().blockingDisabled()); // room blocking
-                                                              // disabled
+        // disabled
         super.push(room.getInformation().wallsHidden());
         super.push(room.getInformation().getWallThickness());
         super.push(room.getInformation().getFloorThickness());

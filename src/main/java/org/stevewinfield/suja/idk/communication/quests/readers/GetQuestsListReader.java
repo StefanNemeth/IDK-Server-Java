@@ -14,11 +14,11 @@ public class GetQuestsListReader implements IMessageReader {
 
     @Override
     public void parse(final Session session, final MessageReader reader) {
-        if (!session.isAuthenticated())
+        if (!session.isAuthenticated()) {
             return;
+        }
 
-        session.sendNotification(NotifyType.STAFF_ALERT,
-        Translations.getTranslation("feature_disabled"));
+        session.sendNotification(NotifyType.STAFF_ALERT, Translations.getTranslation("feature_disabled"));
     }
 
 }

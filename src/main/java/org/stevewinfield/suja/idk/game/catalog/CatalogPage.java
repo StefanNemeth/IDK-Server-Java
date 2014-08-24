@@ -4,16 +4,16 @@
  */
 package org.stevewinfield.suja.idk.game.catalog;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.communication.ISerialize;
 import org.stevewinfield.suja.idk.communication.MessageWriter;
 import org.stevewinfield.suja.idk.communication.catalog.writers.CatalogPageWriter;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
 
 public class CatalogPage implements ISerialize {
     private static Logger logger = Logger.getLogger(CatalogPage.class);
