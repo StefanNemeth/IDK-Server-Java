@@ -9,7 +9,6 @@ import org.stevewinfield.suja.idk.InputFilter;
 import org.stevewinfield.suja.idk.communication.IMessageReader;
 import org.stevewinfield.suja.idk.communication.MessageReader;
 import org.stevewinfield.suja.idk.communication.OperationCodes;
-import org.stevewinfield.suja.idk.game.miscellaneous.ChatCommandArguments;
 import org.stevewinfield.suja.idk.game.miscellaneous.ChatType;
 import org.stevewinfield.suja.idk.game.rooms.RoomInstance;
 import org.stevewinfield.suja.idk.network.sessions.Session;
@@ -40,11 +39,7 @@ public class RoomPlayerChatReader implements IMessageReader {
         }
 
         if (message.startsWith(":") && message.length() > 1) {
-            final String command = message.substring(1).split(" ")[0].toLowerCase();
-            final String args = message.length() > (1 + command.length()) ? message.substring(2 + command.length()) : "";
-            if (Bootloader.getGame().getChatCommandHandler().commandExists(command) &&
-                    session.getPlayerInstance().hasRight(Bootloader.getGame().getChatCommandHandler().getCommand(command).getPermissionCode()) &&
-                    Bootloader.getGame().getChatCommandHandler().getCommand(command).execute(session.getRoomPlayer(), new ChatCommandArguments(args, shouting))) {
+            if (Bootloader.getGame().getChatCommandHandler().handleCommand(session, message, shouting)) {
                 return;
             }
         }

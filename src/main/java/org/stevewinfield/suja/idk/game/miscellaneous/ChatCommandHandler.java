@@ -5,6 +5,7 @@
 package org.stevewinfield.suja.idk.game.miscellaneous;
 
 import org.apache.log4j.Logger;
+import org.stevewinfield.suja.idk.Translations;
 import org.stevewinfield.suja.idk.game.miscellaneous.commands.InfoChatCommand;
 import org.stevewinfield.suja.idk.game.miscellaneous.commands.PickallChatCommand;
 import org.stevewinfield.suja.idk.game.miscellaneous.commands.caching.RefreshCatalogCommand;
@@ -13,6 +14,7 @@ import org.stevewinfield.suja.idk.game.miscellaneous.commands.caching.RefreshRoo
 import org.stevewinfield.suja.idk.game.plugins.GamePlugin;
 import org.stevewinfield.suja.idk.game.plugins.PluginInterfaces;
 import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
+import org.stevewinfield.suja.idk.network.sessions.Session;
 
 import javax.script.Invocable;
 import java.util.HashMap;
@@ -58,6 +60,37 @@ public class ChatCommandHandler {
 
     public void addChatCommand(final GamePlugin plugin, final String cmd, IChatCommand chatCommand) {
         commands.put(cmd, chatCommand);
+    }
+
+    public boolean handleCommand(Session session, String message, boolean shouted) {
+        final String command = message.substring(1).split(" ")[0].toLowerCase();
+        final String args = message.length() > (1 + command.length()) ? message.substring(2 + command.length()) : "";
+        if (commandExists(command)) {
+            IChatCommand chatCommand = getCommand(command);
+            if (session.getPlayerInstance().hasRight(chatCommand.getPermissionCode())) {
+                try {
+                    if (chatCommand.execute(session.getRoomPlayer(), new ChatCommandArguments(args, shouted))) {
+                        return true;
+                    } else {
+                        session.getRoomPlayer().getSession().sendNotification(
+                                NotifyType.MULTI_ALERT,
+                                Translations.getTranslation("command_negative_result")
+                        );
+                        return true;
+                    }
+                } catch (Throwable t) {
+                    logger.error("Command error", t);
+                    return true;
+                }
+            } else {
+                session.getRoomPlayer().getSession().sendNotification(
+                        NotifyType.MULTI_ALERT,
+                        Translations.getTranslation("command_no_permission")
+                );
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean commandExists(final String command) {
