@@ -21,14 +21,16 @@ public class NetworkEncoder extends SimpleChannelHandler {
     @Override
     public void writeRequested(final ChannelHandlerContext ctx, final MessageEvent e) {
         try {
-            if (e.getMessage() instanceof String) {
-                Channels.write(ctx, e.getFuture(), ChannelBuffers.copiedBuffer((String) e.getMessage(), Charset.forName("UTF-8")));
-            } else if (e.getMessage() instanceof MessageWriter) {
-                final MessageWriter msg = (MessageWriter) e.getMessage();
-                Channels.write(ctx, e.getFuture(), msg.getBytes());
-            } else if (e.getMessage() instanceof QueuedMessageWriter) {
-                final QueuedMessageWriter msg = (QueuedMessageWriter) e.getMessage();
-                Channels.write(ctx, e.getFuture(), msg.getBytes());
+            if (ctx.getChannel().isConnected()) {
+                if (e.getMessage() instanceof String) {
+                    Channels.write(ctx, e.getFuture(), ChannelBuffers.copiedBuffer((String) e.getMessage(), Charset.forName("UTF-8")));
+                } else if (e.getMessage() instanceof MessageWriter) {
+                    final MessageWriter msg = (MessageWriter) e.getMessage();
+                    Channels.write(ctx, e.getFuture(), msg.getBytes());
+                } else if (e.getMessage() instanceof QueuedMessageWriter) {
+                    final QueuedMessageWriter msg = (QueuedMessageWriter) e.getMessage();
+                    Channels.write(ctx, e.getFuture(), msg.getBytes());
+                }
             }
         } catch (final Exception ex) {
             logger.error(ex.getMessage(), ex);
