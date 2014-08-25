@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -98,7 +97,9 @@ public class PluginManager {
     }
 
     public void loadLocalPlugins(final File pluginDir) {
+        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
+            Thread.currentThread().setContextClassLoader(Bootloader.getCustomClassLoader());
             final File[] jars = pluginDir.listFiles();
 
             if (jars != null) {
@@ -111,24 +112,19 @@ public class PluginManager {
             }
         } catch (final Exception e) {
             logger.error("Loading plugins failed.", e);
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldLoader);
         }
 
         logger.info(plugins.size() + " plugin(s) local loaded from /" + pluginDir.getPath());
     }
 
     public void load(final File pluginDir) {
-        ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader(Bootloader.getCustomClassLoader());
+        this.plugins = new ConcurrentHashMap<>();
+        this.factory = new ScriptEngineManager();
+        this.loadLocalPlugins(pluginDir);
 
-            this.plugins = new ConcurrentHashMap<>();
-            this.factory = new ScriptEngineManager();
-            this.loadLocalPlugins(pluginDir);
-
-            logger.info(plugins.size() + " plugin(s) local loaded from /" + pluginDir.getPath());
-        } finally {
-            Thread.currentThread().setContextClassLoader(oldLoader);
-        }
+        logger.info(plugins.size() + " plugin(s) local loaded from /" + pluginDir.getPath());
     }
 
     public static void log(final String txt) {
