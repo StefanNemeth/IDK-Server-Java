@@ -14,7 +14,6 @@ public class DedicatedServerCommandHandler {
 
     public DedicatedServerCommandHandler() {
         this.commands = new ConcurrentHashMap<>();
-        registerDefaultCommands();
     }
 
     public void handle(String line) {
@@ -37,10 +36,14 @@ public class DedicatedServerCommandHandler {
         commands.put(cmd.getName(), cmd);
     }
 
-    private void registerDefaultCommands() {
+    public void registerDefaultCommands() {
         registerCommand(new StopCommand());
         registerCommand(new RefreshCatalogCommand());
         registerCommand(new RefreshFurnitureCommand());
         registerCommand(new KickAllCommand());
+    }
+
+    public IDedicatedServerCommand getCommand(String name) {
+        return commands.get(name);
     }
 }
