@@ -127,19 +127,16 @@ public class RoomInstance {
 
     public void load(final ResultSet set) {
         this.information = new RoomInformation();
-        for (final NavigatorList list : Bootloader.getGame().getNavigatorListManager().getNavigatorLists().values()) {
-            try {
-                final RoomInformation info = list.getInformationEntry(set.getInt("id"));
-                if (info != null) {
-                    this.information = info;
-                    break;
-                }
-            } catch (final SQLException e) {
-                logger.error("SQL Exception", e);
-            }
-        }
-        this.information.set(set);
         try {
+            for (final NavigatorList list : Bootloader.getGame().getNavigatorListManager().getNavigatorLists().values()) {
+
+                    final RoomInformation info = list.getInformationEntry(set.getInt("id"));
+                    if (info != null) {
+                        this.information = info;
+                        break;
+                    }
+            }
+            this.information.set(set);
             ResultSet row = Bootloader.getStorage().queryParams("SELECT player_id FROM room_votes WHERE room_id=" + information.getId()).executeQuery();
             while (row.next()) {
                 this.votes.add(row.getInt("player_id"));
