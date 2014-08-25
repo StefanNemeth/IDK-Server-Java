@@ -258,6 +258,10 @@ public class Bootloader {
         return customClassLoader;
     }
 
+    public static Logger getLogger() {
+        return logger;
+    }
+
     // fields
     private static Settings settings;
     private static ConnectionListener listener;

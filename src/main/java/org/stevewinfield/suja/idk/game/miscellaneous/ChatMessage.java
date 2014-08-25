@@ -4,6 +4,7 @@
  */
 package org.stevewinfield.suja.idk.game.miscellaneous;
 
+import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
 
 public class ChatMessage {
@@ -30,7 +31,7 @@ public class ChatMessage {
         try {
             this.finalize();
         } catch (final Throwable e) {
-            e.printStackTrace();
+            Bootloader.getLogger().error("Failed to dipose ChatMessage", e);
         }
     }
 

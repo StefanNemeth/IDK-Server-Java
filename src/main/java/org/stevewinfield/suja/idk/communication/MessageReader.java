@@ -4,6 +4,7 @@
  */
 package org.stevewinfield.suja.idk.communication;
 
+import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.encryption.Base64Encryption;
 import org.stevewinfield.suja.idk.encryption.WireEncryption;
 
@@ -84,7 +85,7 @@ public class MessageReader {
         try {
             MessageReaderFactory.objectCallback(this);
         } catch (final Throwable e) {
-            e.printStackTrace();
+            Bootloader.getLogger().error("Failed to dispose MessageReader", e);
         }
     }
 

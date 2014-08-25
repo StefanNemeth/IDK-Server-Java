@@ -37,7 +37,7 @@ public class Storage {
                 this.driverStatement = this.driverConnection.createStatement();
             }
         } catch (final Exception e) {
-            logger.error(e.getMessage());
+            logger.error("Failed to access database", e);
             return false;
         }
         return true;
@@ -49,7 +49,7 @@ public class Storage {
             result.first();
             return result.getString(query.split(" ")[1]);
         } catch (final Exception e) {
-            e.printStackTrace();
+            logger.error("SQL Exception", e);
         }
         return null;
     }
@@ -60,7 +60,7 @@ public class Storage {
             result.first();
             return result.getInt(query.split(" ")[1]);
         } catch (final Exception e) {
-            e.printStackTrace();
+            logger.error("SQL Exception", e);
         }
         return 0;
     }
@@ -71,7 +71,7 @@ public class Storage {
             result.first();
             return result.getInt("last_id");
         } catch (final Exception e) {
-            e.printStackTrace();
+            logger.error("SQL Exception", e);
         }
         return 0;
     }
@@ -80,7 +80,7 @@ public class Storage {
         try {
             return driverConnection.prepareStatement(query);
         } catch (final Exception e) {
-            e.printStackTrace();
+            logger.error("SQL Exception", e);
         }
         return null;
     }
@@ -89,7 +89,7 @@ public class Storage {
         try {
             driverStatement.execute(query);
         } catch (final Exception e) {
-            e.printStackTrace();
+            logger.error("SQL Exception", e);
         }
     }
 
@@ -98,7 +98,7 @@ public class Storage {
             final ResultSet result = driverStatement.executeQuery(query);
             return result.next();
         } catch (final Exception e) {
-            e.printStackTrace();
+            logger.error("SQL Exception", e);
         }
         return false;
     }
@@ -113,7 +113,7 @@ public class Storage {
                 ++i;
             }
         } catch (final Exception e) {
-            e.printStackTrace();
+            logger.error("SQL Exception", e);
         }
         return i;
     }
@@ -127,7 +127,7 @@ public class Storage {
                 ++i;
             }
         } catch (final Exception e) {
-            e.printStackTrace();
+            logger.error("SQL Exception", e);
         }
         return i;
     }
@@ -140,7 +140,7 @@ public class Storage {
                 return resSet;
             }
         } catch (final Exception e) {
-            e.printStackTrace();
+            logger.error("SQL Exception", e);
         }
         return null;
     }

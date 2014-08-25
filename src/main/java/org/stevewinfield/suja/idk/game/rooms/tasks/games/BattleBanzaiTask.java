@@ -273,7 +273,7 @@ public class BattleBanzaiTask extends GameTask {
                     }
                 }
             } catch (final Exception e) {
-                e.printStackTrace();
+                Bootloader.getLogger().error("Battle Banzai error", e);
             }
 
             if (!player.isBot() && player.getSession() != null) {

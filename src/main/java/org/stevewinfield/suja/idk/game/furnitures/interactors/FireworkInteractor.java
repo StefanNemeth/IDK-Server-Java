@@ -4,6 +4,7 @@
  */
 package org.stevewinfield.suja.idk.game.furnitures.interactors;
 
+import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.IDK;
 import org.stevewinfield.suja.idk.communication.catalog.writers.CatalogPurchaseResultWriter;
 import org.stevewinfield.suja.idk.communication.catalog.writers.OpenFireworkChargeDialogWriter;
@@ -27,7 +28,7 @@ public class FireworkInteractor extends DefaultInteractor {
         try {
             currentCharges = Integer.valueOf(item.getTermFlags()[0]);
         } catch (final NumberFormatException ex) {
-            ex.printStackTrace();
+            Bootloader.getLogger().error("NumberFormatException", ex);
             currentCharges = 0;
         }
         if (request == 2) {
@@ -148,7 +149,7 @@ public class FireworkInteractor extends DefaultInteractor {
         try {
             currentCharges = Integer.valueOf(item.getTermFlags()[0]);
         } catch (final NumberFormatException ex) {
-            ex.printStackTrace();
+            Bootloader.getLogger().error("NumberFormatException", ex);
             currentCharges = 0;
         }
 

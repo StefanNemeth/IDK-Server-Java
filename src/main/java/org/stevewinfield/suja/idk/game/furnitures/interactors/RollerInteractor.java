@@ -5,6 +5,7 @@
 package org.stevewinfield.suja.idk.game.furnitures.interactors;
 
 import org.magicwerk.brownies.collections.GapList;
+import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.IDK;
 import org.stevewinfield.suja.idk.communication.room.writers.RollerEventWriter;
 import org.stevewinfield.suja.idk.game.rooms.RoomInstance;
@@ -143,7 +144,7 @@ public class RollerInteractor extends DefaultInteractor {
                 reCycle = true;
             }
         } catch (final Exception e) {
-            e.printStackTrace();
+            Bootloader.getLogger().error("Failed to move items", e);
         }
 
         if (reCycle) {
