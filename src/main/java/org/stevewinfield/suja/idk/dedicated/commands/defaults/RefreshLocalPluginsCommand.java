@@ -13,7 +13,6 @@ public class RefreshLocalPluginsCommand implements IDedicatedServerCommand {
     public void execute(String[] args, Logger logger) {
         logger.info("Refreshing local plugins...");
         Bootloader.getPluginManager().loadLocalPlugins(new File(IDK.SYSTEM_PLUGINS_PATH));
-        Bootloader.exitServer(0);
     }
 
     @Override
