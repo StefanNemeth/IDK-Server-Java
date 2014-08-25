@@ -29,8 +29,9 @@ dependencies {
     compile 'mysql:mysql-connector-java:5.1.25'
     compile 'io.netty:netty:3.6.6.Final'
     compile 'org.slf4j:slf4j-api:1.7.5'
-    compile 'org.slf4j:slf4j-nop:1.7.5'
+    compile 'org.slf4j:slf4j-log4j12:1.7.5'
     compile 'commons-io:commons-io:2.4'
+    compile 'org.fusesource.jansi:jansi:1.11'
 }
 
 jar {
