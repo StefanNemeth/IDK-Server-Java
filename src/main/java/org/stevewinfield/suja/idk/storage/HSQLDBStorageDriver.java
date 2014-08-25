@@ -15,16 +15,16 @@ public class HSQLDBStorageDriver implements StorageDriver {
 
     @Override
     public String getConnectionString() {
-        return "jdbc:hsqldb:file:" + Bootloader.getSettings().getProperty("idk.hsqldb.path");
+        return "jdbc:hsqldb:file:" + Bootloader.getSettings().getProperty("idk.hsqldb.path", "database");
     }
 
     @Override
     public String getUsername() {
-        return "sa";
+        return Bootloader.getSettings().getProperty("idk.hsqldb.user", "");
     }
 
     @Override
     public String getPassword() {
-        return "";
+        return Bootloader.getSettings().getProperty("idk.hsqldb.password", "");
     }
 }
