@@ -15,7 +15,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class FriendStreamEventData implements ISerialize {
-    private static final Logger logger = Logger.getLogger(FriendStreamEventData.class);
 
     public int getPostedTimeSpan() {
         final long diff[] = new long[]{0, 0, 0, 0, 0};
@@ -57,22 +56,18 @@ public class FriendStreamEventData implements ISerialize {
         this.image = String.format(IDK.FRIENDSTREAM_AVATAR_URL, avatar);
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.id = row.getInt("id");
-            this.playerId = row.getInt("player_id");
-            this.playerName = row.getString("player_name");
-            this.playerGender = row.getString("player_gender").toLowerCase().equals("f") ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
-            this.playerAvatar = row.getString("player_avatar");
-            this.eventType = row.getInt("event_type");
-            this.timestamp = row.getInt("timestamp");
-            this.linkType = row.getInt("link_type");
-            this.likes = row.getInt("event_likes");
-            this.eventData = row.getString("event_data").split((char) 13 + "");
-            this.image = String.format(IDK.FRIENDSTREAM_AVATAR_URL, this.playerAvatar);
-        } catch (final SQLException ex) {
-            logger.error("SQL Exception", ex);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.id = row.getInt("id");
+        this.playerId = row.getInt("player_id");
+        this.playerName = row.getString("player_name");
+        this.playerGender = row.getString("player_gender").toLowerCase().equals("f") ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
+        this.playerAvatar = row.getString("player_avatar");
+        this.eventType = row.getInt("event_type");
+        this.timestamp = row.getInt("timestamp");
+        this.linkType = row.getInt("link_type");
+        this.likes = row.getInt("event_likes");
+        this.eventData = row.getString("event_data").split((char) 13 + "");
+        this.image = String.format(IDK.FRIENDSTREAM_AVATAR_URL, this.playerAvatar);
     }
 
     @Override

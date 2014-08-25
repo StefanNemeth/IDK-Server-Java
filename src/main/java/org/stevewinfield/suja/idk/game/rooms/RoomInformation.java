@@ -12,8 +12,6 @@ import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RoomInformation {
-    private static final Logger logger = Logger.getLogger(RoomInformation.class);
-
     // getters
     public int getId() {
         return id;
@@ -141,7 +139,7 @@ public class RoomInformation {
         this.decorations.put(k, s);
     }
 
-    public void set(final ResultSet row) {
+    public void set(final ResultSet row) throws SQLException {
         this.set(row, "");
     }
 
@@ -162,38 +160,34 @@ public class RoomInformation {
         this.tradingEnabled = tradingEnabled;
     }
 
-    public void set(final ResultSet row, final String nickname) {
-        try {
-            this.id = row.getInt("id");
-            this.tags = row.getString("tags").split(",");
-            this.roomType = row.getInt("room_type");
-            this.ownerId = row.getInt("owner_id");
-            this.ownerName = !nickname.equals("") ? nickname : row.getString("nickname");
-            this.name = row.getString("name");
-            this.description = row.getString("description");
-            this.accessType = row.getInt("access_type");
-            this.password = row.getString("password");
-            this.categoryId = row.getInt("category_id");
-            this.maxPlayers = row.getInt("max_players");
-            this.modelName = row.getString("model_name");
-            this.model = Bootloader.getGame().getRoomManager().getRoomModel(modelName);
-            this.allowPets = row.getInt("allow_pets") == 1;
-            this.allowPetsEating = row.getInt("allow_pets_eating") == 1;
-            this.disableBlocking = row.getInt("disable_blocking") == 1;
-            this.hideWalls = row.getInt("hide_walls") == 1;
-            this.wallThickness = row.getInt("wall_thickness");
-            this.floorThickness = row.getInt("floor_thickness");
-            final String[] splittingMap = row.getString("decorations").split(";");
-            this.decorations = new ConcurrentHashMap<>();
-            for (final String entry : splittingMap) {
-                this.decorations.put(entry.split("=")[0], entry.split("=")[1]);
-            }
-            RoomCategory category;
-            if ((category = Bootloader.getGame().getRoomManager().getRoomCategory(categoryId)) != null) {
-                this.tradingEnabled = category.isTradingEnabled();
-            }
-        } catch (final SQLException e) {
-            logger.error("SQL Exception", e);
+    public void set(final ResultSet row, final String nickname) throws SQLException {
+        this.id = row.getInt("id");
+        this.tags = row.getString("tags").split(",");
+        this.roomType = row.getInt("room_type");
+        this.ownerId = row.getInt("owner_id");
+        this.ownerName = !nickname.equals("") ? nickname : row.getString("nickname");
+        this.name = row.getString("name");
+        this.description = row.getString("description");
+        this.accessType = row.getInt("access_type");
+        this.password = row.getString("password");
+        this.categoryId = row.getInt("category_id");
+        this.maxPlayers = row.getInt("max_players");
+        this.modelName = row.getString("model_name");
+        this.model = Bootloader.getGame().getRoomManager().getRoomModel(modelName);
+        this.allowPets = row.getInt("allow_pets") == 1;
+        this.allowPetsEating = row.getInt("allow_pets_eating") == 1;
+        this.disableBlocking = row.getInt("disable_blocking") == 1;
+        this.hideWalls = row.getInt("hide_walls") == 1;
+        this.wallThickness = row.getInt("wall_thickness");
+        this.floorThickness = row.getInt("floor_thickness");
+        final String[] splittingMap = row.getString("decorations").split(";");
+        this.decorations = new ConcurrentHashMap<>();
+        for (final String entry : splittingMap) {
+            this.decorations.put(entry.split("=")[0], entry.split("=")[1]);
+        }
+        RoomCategory category;
+        if ((category = Bootloader.getGame().getRoomManager().getRoomCategory(categoryId)) != null) {
+            this.tradingEnabled = category.isTradingEnabled();
         }
     }
 

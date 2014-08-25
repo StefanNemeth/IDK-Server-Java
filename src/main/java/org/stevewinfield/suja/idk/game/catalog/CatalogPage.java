@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CatalogPage implements ISerialize {
-    private static final Logger logger = Logger.getLogger(CatalogPage.class);
 
     // getters
     public int getId() {
@@ -80,21 +79,17 @@ public class CatalogPage implements ISerialize {
         this.items = new HashMap<>();
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.id = row.getInt("id");
-            this.parentId = row.getInt("parent_id");
-            this.caption = row.getString("caption");
-            this.icon = row.getInt("icon_id");
-            this.color = row.getInt("color_id");
-            this.visible = row.getInt("visible") == 1;
-            this.layout = row.getString("layout");
-            this.layoutStrings = row.getString("layout_strings").split("\\|");
-            this.contentStrings = row.getString("content_strings").split("\\|");
-            this.enabled = row.getInt("enabled") == 1;
-        } catch (final SQLException e) {
-            logger.error("SQL Exception", e);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.id = row.getInt("id");
+        this.parentId = row.getInt("parent_id");
+        this.caption = row.getString("caption");
+        this.icon = row.getInt("icon_id");
+        this.color = row.getInt("color_id");
+        this.visible = row.getInt("visible") == 1;
+        this.layout = row.getString("layout");
+        this.layoutStrings = row.getString("layout_strings").split("\\|");
+        this.contentStrings = row.getString("content_strings").split("\\|");
+        this.enabled = row.getInt("enabled") == 1;
     }
 
     public void cache() {

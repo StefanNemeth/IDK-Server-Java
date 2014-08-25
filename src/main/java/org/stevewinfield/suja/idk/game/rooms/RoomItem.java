@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RoomItem implements ISerialize {
-    private static final Logger logger = Logger.getLogger(RoomItem.class);
-
     public int getItemId() {
         return itemId;
     }
@@ -180,26 +178,22 @@ public class RoomItem implements ISerialize {
         }
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.itemId = row.getInt("room_items.item_id");
-            this.base = Bootloader.getGame().getFurnitureManager().getFurniture(row.getInt("base_item"));
-            this.interactorId = row.getInt("special_interactor") > -1 ? row.getInt("special_interactor") : this.base.getInteractor();
-            this.interactor = Bootloader.getGame().getFurnitureManager().getInteractor(interactorId);
-            this.rotation = row.getInt("rotation");
-            this.position = new Vector3(row.getInt("position_x"), row.getInt("position_y"), row.getDouble("position_altitude"));
-            this.wallPosition = row.getString("wall_position");
-            final ResultSet _row = Bootloader.getStorage().queryParams("SELECT flag FROM item_flags WHERE item_id=" + this.itemId).executeQuery();
-            if (_row != null && _row.next()) {
-                this.flags = _row.getString("flag");
-            } else {
-                this.flags = "0";
-            }
-            this.walkable = (this.base.getInteractor() == FurnitureInteractor.GATE && this.flags.equals("1")) || this.base.isWalkable();
-            this.loadTermFlags();
-        } catch (final SQLException e) {
-            logger.error("SQL Exception", e);
+    public void set(final ResultSet row) throws SQLException {
+        this.itemId = row.getInt("room_items.item_id");
+        this.base = Bootloader.getGame().getFurnitureManager().getFurniture(row.getInt("base_item"));
+        this.interactorId = row.getInt("special_interactor") > -1 ? row.getInt("special_interactor") : this.base.getInteractor();
+        this.interactor = Bootloader.getGame().getFurnitureManager().getInteractor(interactorId);
+        this.rotation = row.getInt("rotation");
+        this.position = new Vector3(row.getInt("position_x"), row.getInt("position_y"), row.getDouble("position_altitude"));
+        this.wallPosition = row.getString("wall_position");
+        final ResultSet _row = Bootloader.getStorage().queryParams("SELECT flag FROM item_flags WHERE item_id=" + this.itemId).executeQuery();
+        if (_row != null && _row.next()) {
+            this.flags = _row.getString("flag");
+        } else {
+            this.flags = "0";
         }
+        this.walkable = (this.base.getInteractor() == FurnitureInteractor.GATE && this.flags.equals("1")) || this.base.isWalkable();
+        this.loadTermFlags();
     }
 
     public void setPosition(final Vector3 position, final int rotation) {

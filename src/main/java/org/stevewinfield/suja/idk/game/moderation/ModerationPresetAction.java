@@ -43,15 +43,11 @@ public class ModerationPresetAction {
         this.message = "";
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.id = row.getInt("id");
-            this.parentId = row.getInt("parent_id");
-            this.caption = row.getString("caption");
-            this.message = row.getString("message");
-        } catch (final SQLException ex) {
-            logger.error("SQL Exception", ex);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.id = row.getInt("id");
+        this.parentId = row.getInt("parent_id");
+        this.caption = row.getString("caption");
+        this.message = row.getString("message");
     }
 
     public void addSubItem(final ModerationPresetAction item) {

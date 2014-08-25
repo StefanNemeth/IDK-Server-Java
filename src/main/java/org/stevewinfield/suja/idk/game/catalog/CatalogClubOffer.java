@@ -50,16 +50,12 @@ public class CatalogClubOffer {
         this.length = 0;
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.id = row.getInt("id");
-            this.name = row.getString("name");
-            this.price = row.getInt("cost_credits");
-            this.length = row.getInt("length_days");
-            this.type = row.getInt("type");
-        } catch (final SQLException ex) {
-            logger.error("SQL Exception", ex);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.id = row.getInt("id");
+        this.name = row.getString("name");
+        this.price = row.getInt("cost_credits");
+        this.length = row.getInt("length_days");
+        this.type = row.getInt("type");
     }
 
     // fields

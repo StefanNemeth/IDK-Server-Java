@@ -10,8 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class BotKeywordReaction {
-    private static final Logger logger = Logger.getLogger(BotKeywordReaction.class);
-
     public int getBotId() {
         return botId;
     }
@@ -33,20 +31,16 @@ public class BotKeywordReaction {
         this.drinks = new int[0];
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.botId = row.getInt("bot_id");
-            this.responses = row.getString("responses").split(";");
-            this.chatType = row.getInt("chat_type");
-            if (row.getString("serving_drink").length() > 0) {
-                final String[] drinks = row.getString("serving_drink").split(";");
-                this.drinks = new int[drinks.length];
-                for (int i = 0; i < drinks.length; i++) {
-                    this.drinks[i] = Integer.valueOf(drinks[i]);
-                }
+    public void set(final ResultSet row) throws SQLException {
+        this.botId = row.getInt("bot_id");
+        this.responses = row.getString("responses").split(";");
+        this.chatType = row.getInt("chat_type");
+        if (row.getString("serving_drink").length() > 0) {
+            final String[] drinks = row.getString("serving_drink").split(";");
+            this.drinks = new int[drinks.length];
+            for (int i = 0; i < drinks.length; i++) {
+                this.drinks[i] = Integer.valueOf(drinks[i]);
             }
-        } catch (final SQLException ex) {
-            logger.error("SQL Exception", ex);
         }
     }
 

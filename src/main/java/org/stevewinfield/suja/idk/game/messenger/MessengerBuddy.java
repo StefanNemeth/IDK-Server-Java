@@ -68,19 +68,15 @@ public class MessengerBuddy implements ISerialize {
         this.inRoom = online && this.session.isInRoom();
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.playerId = row.getInt("id");
-            this.playerName = row.getString("nickname");
-            this.avatar = row.getString("figurecode");
-            this.mission = row.getString("motto");
-            this.lastOnline = "";
-            this.session = Bootloader.getSessionManager().getAuthenticatedSession(playerId);
-            this.online = this.session != null;
-            this.inRoom = online && this.session.isInRoom();
-        } catch (final SQLException ex) {
-            logger.error("SQL Exception", ex);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.playerId = row.getInt("id");
+        this.playerName = row.getString("nickname");
+        this.avatar = row.getString("figurecode");
+        this.mission = row.getString("motto");
+        this.lastOnline = "";
+        this.session = Bootloader.getSessionManager().getAuthenticatedSession(playerId);
+        this.online = this.session != null;
+        this.inRoom = online && this.session.isInRoom();
     }
 
     public void set(final int playerId, final String playerName, final String avatar, final String mission) {

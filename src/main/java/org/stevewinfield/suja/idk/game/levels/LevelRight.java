@@ -10,8 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class LevelRight {
-    private static final Logger logger = Logger.getLogger(LevelRight.class);
-
     // getters
     public int getId() {
         return id;
@@ -26,13 +24,9 @@ public class LevelRight {
         this.label = "";
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.id = row.getInt("id");
-            this.label = row.getString("right_label");
-        } catch (final SQLException e) {
-            logger.error("SQL Exception", e);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.id = row.getInt("id");
+        this.label = row.getString("right_label");
     }
 
     // fields
