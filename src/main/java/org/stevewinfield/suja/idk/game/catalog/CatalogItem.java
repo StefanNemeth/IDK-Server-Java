@@ -12,6 +12,7 @@ import org.stevewinfield.suja.idk.game.furnitures.Furniture;
 import org.stevewinfield.suja.idk.game.furnitures.FurnitureInteractor;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class CatalogItem implements ISerialize {
     private static final Logger logger = Logger.getLogger(CatalogItem.class);
@@ -63,31 +64,26 @@ public class CatalogItem implements ISerialize {
         return this.secondaryData;
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.id = row.getInt("id");
-            this.displayName = row.getString("display_name");
-            this.pageId = row.getInt("page_id");
-            this.baseItem = Bootloader.getGame().getFurnitureManager().getFurniture(row.getInt("furni_id"));
-            switch (this.baseItem.getInteractor()) {
-                case FurnitureInteractor.WALLPAPER:
-                case FurnitureInteractor.FLOOR:
-                case FurnitureInteractor.LANDSCAPE:
-                    final String[] split = this.displayName.split("_");
-                    if (split.length == 3) {
-                        this.secondaryData = split[2];
-                    }
-                    break;
-            }
-
-            this.costsPixels = row.getInt("costs_pixels");
-            this.costsCoins = row.getInt("costs_coins");
-            this.costsExtra = row.getInt("costs_extra");
-            this.amount = row.getInt("amount");
-        } catch (final Exception e) {
-            System.out.println(this.id);
-            logger.error("SQL Exception", e);
+    public void set(final ResultSet row) throws SQLException {
+        this.id = row.getInt("id");
+        this.displayName = row.getString("display_name");
+        this.pageId = row.getInt("page_id");
+        this.baseItem = Bootloader.getGame().getFurnitureManager().getFurniture(row.getInt("furni_id"));
+        switch (this.baseItem.getInteractor()) {
+            case FurnitureInteractor.WALLPAPER:
+            case FurnitureInteractor.FLOOR:
+            case FurnitureInteractor.LANDSCAPE:
+                final String[] split = this.displayName.split("_");
+                if (split.length == 3) {
+                    this.secondaryData = split[2];
+                }
+                break;
         }
+
+        this.costsPixels = row.getInt("costs_pixels");
+        this.costsCoins = row.getInt("costs_coins");
+        this.costsExtra = row.getInt("costs_extra");
+        this.amount = row.getInt("amount");
     }
 
     // fields

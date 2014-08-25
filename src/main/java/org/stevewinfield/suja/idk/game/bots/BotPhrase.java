@@ -28,14 +28,10 @@ public class BotPhrase {
         this.phrase = "";
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.botId = row.getInt("bot_id");
-            this.phrase = row.getString("phrase");
-            this.shouted = row.getInt("is_shouted") == 1;
-        } catch (final SQLException ex) {
-            logger.error("SQL Exception", ex);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.botId = row.getInt("bot_id");
+        this.phrase = row.getString("phrase");
+        this.shouted = row.getInt("is_shouted") == 1;
     }
 
     private int botId;

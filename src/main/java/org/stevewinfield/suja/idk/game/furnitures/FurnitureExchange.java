@@ -28,15 +28,11 @@ public class FurnitureExchange {
         return changeExtra;
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.furniId = row.getInt("id");
-            this.changeCoins = row.getInt("change_coins");
-            this.changePixels = row.getInt("change_pixels");
-            this.changeExtra = row.getInt("change_extra");
-        } catch (final SQLException e) {
-            logger.error("SQL Exception", e);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.furniId = row.getInt("id");
+        this.changeCoins = row.getInt("change_coins");
+        this.changePixels = row.getInt("change_pixels");
+        this.changeExtra = row.getInt("change_extra");
     }
 
     // fields

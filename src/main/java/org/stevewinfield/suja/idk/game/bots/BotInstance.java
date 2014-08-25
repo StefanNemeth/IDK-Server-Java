@@ -15,8 +15,6 @@ import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class BotInstance {
-    private static final Logger logger = Logger.getLogger(BotInstance.class);
-
     public int getId() {
         return id;
     }
@@ -78,21 +76,17 @@ public class BotInstance {
         this.keywordReactions = new ConcurrentHashMap<>();
     }
 
-    public void set(final ResultSet row, final ConcurrentHashMap<Integer, IBotInteractor> interactors) {
-        try {
-            this.id = row.getInt("id");
-            this.startRoomId = row.getInt("start_room_id");
-            this.botName = row.getString("nickname");
-            this.avatar = row.getString("figurecode");
-            this.gender = row.getString("gender").toUpperCase().equals("F") ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
-            this.mission = row.getString("motto");
-            this.startRotation = row.getInt("start_rotation");
-            this.startPosition = new Vector3(row.getInt("start_position_x"), row.getInt("start_position_y"), row.getDouble("start_position_altitude"));
-            this.interactorId = row.getInt("interactor");
-            this.movingEnabled = row.getInt("moving_enabled") == 1;
-        } catch (final SQLException ex) {
-            logger.error("SQL Exception", ex);
-        }
+    public void set(final ResultSet row, final ConcurrentHashMap<Integer, IBotInteractor> interactors) throws SQLException {
+        this.id = row.getInt("id");
+        this.startRoomId = row.getInt("start_room_id");
+        this.botName = row.getString("nickname");
+        this.avatar = row.getString("figurecode");
+        this.gender = row.getString("gender").toUpperCase().equals("F") ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
+        this.mission = row.getString("motto");
+        this.startRotation = row.getInt("start_rotation");
+        this.startPosition = new Vector3(row.getInt("start_position_x"), row.getInt("start_position_y"), row.getDouble("start_position_altitude"));
+        this.interactorId = row.getInt("interactor");
+        this.movingEnabled = row.getInt("moving_enabled") == 1;
     }
 
     public void addPhrase(final BotPhrase phrase) {

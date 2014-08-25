@@ -58,16 +58,12 @@ public class PlayerAchievement {
         this.update = true;
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.id = row.getInt("id");
-            this.playerId = row.getInt("player_id");
-            this.achievementId = row.getInt("achievement_id");
-            this.progress = row.getInt("progress");
-            this.level = row.getInt("level");
-        } catch (final SQLException ex) {
-            logger.error("SQL Exception", ex);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.id = row.getInt("id");
+        this.playerId = row.getInt("player_id");
+        this.achievementId = row.getInt("achievement_id");
+        this.progress = row.getInt("progress");
+        this.level = row.getInt("level");
     }
 
     private int id;

@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class RoomCategory {
-    private static final Logger logger = Logger.getLogger(RoomCategory.class);
 
     // getters
     public int getId() {
@@ -35,15 +34,11 @@ public class RoomCategory {
         this.staffCategory = false;
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.id = row.getInt("id");
-            this.title = row.getString("title");
-            this.staffCategory = row.getInt("staff_category") == 1;
-            this.tradingEnabled = row.getInt("trading_enabled") == 1;
-        } catch (final SQLException e) {
-            logger.error("SQL Exception", e);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.id = row.getInt("id");
+        this.title = row.getString("title");
+        this.staffCategory = row.getInt("staff_category") == 1;
+        this.tradingEnabled = row.getInt("trading_enabled") == 1;
     }
 
     // fields

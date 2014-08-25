@@ -103,21 +103,17 @@ public class ClubSubscription {
                 );
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.baseLevel = row.getInt("subscription_level");
-            this.created = row.getInt("timestamp_created");
-            this.expire = row.getInt("timestamp_expire");
-            this.hcTime = row.getInt("past_time_hc");
-            this.vipTime = row.getInt("past_time_vip");
-            this.choosenGifts = row.getInt("choosen_gifts");
+    public void set(final ResultSet row) throws SQLException {
+        this.baseLevel = row.getInt("subscription_level");
+        this.created = row.getInt("timestamp_created");
+        this.expire = row.getInt("timestamp_expire");
+        this.hcTime = row.getInt("past_time_hc");
+        this.vipTime = row.getInt("past_time_vip");
+        this.choosenGifts = row.getInt("choosen_gifts");
 
-            if (!this.isActive()) // expire if subscription is expired
-            {
-                this.expire();
-            }
-        } catch (final SQLException ex) {
-            logger.error("SQL Exception", ex);
+        if (!this.isActive()) // expire if subscription is expired
+        {
+            this.expire();
         }
     }
 

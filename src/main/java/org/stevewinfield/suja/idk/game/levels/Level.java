@@ -42,14 +42,10 @@ public class Level {
         this(0);
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.id = row.getInt("id");
-            this.name = row.getString("level_name");
-            this.badgeCode = row.getString("level_badge");
-        } catch (final SQLException e) {
-            logger.error("SQL Exception", e);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.id = row.getInt("id");
+        this.name = row.getString("level_name");
+        this.badgeCode = row.getString("level_badge");
     }
 
     public void addRight(final LevelRight right) {

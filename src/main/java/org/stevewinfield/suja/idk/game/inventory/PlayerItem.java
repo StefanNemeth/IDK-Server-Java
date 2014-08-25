@@ -17,8 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PlayerItem implements ISerialize {
-    private static final Logger logger = Logger.getLogger(PlayerItem.class);
-
     // getters
     public int getItemId() {
         return itemId;
@@ -57,19 +55,15 @@ public class PlayerItem implements ISerialize {
         this.interactorId = interactorId;
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.itemId = row.getInt("item_id");
-            this.base = Bootloader.getGame().getFurnitureManager().getFurniture(row.getInt("base_item"));
-            this.interactorId = row.getInt("special_interactor") > -1 ? row.getInt("special_interactor") : this.base.getInteractor();
-            final ResultSet _row = Bootloader.getStorage().queryParams("SELECT flag FROM item_flags WHERE item_id=" + this.itemId).executeQuery();
-            if (_row != null && _row.next()) {
-                this.flags = _row.getString("flag");
-            } else {
-                this.flags = "0";
-            }
-        } catch (final SQLException e) {
-            logger.error("SQL Exception", e);
+    public void set(final ResultSet row) throws SQLException {
+        this.itemId = row.getInt("item_id");
+        this.base = Bootloader.getGame().getFurnitureManager().getFurniture(row.getInt("base_item"));
+        this.interactorId = row.getInt("special_interactor") > -1 ? row.getInt("special_interactor") : this.base.getInteractor();
+        final ResultSet _row = Bootloader.getStorage().queryParams("SELECT flag FROM item_flags WHERE item_id=" + this.itemId).executeQuery();
+        if (_row != null && _row.next()) {
+            this.flags = _row.getString("flag");
+        } else {
+            this.flags = "0";
         }
     }
 

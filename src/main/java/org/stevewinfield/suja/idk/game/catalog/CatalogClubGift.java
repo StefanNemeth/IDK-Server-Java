@@ -14,8 +14,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class CatalogClubGift implements ISerialize {
-    private static final Logger logger = Logger.getLogger(CatalogClubGift.class);
-
     public int getId() {
         return id;
     }
@@ -40,16 +38,12 @@ public class CatalogClubGift implements ISerialize {
         this.name = "";
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.id = row.getInt("id");
-            this.name = row.getString("name");
-            this.baseItem = Bootloader.getGame().getFurnitureManager().getFurniture(row.getInt("furni_id"));
-            this.vip = row.getInt("only_vip") == 1;
-            this.minMonths = row.getInt("min_months");
-        } catch (final SQLException e) {
-            logger.error("SQL Exception", e);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.id = row.getInt("id");
+        this.name = row.getString("name");
+        this.baseItem = Bootloader.getGame().getFurnitureManager().getFurniture(row.getInt("furni_id"));
+        this.vip = row.getInt("only_vip") == 1;
+        this.minMonths = row.getInt("min_months");
     }
 
     // fields

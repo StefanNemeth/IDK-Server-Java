@@ -53,18 +53,14 @@ public class RoomModel {
         this.maxPlayers = 0;
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.name = row.getString("name");
-            this.modelType = row.getInt("model_type");
-            this.doorPosition = new Vector3(row.getInt("door_x"), row.getInt("door_y"), row.getDouble("door_altitude"));
-            this.heightMap = new Heightmap(row.getString("heightmap"), doorPosition);
-            this.doorRotation = row.getInt("door_rotation");
-            this.maxPlayers = row.getInt("max_players");
-            this.cachedHeightmapWriter = new RoomItemHeightmapWriter(this.heightMap.toString());
-        } catch (final SQLException e) {
-            logger.error("SQL Exception", e);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.name = row.getString("name");
+        this.modelType = row.getInt("model_type");
+        this.doorPosition = new Vector3(row.getInt("door_x"), row.getInt("door_y"), row.getDouble("door_altitude"));
+        this.heightMap = new Heightmap(row.getString("heightmap"), doorPosition);
+        this.doorRotation = row.getInt("door_rotation");
+        this.maxPlayers = row.getInt("max_players");
+        this.cachedHeightmapWriter = new RoomItemHeightmapWriter(this.heightMap.toString());
     }
 
     // fields

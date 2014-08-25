@@ -122,35 +122,31 @@ public class PlayerInformation {
         this.level = new Level();
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.id = row.getInt("id");
-            this.playerName = row.getString("nickname");
-            this.email = row.getString("email");
-            this.avatar = row.getString("figurecode");
-            this.gender = row.getString("gender").toUpperCase().equals("F") ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
-            this.mission = row.getString("motto");
-            this.level = Bootloader.getGame().getLevelManager().getLevel(row.getInt("level"));
-            this.creditsBalance = row.getInt("credits_balance");
-            this.pixelsBalance = row.getInt("pixels_balance");
-            this.shellsBalance = row.getInt("shells_balance");
-            this.homeRoom = row.getInt("home_room");
-            this.respectPoints = row.getInt("respect_points");
-            this.availableRespects = row.getInt("available_respects");
-            this.availableScratches = row.getInt("available_scrachtes");
-            this.score = row.getInt("score");
-            this.streamEnabled = row.getInt("stream_enabled") == 1;
-            this.trade = row.getInt("can_trade") == 1;
-            this.cfhs = row.getInt("total_cfhs");
-            this.abusiveCFHS = row.getInt("abusive_cfhs");
-            this.cautions = row.getInt("cautions");
-            this.bans = row.getInt("bans");
-            this.registeredTimestamp = row.getInt("registered_timestamp");
-            this.lastLoginTimestamp = row.getInt("last_login_timestamp");
-            this.lastUpdate = row.getInt("last_update");
-        } catch (final SQLException e) {
-            logger.error("SQL Exception", e);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.id = row.getInt("id");
+        this.playerName = row.getString("nickname");
+        this.email = row.getString("email");
+        this.avatar = row.getString("figurecode");
+        this.gender = row.getString("gender").toUpperCase().equals("F") ? PlayerInformation.FEMALE_GENDER : PlayerInformation.MALE_GENDER;
+        this.mission = row.getString("motto");
+        this.level = Bootloader.getGame().getLevelManager().getLevel(row.getInt("level"));
+        this.creditsBalance = row.getInt("credits_balance");
+        this.pixelsBalance = row.getInt("pixels_balance");
+        this.shellsBalance = row.getInt("shells_balance");
+        this.homeRoom = row.getInt("home_room");
+        this.respectPoints = row.getInt("respect_points");
+        this.availableRespects = row.getInt("available_respects");
+        this.availableScratches = row.getInt("available_scrachtes");
+        this.score = row.getInt("score");
+        this.streamEnabled = row.getInt("stream_enabled") == 1;
+        this.trade = row.getInt("can_trade") == 1;
+        this.cfhs = row.getInt("total_cfhs");
+        this.abusiveCFHS = row.getInt("abusive_cfhs");
+        this.cautions = row.getInt("cautions");
+        this.bans = row.getInt("bans");
+        this.registeredTimestamp = row.getInt("registered_timestamp");
+        this.lastLoginTimestamp = row.getInt("last_login_timestamp");
+        this.lastUpdate = row.getInt("last_update");
     }
 
     public void setCredits(final int credits) {
