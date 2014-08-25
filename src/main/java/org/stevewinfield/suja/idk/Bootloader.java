@@ -100,6 +100,7 @@ public class Bootloader {
         logger.info("Properties file successfully read.");
 
         dedicatedServerCommandHandler = new DedicatedServerCommandHandler();
+        dedicatedServerCommandHandler.registerDefaultCommands();
 
         ThreadedCommandReader commandReader = new ThreadedCommandReader("Server console handler", dedicatedServerCommandHandler);
 
