@@ -11,6 +11,8 @@ import org.magicwerk.brownies.collections.GapList;
 import org.stevewinfield.placeholder.services.PlaceholderNetwork;
 import org.stevewinfield.suja.idk.communication.MessageHandler;
 import org.stevewinfield.suja.idk.communication.OperationCodes;
+import org.stevewinfield.suja.idk.dedicated.commands.ThreadedCommandReader;
+import org.stevewinfield.suja.idk.dedicated.commands.DedicatedServerCommandHandler;
 import org.stevewinfield.suja.idk.game.Game;
 import org.stevewinfield.suja.idk.game.plugins.PluginManager;
 import org.stevewinfield.suja.idk.network.ConnectionListener;
@@ -96,6 +98,13 @@ public class Bootloader {
 
         settings = new Settings(pFile);
         logger.info("Properties file successfully read.");
+
+        dedicatedServerCommandHandler = new DedicatedServerCommandHandler();
+
+        ThreadedCommandReader commandReader = new ThreadedCommandReader("Server console handler", dedicatedServerCommandHandler);
+
+        commandReader.setDaemon(true);
+        commandReader.start();
 
         final List<URL> classPath = new ArrayList<>();
         File directoryFile = new File("libs");
@@ -265,6 +274,7 @@ public class Bootloader {
     // fields
     private static Settings settings;
     private static ConnectionListener listener;
+    private static DedicatedServerCommandHandler dedicatedServerCommandHandler;
     private static SessionManager sessionManager;
     private static PluginManager pluginManager;
     private static Storage storage;
