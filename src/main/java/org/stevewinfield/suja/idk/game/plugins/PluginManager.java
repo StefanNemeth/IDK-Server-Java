@@ -97,6 +97,25 @@ public class PluginManager {
         return true;
     }
 
+    public void loadLocalPlugins(final File pluginDir) {
+        try {
+            final File[] jars = pluginDir.listFiles();
+
+            if (jars != null) {
+                for (final File f : jars) {
+                    final String name = f.getName();
+                    final FileReader reader = new FileReader(f);
+                    this.addPlugin(name, reader, true);
+                    reader.close();
+                }
+            }
+        } catch (final Exception e) {
+            logger.error("Loading plugins failed.", e);
+        }
+
+        logger.info(plugins.size() + " plugin(s) local loaded from /" + pluginDir.getPath());
+    }
+
     public void load(final File pluginDir) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
@@ -104,21 +123,7 @@ public class PluginManager {
 
             this.plugins = new ConcurrentHashMap<>();
             this.factory = new ScriptEngineManager();
-
-            final File[] jars = pluginDir.listFiles();
-
-            try {
-                if (jars != null) {
-                    for (final File f : jars) {
-                        final String name = f.getName();
-                        final FileReader reader = new FileReader(f);
-                        this.addPlugin(name, reader, true);
-                        reader.close();
-                    }
-                }
-            } catch (final Exception e) {
-                logger.error("Loading plugins failed.", e);
-            }
+            this.loadLocalPlugins(pluginDir);
 
             logger.info(plugins.size() + " plugin(s) local loaded from /" + pluginDir.getPath());
         } finally {

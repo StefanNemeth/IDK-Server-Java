@@ -101,6 +101,7 @@ public class IDK {
     public static boolean DEBUG = false;
     public static String SYSTEM_DATE_FORMAT = "yyyy-MM-dd";
     public static String SYSTEM_TIME_FORMAT = "HH:mm";
+    public static String SYSTEM_PLUGINS_PATH = "plugins";
     public static String[] BOTS_SHOUT_RESPONSES = new String[]{"Come on.. I didn't understand you.", "What have you said?", "Ergh, what..? You're too quiet."};
     public static int NAV_MAX_FAVORITES = 20;
     public static int NAV_MAX_ROOMS_PER_PLAYER = 20;

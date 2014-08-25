@@ -188,7 +188,7 @@ public class Bootloader {
         game = new Game();
         game.getCatalogManager().loadCache();
         pluginManager = new PluginManager();
-        pluginManager.load(new File("plugins"));
+        pluginManager.load(new File(IDK.SYSTEM_PLUGINS_PATH));
 
         game.getBotManager().load();
 

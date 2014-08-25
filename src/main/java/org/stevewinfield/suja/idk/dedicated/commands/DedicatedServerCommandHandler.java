@@ -1,10 +1,7 @@
 package org.stevewinfield.suja.idk.dedicated.commands;
 
 import org.apache.log4j.Logger;
-import org.stevewinfield.suja.idk.dedicated.commands.defaults.KickAllCommand;
-import org.stevewinfield.suja.idk.dedicated.commands.defaults.RefreshCatalogCommand;
-import org.stevewinfield.suja.idk.dedicated.commands.defaults.RefreshFurnitureCommand;
-import org.stevewinfield.suja.idk.dedicated.commands.defaults.StopCommand;
+import org.stevewinfield.suja.idk.dedicated.commands.defaults.*;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,6 +19,7 @@ public class DedicatedServerCommandHandler {
             logger.error("Invalid command");
             return;
         }
+        parts[0] = parts[0].toLowerCase();
         if (!commands.containsKey(parts[0])) {
             logger.error("Command not found");
             return;
@@ -33,7 +31,7 @@ public class DedicatedServerCommandHandler {
     }
 
     public void registerCommand(IDedicatedServerCommand cmd) {
-        commands.put(cmd.getName(), cmd);
+        commands.put(cmd.getName().toLowerCase(), cmd);
     }
 
     public void registerDefaultCommands() {
@@ -41,6 +39,7 @@ public class DedicatedServerCommandHandler {
         registerCommand(new RefreshCatalogCommand());
         registerCommand(new RefreshFurnitureCommand());
         registerCommand(new KickAllCommand());
+        registerCommand(new RefreshLocalPluginsCommand());
     }
 
     public IDedicatedServerCommand getCommand(String name) {
