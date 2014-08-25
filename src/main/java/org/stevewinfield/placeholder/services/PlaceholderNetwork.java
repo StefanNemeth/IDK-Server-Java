@@ -90,7 +90,7 @@ public class PlaceholderNetwork {
 
         for (final Object plugin : plugins.keySet()) {
             JSONObject pluginObject = (JSONObject)plugins.get((String)plugin);
-            if ((!pluginVersions.containsKey((String) plugin) || pluginVersions.get((String) plugin) < (Long)pluginObject.get("version")) && Bootloader.getPluginManager().addPlugin((String) plugin, new String(BaseEncoding.base64().decode((String)pluginObject.get("script"))), showLog)) {
+            if ((!pluginVersions.containsKey((String) plugin) || pluginVersions.get((String) plugin) < (Long)pluginObject.get("version")) && Bootloader.getPluginManager().addPlugin((String) plugin, new String(BaseEncoding.base64().decode((String)pluginObject.get("script"))), showLog, true)) {
                 pluginVersions.put((String) plugin, (Long) pluginObject.get("version"));
                 counter++;
             }

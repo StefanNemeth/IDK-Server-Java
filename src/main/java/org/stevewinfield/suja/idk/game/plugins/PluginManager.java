@@ -30,7 +30,7 @@ public class PluginManager {
     public PluginManager() {
     }
 
-    public boolean addPlugin(final String filename, final Object content, final boolean showLog) {
+    public boolean addPlugin(final String filename, final Object content, final boolean showLog, final boolean loadedExternally) {
         String extension = "";
 
         int i = filename.lastIndexOf('.');
@@ -65,7 +65,7 @@ public class PluginManager {
                                 "importClass(org.stevewinfield.suja.idk.game.plugins.PluginManager);"
                 );
             }
-            GamePlugin plugin = new GamePlugin(name, engine);
+            GamePlugin plugin = new GamePlugin(name, engine, loadedExternally);
             engine.put("IDK", plugin);
             engine.put("gamePlugin", plugin);
             engine.put("logger", Logger.getLogger(name));
@@ -105,7 +105,7 @@ public class PluginManager {
                 for (final File f : jars) {
                     final String name = f.getName();
                     final FileReader reader = new FileReader(f);
-                    this.addPlugin(name, reader, true);
+                    this.addPlugin(name, reader, true, false);
                     reader.close();
                 }
             }

@@ -15,13 +15,14 @@ public class GamePlugin {
         return script;
     }
 
-    public GamePlugin(final String name, final ScriptEngine script) {
-        this.name = name;
-        this.script = script;
+    public boolean isLoadedExternally() {
+        return loadedExternally;
     }
 
-    public void addEventListener(final String type, final Object obj) {
-
+    public GamePlugin(final String name, final ScriptEngine script, final boolean loadedExternally) {
+        this.name = name;
+        this.script = script;
+        this.loadedExternally = loadedExternally;
     }
 
     public void addChatCommand(final String name, final String permission, final String obj) {
@@ -46,4 +47,5 @@ public class GamePlugin {
 
     private final String name;
     private final ScriptEngine script;
+    private final boolean loadedExternally;
 }
