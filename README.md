@@ -35,3 +35,5 @@ Please follow the [Sun/Oracle coding standards](http://www.oracle.com/technetwor
 	- Setters
 	- Methods
 	- Fields
+* Use the keyword "final" where possible
+* Don't Ignore Exceptions without a good reason

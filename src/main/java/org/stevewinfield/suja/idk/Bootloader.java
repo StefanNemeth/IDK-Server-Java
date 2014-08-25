@@ -65,6 +65,8 @@ public class Bootloader {
         try {
             buildProperties.load(Bootloader.class.getResourceAsStream("/build.properties"));
         } catch (Exception ignored) {
+            // Default Values of buildProperties are given at
+            // the second parameter of Properties::getProperty
         }
         IDK.NAME = buildProperties.getProperty("name", "IDK");
         IDK.BUILD_NUMBER = buildProperties.getProperty("build", "UNKNOWN");
