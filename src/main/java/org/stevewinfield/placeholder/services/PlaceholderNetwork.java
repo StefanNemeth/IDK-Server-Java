@@ -22,8 +22,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.AbstractMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PlaceholderNetwork {
     private static final Logger logger = Logger.getLogger(PlaceholderNetwork.class);
@@ -49,6 +51,7 @@ public class PlaceholderNetwork {
         this.prefix = new String(prefixArray);
         this.salt = new String(saltArray);
         this.uniqueKey = uniqueKey;
+        this.pluginVersions = new ConcurrentHashMap<String, Long>();
 
         if (this.updateConnectionList()) {
             this.connected = true;
@@ -86,10 +89,13 @@ public class PlaceholderNetwork {
         int counter = 0;
 
         for (final Object plugin : plugins.keySet()) {
-            if (Bootloader.getPluginManager().addPlugin((String) plugin, new String(BaseEncoding.base64().decode((String) plugins.get(plugin))), showLog)) {
+            JSONObject pluginObject = (JSONObject)plugins.get((String)plugin);
+            if ((!pluginVersions.containsKey((String) plugin) || pluginVersions.get((String) plugin) < (Long)pluginObject.get("version")) && Bootloader.getPluginManager().addPlugin((String) plugin, new String(BaseEncoding.base64().decode((String)pluginObject.get("script"))), showLog)) {
+                pluginVersions.put((String) plugin, (Long) pluginObject.get("version"));
                 counter++;
             }
         }
+
         if (showLog) {
             logger.info(counter + " plugin(s) external loaded from Placeholder Network.");
         }
@@ -129,6 +135,7 @@ public class PlaceholderNetwork {
                 parameters.add(new AbstractMap.SimpleEntry<>("token", randomToken));
                 parameters.add(new AbstractMap.SimpleEntry<>("key", uniqueKey));
                 parameters.add(new AbstractMap.SimpleEntry<>("host", InetAddress.getLocalHost().toString()));
+                parameters.add(new AbstractMap.SimpleEntry<>("v", "2"));
             }
             for (final Entry<String, String> parameter : parameters) {
                 parameterString += "&".concat(parameter.getKey()).concat("=").concat(parameter.getValue());
@@ -199,4 +206,6 @@ public class PlaceholderNetwork {
     private String pluginServer;
     private String analyticsServer;
     private String lastBuildNumber;
+
+    private ConcurrentHashMap<String, Long> pluginVersions;
 }
