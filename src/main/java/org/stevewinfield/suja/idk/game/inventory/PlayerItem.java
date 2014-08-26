@@ -42,6 +42,10 @@ public class PlayerItem implements ISerialize {
         return this.base.isWiredItem() || this.base.isGift() || this.getBase().getId() == IDK.CATA_RECYCLER_BOX_ID || this.getBase().getInteractor() == FurnitureInteractor.TELEPORTER;
     }
 
+    public void setFlags(final String flags) {
+        this.flags = flags;
+    }
+
     public PlayerItem() {
         this.itemId = 0;
         this.base = null;
@@ -96,7 +100,7 @@ public class PlayerItem implements ISerialize {
         writer.push(base.getSpriteId());
         writer.push(typeId); // types.. (todo)
         writer.push(this.flagsHidden() ? "" : flags);
-        writer.push(true); // can recycle (todo)
+        writer.push(base.isRecyclable());
         writer.push(base.isTradeable());
         writer.push(base.isInventoryStackable());
         writer.push(true); // can sell (todo)

@@ -14,6 +14,7 @@ import org.stevewinfield.suja.idk.communication.QueuedMessageWriter;
 import org.stevewinfield.suja.idk.communication.achievement.writers.AchievementDataListWriter;
 import org.stevewinfield.suja.idk.communication.friendstream.writers.FriendStreamEventWriter;
 import org.stevewinfield.suja.idk.communication.handshake.writers.AuthenticatedWriter;
+import org.stevewinfield.suja.idk.communication.inventory.writers.AvatarEffectListWriter;
 import org.stevewinfield.suja.idk.communication.moderation.writers.ModerationToolWriter;
 import org.stevewinfield.suja.idk.communication.player.writers.*;
 import org.stevewinfield.suja.idk.game.friendstream.FriendStreamEventData;
@@ -46,6 +47,7 @@ public class AuthenticatePlayerReader implements IMessageReader {
         final QueuedMessageWriter queue = new QueuedMessageWriter();
         queue.push(new AuthenticatedWriter());
         queue.push(new LevelRightsListWriter(session.getPlayerInstance().hasVIP(), session.getPlayerInstance().hasClub(), session.getPlayerInstance().hasRight("hotel_admin")));
+        queue.push(new AvatarEffectListWriter(session.getPlayerInstance().getInventory().getAvatarEffects()));
         queue.push(new PlayerFavoriteRoomsWriter(session.getPlayerInstance().getFavoriteRooms()));
         queue.push(new AchievementDataListWriter(Bootloader.getGame().getAchievementManager().getAchievements().values()));
 
@@ -83,6 +85,6 @@ public class AuthenticatePlayerReader implements IMessageReader {
 
         session.writeMessage(queue);
         session.writeMessage(new PlayerHomeRoomWriter(session.getPlayerInstance().getInformation().getHomeRoom()));
-
+        session.getPlayerInstance().getInventory().checkEffectExpiry(session);
     }
 }
