@@ -15,7 +15,7 @@ public class DedicatedServerCommandHandler {
 
     public void handle(String line) {
         String[] parts = line.split(" ");
-        if (parts.length < 1) {
+        if (parts.length < 1 || parts[0].length() < 1) {
             logger.error("Invalid command");
             return;
         }
