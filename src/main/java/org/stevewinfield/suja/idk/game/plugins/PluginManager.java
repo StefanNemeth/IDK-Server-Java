@@ -61,7 +61,8 @@ public class PluginManager {
                                 "importPackage(org.stevewinfield.suja.idk.game.miscellaneous);" +
                                 "importPackage(org.stevewinfield.suja.idk.game.players);" +
                                 "importPackage(org.stevewinfield.suja.idk.game.rooms);" +
-                                "importClass(org.stevewinfield.suja.idk.game.plugins.PluginManager);"
+                                "importClass(org.stevewinfield.suja.idk.game.plugins.PluginManager);" +
+                                "importClass(org.stevewinfield.suja.idk.game.plugins.PluginHelper);"
                 );
             }
             GamePlugin plugin = new GamePlugin(name, engine, loadedExternally);
