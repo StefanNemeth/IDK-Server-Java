@@ -708,6 +708,7 @@ public class RoomInstance {
         if (onlyChangeRot && newAltitude < oldAlt) {
             newAltitude = oldAlt;
         }
+
         final int state = item.getState();
         for (final Vector2 posAct : newPos) {
             this.gameMap.updateTile(posAct, state);

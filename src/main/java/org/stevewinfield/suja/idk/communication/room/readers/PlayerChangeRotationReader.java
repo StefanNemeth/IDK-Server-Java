@@ -23,7 +23,7 @@ public class PlayerChangeRotationReader implements IMessageReader {
 
         final RoomInstance room = Bootloader.getGame().getRoomManager().getLoadedRoomInstance(session.getRoomId());
 
-        if (room == null || session.getRoomPlayer().isWalking()) {
+        if (room == null || session.getRoomPlayer().isWalking() || session.getRoomPlayer().isFrozen()) {
             return;
         }
 
