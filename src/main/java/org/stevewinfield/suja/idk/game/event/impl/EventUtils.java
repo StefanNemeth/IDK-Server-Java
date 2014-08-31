@@ -4,6 +4,8 @@ import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.game.event.Event;
 import org.stevewinfield.suja.idk.game.event.session.SessionAuthenticatedEvent;
+import org.stevewinfield.suja.idk.game.event.session.SessionMakeEvent;
+import org.stevewinfield.suja.idk.game.event.session.SessionRemoveEvent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,5 +40,7 @@ public class EventUtils {
 
     static {
         addEventClass(SessionAuthenticatedEvent.class);
+        addEventClass(SessionMakeEvent.class);
+        addEventClass(SessionRemoveEvent.class);
     }
 }
