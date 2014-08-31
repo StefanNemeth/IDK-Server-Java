@@ -6,6 +6,9 @@ package org.stevewinfield.suja.idk.game.plugins;
 
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.game.bots.IBotInteractor;
+import org.stevewinfield.suja.idk.game.event.Event;
+import org.stevewinfield.suja.idk.game.event.Listener;
+import org.stevewinfield.suja.idk.game.event.impl.EventUtils;
 import org.stevewinfield.suja.idk.game.miscellaneous.IChatCommand;
 
 import javax.script.ScriptEngine;
@@ -39,6 +42,22 @@ public class GamePlugin {
 
     public void addBotInteractor(final int interactorId, final IBotInteractor botInteractor) {
         Bootloader.getGame().getBotManager().addBotInteractor(this, interactorId, botInteractor);
+    }
+
+    public void addEventListener(final String eventName, final String obj) {
+        Class<? extends Event> eventClass = EventUtils.eventStringToClass(eventName);
+        if (eventClass == null) {
+            throw new Error("Unable to find event " + eventName);
+        }
+        addEventListener(eventClass, obj);
+    }
+
+    public void addEventListener(final Class<? extends Event> eventClass, final String obj) {
+        Bootloader.getGame().getEventManager().addEventListener(this, eventClass, obj);
+    }
+
+    public void addEventListener(final Listener listener) {
+        Bootloader.getGame().getEventManager().registerListener(this, listener);
     }
 
     public String getName() {
