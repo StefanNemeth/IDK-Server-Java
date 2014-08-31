@@ -1,16 +1,13 @@
 package org.stevewinfield.suja.idk.game.event.session;
 
-import org.stevewinfield.suja.idk.game.event.Event;
 import org.stevewinfield.suja.idk.network.sessions.Session;
 
-public class SessionAuthenticatedEvent extends Event {
-    public Session getSession() {
-        return session;
-    }
+/**
+ * This event is called when a session is authenticated.
+ */
+public class SessionAuthenticatedEvent extends SessionEvent {
 
     public SessionAuthenticatedEvent(Session session) {
-        this.session = session;
+        super(session);
     }
-
-    private final Session session;
 }
