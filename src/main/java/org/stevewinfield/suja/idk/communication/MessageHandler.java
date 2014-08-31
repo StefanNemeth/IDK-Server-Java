@@ -18,7 +18,7 @@ import org.stevewinfield.suja.idk.communication.global.readers.LatencyTestReader
 import org.stevewinfield.suja.idk.communication.handshake.readers.AuthenticatePlayerReader;
 import org.stevewinfield.suja.idk.communication.handshake.readers.InitializeCryptoReader;
 import org.stevewinfield.suja.idk.communication.handshake.readers.ShowDayMessageReader;
-import org.stevewinfield.suja.idk.communication.inventory.readers.GetObjectInventoryReader;
+import org.stevewinfield.suja.idk.communication.inventory.readers.*;
 import org.stevewinfield.suja.idk.communication.messenger.readers.*;
 import org.stevewinfield.suja.idk.communication.moderation.readers.GetModerationPlayerInfoReader;
 import org.stevewinfield.suja.idk.communication.moderation.readers.GetModerationRoomInfoReader;
@@ -168,6 +168,8 @@ public class MessageHandler {
 
     private static void putInventoryMessages() {
         messages.put(OperationCodes.getIncomingOpCode("GetObjectInventory"), new GetObjectInventoryReader());
+        messages.put(OperationCodes.getIncomingOpCode("ActivatePlayerEffect"), new ActivatePlayerEffectReader());
+        messages.put(OperationCodes.getIncomingOpCode("ApplyPlayerEffect"), new ApplyPlayerEffectReader());
     }
 
     private static void putCatalogMessages() {

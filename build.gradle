@@ -1,4 +1,4 @@
-apply plugin: 'java'
+apply plugin: 'groovy'
 
 ext {
     mainClassName = 'org.stevewinfield.suja.idk.Bootloader' // class to start when JAR is started
@@ -32,6 +32,8 @@ dependencies {
     compile 'org.slf4j:slf4j-log4j12:1.7.5'
     compile 'commons-io:commons-io:2.4'
     compile 'org.fusesource.jansi:jansi:1.11'
+    testCompile 'junit:junit:4.11'
+    testCompile "org.codehaus.groovy:groovy-all:2.3.6:indy"
 }
 
 jar {

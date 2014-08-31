@@ -60,8 +60,9 @@ public class PlayerInstance {
     }
 
     public void load(final ResultSet set) {
-        this.information.set(set);
         try {
+            this.information.set(set);
+
             if (this.information.getAvailableRespects() < 3) {
                 final Calendar cal = Calendar.getInstance();
 

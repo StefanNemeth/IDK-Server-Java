@@ -69,7 +69,7 @@ public class PlaceItemReader implements IMessageReader {
 
         final PlayerItem item = session.getPlayerInstance().getInventory().getItem(itemId);
 
-        if (item == null) {
+        if (item == null || (!item.getBase().getType().equals(FurnitureType.FLOOR) && !item.getBase().getType().equals(FurnitureType.WALL))) {
             return;
         }
 

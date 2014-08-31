@@ -91,6 +91,9 @@ public class IDK {
                 case "cata.rollers.max.count":
                     CATA_ROLLERS_MAX_COUNT = Integer.valueOf(settings.getString("value"));
                     continue;
+                case "cata.avatar.effects.duration":
+                    CATA_AVATAR_EFFECTS_DURATION = Integer.valueOf(settings.getString("value"));
+                    continue;
             }
         }
     }
@@ -101,6 +104,7 @@ public class IDK {
     public static boolean DEBUG = false;
     public static String SYSTEM_DATE_FORMAT = "yyyy-MM-dd";
     public static String SYSTEM_TIME_FORMAT = "HH:mm";
+    public static String SYSTEM_PLUGINS_PATH = "plugins";
     public static String[] BOTS_SHOUT_RESPONSES = new String[]{"Come on.. I didn't understand you.", "What have you said?", "Ergh, what..? You're too quiet."};
     public static int NAV_MAX_FAVORITES = 20;
     public static int NAV_MAX_ROOMS_PER_PLAYER = 20;
@@ -120,6 +124,7 @@ public class IDK {
     public static int CATA_ROLLERS_ROLL_DELAY = 1;
     public static int BB_DEFAULT_TIMER_SECONDS = 60;
     public static int ROOM_MAX_WALK_ALTITUDE_DIFFERENCE = 2;
+    public static int CATA_AVATAR_EFFECTS_DURATION = 3600;
     public static String FRIENDSTREAM_AVATAR_URL = "http://127.0.0.1/habbo-imaging/avatar.png?gesture=sml&figure=%s";
 
     /**

@@ -18,6 +18,6 @@ public class KickAllCommand implements IDedicatedServerCommand {
 
     @Override
     public String getName() {
-        return "kickall";
+        return "kickAll";
     }
 }

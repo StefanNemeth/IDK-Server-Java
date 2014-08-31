@@ -10,8 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class OfficialItem {
-    private static final Logger logger = Logger.getLogger(OfficialItem.class);
-
     // getters
     public int getId() {
         return id;
@@ -71,22 +69,18 @@ public class OfficialItem {
         this.categoryAutoExpand = false;
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.id = row.getInt("id");
-            this.parentId = row.getInt("parent_id");
-            this.roomId = row.getInt("room_id");
-            this.name = row.getString("name");
-            this.description = row.getString("description");
-            this.category = row.getInt("is_category") == 1;
-            this.displayType = row.getInt("display_type");
-            this.imageType = row.getInt("image_type");
-            this.image = row.getString("image_src");
-            this.bannerLabel = row.getString("banner_label");
-            this.categoryAutoExpand = row.getInt("category_autoexpand") == 1;
-        } catch (final SQLException e) {
-            logger.error("SQL Exception", e);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.id = row.getInt("id");
+        this.parentId = row.getInt("parent_id");
+        this.roomId = row.getInt("room_id");
+        this.name = row.getString("name");
+        this.description = row.getString("description");
+        this.category = row.getInt("is_category") == 1;
+        this.displayType = row.getInt("display_type");
+        this.imageType = row.getInt("image_type");
+        this.image = row.getString("image_src");
+        this.bannerLabel = row.getString("banner_label");
+        this.categoryAutoExpand = row.getInt("category_autoexpand") == 1;
     }
 
     // fields

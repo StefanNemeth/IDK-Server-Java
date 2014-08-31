@@ -21,6 +21,6 @@ public class RefreshCatalogCommand implements IDedicatedServerCommand {
 
     @Override
     public String getName() {
-        return "refreshcatalog";
+        return "refreshCatalog";
     }
 }

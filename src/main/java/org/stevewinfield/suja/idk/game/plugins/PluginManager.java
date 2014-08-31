@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,7 +29,7 @@ public class PluginManager {
     public PluginManager() {
     }
 
-    public boolean addPlugin(final String filename, final Object content, final boolean showLog) {
+    public boolean addPlugin(final String filename, final Object content, final boolean showLog, final boolean loadedExternally) {
         String extension = "";
 
         int i = filename.lastIndexOf('.');
@@ -65,7 +64,7 @@ public class PluginManager {
                                 "importClass(org.stevewinfield.suja.idk.game.plugins.PluginManager);"
                 );
             }
-            GamePlugin plugin = new GamePlugin(name, engine);
+            GamePlugin plugin = new GamePlugin(name, engine, loadedExternally);
             engine.put("IDK", plugin);
             engine.put("gamePlugin", plugin);
             engine.put("logger", Logger.getLogger(name));
@@ -97,33 +96,35 @@ public class PluginManager {
         return true;
     }
 
-    public void load(final File pluginDir) {
+    public void loadLocalPlugins(final File pluginDir) {
         ClassLoader oldLoader = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(Bootloader.getCustomClassLoader());
-
-            this.plugins = new ConcurrentHashMap<>();
-            this.factory = new ScriptEngineManager();
-
             final File[] jars = pluginDir.listFiles();
 
-            try {
-                if (jars != null) {
-                    for (final File f : jars) {
-                        final String name = f.getName();
-                        final FileReader reader = new FileReader(f);
-                        this.addPlugin(name, reader, true);
-                        reader.close();
-                    }
+            if (jars != null) {
+                for (final File f : jars) {
+                    final String name = f.getName();
+                    final FileReader reader = new FileReader(f);
+                    this.addPlugin(name, reader, true, false);
+                    reader.close();
                 }
-            } catch (final Exception e) {
-                logger.error("Loading plugins failed.", e);
             }
-
-            logger.info(plugins.size() + " plugin(s) local loaded from /" + pluginDir.getPath());
+        } catch (final Exception e) {
+            logger.error("Loading plugins failed.", e);
         } finally {
             Thread.currentThread().setContextClassLoader(oldLoader);
         }
+
+        logger.info(plugins.size() + " plugin(s) local loaded from /" + pluginDir.getPath());
+    }
+
+    public void load(final File pluginDir) {
+        this.plugins = new ConcurrentHashMap<>();
+        this.factory = new ScriptEngineManager();
+        this.loadLocalPlugins(pluginDir);
+
+        logger.info(plugins.size() + " plugin(s) local loaded from /" + pluginDir.getPath());
     }
 
     public static void log(final String txt) {

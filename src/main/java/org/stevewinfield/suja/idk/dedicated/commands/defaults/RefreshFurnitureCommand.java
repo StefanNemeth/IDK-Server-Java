@@ -12,6 +12,6 @@ public class RefreshFurnitureCommand implements IDedicatedServerCommand {
 
     @Override
     public String getName() {
-        return "refreshfurniture";
+        return "refreshFurniture";
     }
 }

@@ -20,7 +20,7 @@ public abstract class BaseColorConsoleAppender extends ConsoleAppender {
         levelToColor.put(Level.FATAL, "\u001b[1;37;41m");
         levelToColor.put(Level.ERROR, "\u001b[1;31m");
         levelToColor.put(Level.WARN, "\u001b[1;33m");
-        levelToColor.put(Level.INFO, "\u001b[22;32m");
+        levelToColor.put(Level.INFO, "\u001b[37m");
         levelToColor.put(Level.DEBUG, "\u001b[22;36m");
         levelToColor.put(Level.TRACE, "\u001b[1;30m");
     }

@@ -28,14 +28,10 @@ public class ModerationPresetMessage {
         this.message = "";
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.id = row.getInt("id");
-            this.type = row.getString("type").equals("room") ? ModerationPresetMessageType.ROOM_MESSAGE : ModerationPresetMessageType.PLAYER_MESSAGE;
-            this.message = row.getString("message");
-        } catch (final SQLException ex) {
-            logger.error("SQL Exception", ex);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.id = row.getInt("id");
+        this.type = row.getString("type").equals("room") ? ModerationPresetMessageType.ROOM_MESSAGE : ModerationPresetMessageType.PLAYER_MESSAGE;
+        this.message = row.getString("message");
     }
 
     // fields

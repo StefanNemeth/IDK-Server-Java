@@ -46,5 +46,4 @@ public class FurnitureInteractor {
     public final static int ROLLER = 38;
     public final static int WF_TRG_GAME_ENDS = 39;
     public final static int WF_TRG_GAME_STARTS = 40;
-
 }

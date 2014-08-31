@@ -38,14 +38,10 @@ public class MessengerRequest implements ISerialize {
         this.requestPlayerFigure = requestPlayerFigure;
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.requestPlayerId = row.getInt("player_req_id");
-            this.requestPlayerName = row.getString("request_playername");
-            this.requestPlayerFigure = row.getString("request_playerfigure");
-        } catch (final SQLException ex) {
-            logger.error("SQL Exception", ex);
-        }
+    public void set(final ResultSet row) throws SQLException {
+        this.requestPlayerId = row.getInt("player_req_id");
+        this.requestPlayerName = row.getString("request_playername");
+        this.requestPlayerFigure = row.getString("request_playerfigure");
     }
 
     // fields

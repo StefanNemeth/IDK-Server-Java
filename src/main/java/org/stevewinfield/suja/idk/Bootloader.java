@@ -16,6 +16,7 @@ import org.stevewinfield.suja.idk.dedicated.commands.DedicatedServerCommandHandl
 import org.stevewinfield.suja.idk.game.Game;
 import org.stevewinfield.suja.idk.game.plugins.PluginManager;
 import org.stevewinfield.suja.idk.network.ConnectionListener;
+import org.stevewinfield.suja.idk.network.sessions.Session;
 import org.stevewinfield.suja.idk.network.sessions.SessionManager;
 import org.stevewinfield.suja.idk.storage.Storage;
 import org.stevewinfield.suja.idk.threadpools.ServerTask;
@@ -64,7 +65,9 @@ public class Bootloader {
         Properties buildProperties = new Properties();
         try {
             buildProperties.load(Bootloader.class.getResourceAsStream("/build.properties"));
-        } catch (Exception ignored) {
+        } catch (final Exception ignored) {
+            // Default Values of buildProperties are given at
+            // the second parameter of Properties::getProperty
         }
         IDK.NAME = buildProperties.getProperty("name", "IDK");
         IDK.BUILD_NUMBER = buildProperties.getProperty("build", "UNKNOWN");
@@ -100,6 +103,7 @@ public class Bootloader {
         logger.info("Properties file successfully read.");
 
         dedicatedServerCommandHandler = new DedicatedServerCommandHandler();
+        dedicatedServerCommandHandler.registerDefaultCommands();
 
         ThreadedCommandReader commandReader = new ThreadedCommandReader("Server console handler", dedicatedServerCommandHandler);
 
@@ -187,7 +191,7 @@ public class Bootloader {
         game = new Game();
         game.getCatalogManager().loadCache();
         pluginManager = new PluginManager();
-        pluginManager.load(new File("plugins"));
+        pluginManager.load(new File(IDK.SYSTEM_PLUGINS_PATH));
 
         game.getBotManager().load();
 
@@ -195,9 +199,6 @@ public class Bootloader {
             System.exit(0);
         }
 
-        /**
-         * Online-User updater (+ keeps mysql connection up)
-         */
         WorkerTasks.initWorkerTasks(1); // initialize worker tasks
 
         sessionManager = new SessionManager(Integer.valueOf(settings.getProperty("idk.game.maxconns", "2000")));
@@ -205,6 +206,10 @@ public class Bootloader {
 
         if (listener.tryListen()) {
             logger.info("Ready for connections (Debugging " + (IDK.DEBUG ? "enabled" : "disabled") + ").");
+
+            /**
+             * Online-User updater (+ keeps mysql connection up)
+             */
             WorkerTasks.addTask(new ServerTask() {
 
                 @Override
@@ -219,6 +224,9 @@ public class Bootloader {
 
             }, 0, 60000, WorkerTasks.getSystemExecutor());
 
+            /**
+             * Update plugins
+             */
             WorkerTasks.addTask(new ServerTask() {
                 @Override
                 public void run() {
@@ -228,6 +236,24 @@ public class Bootloader {
                     Bootloader.exitServer();
                 }
             }, 600000, 600000, WorkerTasks.getSystemExecutor());
+
+            /**
+             * Do all kind of stuff
+             * * Check HC/VIP membership expiration
+             * * Check Avatar Effects expiration
+             * * ..
+             */
+            WorkerTasks.addTask(new ServerTask() {
+                @Override
+                public void run() {
+                    for (final Session session : Bootloader.getSessionManager().getSessions()) {
+                        if (session == null || !session.isAuthenticated()) {
+                            continue;
+                        }
+                        session.getPlayerInstance().getInventory().checkEffectExpiry(session);
+                    }
+                }
+            }, 0, 5000, WorkerTasks.getSystemExecutor());
         }
     }
 

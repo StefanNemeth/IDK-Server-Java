@@ -7,4 +7,5 @@ package org.stevewinfield.suja.idk.game.furnitures;
 public class FurnitureType {
     public static final String FLOOR = "s";
     public static final String WALL = "i";
+    public static final String AVATAR_EFFECT = "e";
 }

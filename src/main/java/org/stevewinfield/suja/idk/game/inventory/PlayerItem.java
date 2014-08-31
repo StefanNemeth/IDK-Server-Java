@@ -17,8 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class PlayerItem implements ISerialize {
-    private static final Logger logger = Logger.getLogger(PlayerItem.class);
-
     // getters
     public int getItemId() {
         return itemId;
@@ -44,6 +42,10 @@ public class PlayerItem implements ISerialize {
         return this.base.isWiredItem() || this.base.isGift() || this.getBase().getId() == IDK.CATA_RECYCLER_BOX_ID || this.getBase().getInteractor() == FurnitureInteractor.TELEPORTER;
     }
 
+    public void setFlags(final String flags) {
+        this.flags = flags;
+    }
+
     public PlayerItem() {
         this.itemId = 0;
         this.base = null;
@@ -57,19 +59,15 @@ public class PlayerItem implements ISerialize {
         this.interactorId = interactorId;
     }
 
-    public void set(final ResultSet row) {
-        try {
-            this.itemId = row.getInt("item_id");
-            this.base = Bootloader.getGame().getFurnitureManager().getFurniture(row.getInt("base_item"));
-            this.interactorId = row.getInt("special_interactor") > -1 ? row.getInt("special_interactor") : this.base.getInteractor();
-            final ResultSet _row = Bootloader.getStorage().queryParams("SELECT flag FROM item_flags WHERE item_id=" + this.itemId).executeQuery();
-            if (_row != null && _row.next()) {
-                this.flags = _row.getString("flag");
-            } else {
-                this.flags = "0";
-            }
-        } catch (final SQLException e) {
-            logger.error("SQL Exception", e);
+    public void set(final ResultSet row) throws SQLException {
+        this.itemId = row.getInt("item_id");
+        this.base = Bootloader.getGame().getFurnitureManager().getFurniture(row.getInt("base_item"));
+        this.interactorId = row.getInt("special_interactor") > -1 ? row.getInt("special_interactor") : this.base.getInteractor();
+        final ResultSet _row = Bootloader.getStorage().queryParams("SELECT flag FROM item_flags WHERE item_id=" + this.itemId).executeQuery();
+        if (_row != null && _row.next()) {
+            this.flags = _row.getString("flag");
+        } else {
+            this.flags = "0";
         }
     }
 
@@ -102,7 +100,7 @@ public class PlayerItem implements ISerialize {
         writer.push(base.getSpriteId());
         writer.push(typeId); // types.. (todo)
         writer.push(this.flagsHidden() ? "" : flags);
-        writer.push(true); // can recycle (todo)
+        writer.push(base.isRecyclable());
         writer.push(base.isTradeable());
         writer.push(base.isInventoryStackable());
         writer.push(true); // can sell (todo)

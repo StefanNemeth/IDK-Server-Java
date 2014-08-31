@@ -527,7 +527,6 @@ public class RoomPlayer implements ISerialize {
                         if (highestItem.getBase().getInteractor() == FurnitureInteractor.WF_PLATE) {
                             highestItem.getInteractor().onPlayerWalksOn(this, highestItem);
                         } else if (highestItem.getBase().getInteractor() == FurnitureInteractor.BATTLE_BANZAI_PUCK) {
-                            System.out.println("HIII");
                             if (this.trigger) {
                                 highestItem.getInteractor().onTrigger(this, highestItem, 1, this.getSession() != null && room.hasRights(this.getSession()));
                                 // this.trigger = false;
@@ -583,6 +582,9 @@ public class RoomPlayer implements ISerialize {
     public void applyEffect(final int effectId) {
         if (this.effectId == effectId) {
             return;
+        }
+        if (this.effectId == RoomPlayerEffect.BANZAI_BLUE || this.effectId == RoomPlayerEffect.BANZAI_GREEN || this.effectId == RoomPlayerEffect.BANZAI_ORANGE || this.effectId == RoomPlayerEffect.BANZAI_PINK) {
+            this.effectCache = this.effectId;
         }
         this.effectId = effectId;
         this.getRoom().writeMessage(new RoomPlayerEffectWriter(this.getVirtualId(), effectId), null);
