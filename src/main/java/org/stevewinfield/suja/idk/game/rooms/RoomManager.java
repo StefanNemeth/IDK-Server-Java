@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RoomManager {
     private static final Logger logger = Logger.getLogger(RoomManager.class);
 
-    public ConcurrentHashMap<Integer, Integer> getTeleporterCache() {
+    public Map<Integer, Integer> getTeleporterCache() {
         return this.teleporterCache;
     }
 
