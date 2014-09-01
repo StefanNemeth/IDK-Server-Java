@@ -13,6 +13,7 @@ import org.stevewinfield.suja.idk.communication.navigator.writers.RoomCategories
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RoomManager {
     private static final Logger logger = Logger.getLogger(RoomManager.class);
 
-    public ConcurrentHashMap<Integer, Integer> getTeleporterCache() {
+    public Map<Integer, Integer> getTeleporterCache() {
         return this.teleporterCache;
     }
 
@@ -138,10 +139,10 @@ public class RoomManager {
         return this.roomCategories.size();
     }
 
-    private final ConcurrentHashMap<Integer, RoomInstance> loadedRoomInstances;
-    private final ConcurrentHashMap<Integer, RoomCategory> roomCategories;
-    private final ConcurrentHashMap<String, RoomModel> roomModels;
-    private final ConcurrentHashMap<Integer, Integer> teleporterCache;
+    private final Map<Integer, RoomInstance> loadedRoomInstances;
+    private final Map<Integer, RoomCategory> roomCategories;
+    private final Map<String, RoomModel> roomModels;
+    private final Map<Integer, Integer> teleporterCache;
     private MessageWriter cachedCategoryWriter;
 
 }

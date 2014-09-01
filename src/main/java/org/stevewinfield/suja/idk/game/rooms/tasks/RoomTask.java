@@ -12,13 +12,16 @@ import org.stevewinfield.suja.idk.game.miscellaneous.ChatMessage;
 import org.stevewinfield.suja.idk.game.rooms.RoomInstance;
 import org.stevewinfield.suja.idk.game.rooms.RoomItem;
 import org.stevewinfield.suja.idk.game.rooms.RoomPlayer;
+import org.stevewinfield.suja.idk.game.rooms.coordination.Vector2;
 import org.stevewinfield.suja.idk.game.rooms.tasks.games.BattleBanzaiTask;
 import org.stevewinfield.suja.idk.game.rooms.wired.WiredDelayEvent;
 import org.stevewinfield.suja.idk.threadpools.ServerTask;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 
 public class RoomTask extends ServerTask {
@@ -119,12 +122,16 @@ public class RoomTask extends ServerTask {
         }
         final GapList<MessageWriter> messages = new GapList<>();
         final List<RoomPlayer> updatedPlayers = new GapList<>();
+        final ConcurrentHashMap<Vector2, Integer> setTileStates = new ConcurrentHashMap<>();
         for (final RoomPlayer player : room.getRoomPlayers().values()) {
-            player.onCycle();
+            player.onCycle(setTileStates);
             if (player.needsUpdate()) {
                 updatedPlayers.add(player);
                 player.setUpdateNeeded(false);
             }
+        }
+        for (final Map.Entry<Vector2, Integer> tileState : setTileStates.entrySet()) {
+            this.room.getGamemap().updateTile(tileState.getKey(), tileState.getValue());
         }
         while (!this.chatMessages.isEmpty()) {
             this.room.onPlayerChat(this.chatMessages.poll());

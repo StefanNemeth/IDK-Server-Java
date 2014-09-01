@@ -147,6 +147,9 @@ public class BotManager {
     }
 
     public void addBotInteractor(GamePlugin plugin, final int interactorId, final IBotInteractor botInteractor) {
+        if (!plugin.isLoadedExternally() && botInteractors.containsKey(interactorId)) {
+            logger.warn("Bot Interactor with ID " + interactorId + " has already been added, but will be replaced by plugin " + plugin.getName());
+        }
         botInteractors.put(interactorId, botInteractor);
     }
 

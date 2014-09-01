@@ -59,6 +59,9 @@ public class ChatCommandHandler {
     }
 
     public void addChatCommand(final GamePlugin plugin, final String cmd, IChatCommand chatCommand) {
+        if (!plugin.isLoadedExternally() && commands.containsKey(cmd)) {
+            logger.warn("Command \"" + cmd + "\" has already been added, but will be replaced by plugin " + plugin.getName());
+        }
         commands.put(cmd, chatCommand);
     }
 

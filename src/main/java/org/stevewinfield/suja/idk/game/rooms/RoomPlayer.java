@@ -21,6 +21,7 @@ import org.stevewinfield.suja.idk.network.sessions.Session;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RoomPlayer implements ISerialize {
 
@@ -354,7 +355,7 @@ public class RoomPlayer implements ISerialize {
         this.room.writeMessage(new RoomPlayerCarryItemWriter(this.virtualId, x), this.getSession());
     }
 
-    public void onCycle() {
+    public void onCycle(final ConcurrentHashMap<Vector2, Integer> roomTileStates) {
         if (this.stepIsSetted()) {
             if ((this.room.getInformation().getModel().getDoorPosition().getX() == this.getSettedPosition().getX() &&
                     this.room.getInformation().getModel().getDoorPosition().getY() == this.getSettedPosition().getY()) ||
@@ -410,6 +411,11 @@ public class RoomPlayer implements ISerialize {
             } else {
                 termCycles++;
             }
+        }
+        if (this.isWalking() && this.isFrozen()) {
+            this.setWalking(false);
+            this.removeStatus("mv");
+            this.update();
         }
         if (this.isWalking() && !this.isFrozen()) {
             Vector2 point = this.getGoalPosition();
@@ -544,11 +550,12 @@ public class RoomPlayer implements ISerialize {
                     this.setSettedPosition(new Vector3(nextX, nextY, nextAltitude));
                 }
                 if (this.currentTileState != -1) {
-                    this.getRoom().getGamemap().updateTile(oldPoint, this.currentTileState);
+                    roomTileStates.put(oldPoint, this.currentTileState);
+                    //this.getRoom().getGamemap().updateTile(oldPoint, this.currentTileState);
                 }
                 this.currentTileState = this.getRoom().getGamemap().getTileState(point.getX(), point.getY());
                 final boolean oxi = this.currentTileState == TileState.SITABLE || this.currentTileState == TileState.LAYABLE;
-                this.getRoom().getGamemap().updateTile(point, this.getRoom().getInformation().blockingDisabled() ? (TileState.PLAYER | (oxi ? this.currentTileState : 0)) : (TileState.BLOCKED | (oxi ? this.currentTileState : 0)));
+                roomTileStates.put(point, this.getRoom().getInformation().blockingDisabled() ? (TileState.PLAYER | (oxi ? this.currentTileState : 0)) : (TileState.BLOCKED | (oxi ? this.currentTileState : 0)));
             }
             this.update();
         }
