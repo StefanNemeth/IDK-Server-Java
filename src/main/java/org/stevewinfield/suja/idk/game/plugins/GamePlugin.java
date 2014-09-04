@@ -7,7 +7,7 @@ package org.stevewinfield.suja.idk.game.plugins;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.game.bots.IBotInteractor;
 import org.stevewinfield.suja.idk.game.event.Event;
-import org.stevewinfield.suja.idk.game.event.Listener;
+import org.stevewinfield.suja.idk.game.event.IEventListener;
 import org.stevewinfield.suja.idk.game.event.impl.EventUtils;
 import org.stevewinfield.suja.idk.game.miscellaneous.IChatCommand;
 
@@ -56,8 +56,8 @@ public class GamePlugin {
         Bootloader.getGame().getEventManager().addEventListener(this, eventClass, obj);
     }
 
-    public void addEventListener(final Listener listener) {
-        Bootloader.getGame().getEventManager().registerListener(this, listener);
+    public void addEventListener(final Class<? extends Event> eventClass, final IEventListener listener) {
+        Bootloader.getGame().getEventManager().registerListener(this, eventClass, listener);
     }
 
     public String getName() {

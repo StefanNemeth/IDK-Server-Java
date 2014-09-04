@@ -1,6 +1,5 @@
 package org.stevewinfield.suja.idk.game.plugins;
 
-import org.stevewinfield.suja.idk.game.event.Event;
 import org.stevewinfield.suja.idk.game.miscellaneous.ChatCommandArguments;
 import org.stevewinfield.suja.idk.game.miscellaneous.ChatMessage;
 import org.stevewinfield.suja.idk.game.rooms.RoomInstance;
@@ -25,10 +24,6 @@ public class PluginInterfaces {
 
     public static interface ChatCommandExecutor {
         public boolean execute(RoomPlayer player, ChatCommandArguments arguments);
-    }
-
-    public static interface EventListener {
-        public void onEvent(Event event);
     }
 
     public static interface ScriptPlugin {
