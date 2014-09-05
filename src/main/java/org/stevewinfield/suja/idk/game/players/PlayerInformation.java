@@ -149,7 +149,7 @@ public class PlayerInformation {
         this.lastUpdate = row.getInt("last_update");
     }
 
-    public void setCredits(final int credits) {
+    public void addCredits(final int credits) {
         this.creditsBalance += credits;
     }
 

@@ -26,7 +26,7 @@ public class ExchangeInteractor extends DefaultInteractor {
         final FurnitureExchange exchange = Bootloader.getGame().getFurnitureManager().getFurnitureExchanges().get(item.getBase().getId());
 
         if (exchange.getChangeCoins() > 0) {
-            player.getSession().getPlayerInstance().getInformation().setCredits(exchange.getChangeCoins());
+            player.getSession().getPlayerInstance().getInformation().addCredits(exchange.getChangeCoins());
             player.getSession().writeMessage(new CreditsBalanceWriter(player.getSession().getPlayerInstance().getInformation().getCreditsBalance()));
         }
 

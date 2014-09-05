@@ -3,6 +3,9 @@ package org.stevewinfield.suja.idk.game.event.impl;
 import org.apache.log4j.Logger;
 import org.stevewinfield.suja.idk.Bootloader;
 import org.stevewinfield.suja.idk.game.event.Event;
+import org.stevewinfield.suja.idk.game.event.item.ItemPurchaseClubEvent;
+import org.stevewinfield.suja.idk.game.event.item.ItemPurchaseEvent;
+import org.stevewinfield.suja.idk.game.event.player.PlayerChatEvent;
 import org.stevewinfield.suja.idk.game.event.session.SessionAuthenticatedEvent;
 import org.stevewinfield.suja.idk.game.event.session.SessionMakeEvent;
 import org.stevewinfield.suja.idk.game.event.session.SessionRemoveEvent;
@@ -39,8 +42,16 @@ public class EventUtils {
     }
 
     static {
+        // Session
         addEventClass(SessionAuthenticatedEvent.class);
         addEventClass(SessionMakeEvent.class);
         addEventClass(SessionRemoveEvent.class);
+
+        // Player
+        addEventClass(PlayerChatEvent.class);
+
+        // Items
+        addEventClass(ItemPurchaseClubEvent.class);
+        addEventClass(ItemPurchaseEvent.class);
     }
 }

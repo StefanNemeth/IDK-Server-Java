@@ -56,6 +56,14 @@ public class GamePlugin {
         Bootloader.getGame().getEventManager().addEventListener(this, eventClass, obj);
     }
 
+    public void addEventListener(final String eventName, final IEventListener listener) {
+        Class<? extends Event> eventClass = EventUtils.eventStringToClass(eventName);
+        if (eventClass == null) {
+            throw new Error("Unable to find event " + eventName);
+        }
+        addEventListener(eventClass, listener);
+    }
+
     public void addEventListener(final Class<? extends Event> eventClass, final IEventListener listener) {
         Bootloader.getGame().getEventManager().registerListener(this, eventClass, listener);
     }

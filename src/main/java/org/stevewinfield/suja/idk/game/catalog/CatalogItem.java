@@ -37,6 +37,10 @@ public class CatalogItem implements ISerialize {
         return costsCoins;
     }
 
+    /**
+     * Third currency, which would usually be snowflakes or shells
+     * @return Extra costs
+     */
     public int getCostsExtra() {
         return costsExtra;
     }
