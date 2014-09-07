@@ -49,7 +49,7 @@ public class FireworkInteractor extends DefaultInteractor {
             }
 
             if (IDK.CATA_FIREWORKS_CHARGES_CREDITS > 0) {
-                player.getSession().getPlayerInstance().getInformation().setCredits(-IDK.CATA_FIREWORKS_CHARGES_CREDITS);
+                player.getSession().getPlayerInstance().getInformation().addCredits(-IDK.CATA_FIREWORKS_CHARGES_CREDITS);
                 player.getSession().writeMessage(new CreditsBalanceWriter(player.getSession().getPlayerInstance().getInformation().getCreditsBalance()));
             }
 

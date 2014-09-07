@@ -7,6 +7,7 @@ package org.stevewinfield.suja.idk.game;
 import org.stevewinfield.suja.idk.game.achievements.AchievementManager;
 import org.stevewinfield.suja.idk.game.bots.BotManager;
 import org.stevewinfield.suja.idk.game.catalog.CatalogManager;
+import org.stevewinfield.suja.idk.game.event.EventManager;
 import org.stevewinfield.suja.idk.game.furnitures.FurnitureManager;
 import org.stevewinfield.suja.idk.game.levels.LevelManager;
 import org.stevewinfield.suja.idk.game.miscellaneous.ChatCommandHandler;
@@ -53,6 +54,10 @@ public class Game {
         return botManager;
     }
 
+    public EventManager getEventManager() {
+        return eventManager;
+    }
+
     public Game() {
         this.levelManager = new LevelManager();
         this.achievementManager = new AchievementManager();
@@ -63,6 +68,7 @@ public class Game {
         this.navigatorListManager = new NavigatorListManager(roomManager.getRoomCategoryCount());
         this.moderationManager = new ModerationManager();
         this.botManager = new BotManager();
+        this.eventManager = new EventManager();
     }
 
     // fields
@@ -75,4 +81,5 @@ public class Game {
     private final CatalogManager catalogManager;
     private final ModerationManager moderationManager;
     private final BotManager botManager;
+    private final EventManager eventManager;
 }

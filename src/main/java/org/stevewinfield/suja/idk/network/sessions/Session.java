@@ -17,6 +17,7 @@ import org.stevewinfield.suja.idk.communication.miscellaneous.writers.MultiNotif
 import org.stevewinfield.suja.idk.communication.miscellaneous.writers.StaffNotificationWriter;
 import org.stevewinfield.suja.idk.communication.player.writers.PlayerInfoUpdateWriter;
 import org.stevewinfield.suja.idk.communication.room.writers.*;
+import org.stevewinfield.suja.idk.game.event.session.SessionAuthenticatedEvent;
 import org.stevewinfield.suja.idk.game.friendstream.FriendStream;
 import org.stevewinfield.suja.idk.game.messenger.Messenger;
 import org.stevewinfield.suja.idk.game.messenger.MessengerBuddy;
@@ -248,6 +249,7 @@ public class Session {
                 }
                 this.friendStream.load(this.playerInstance.getInformation().getId(), friends);
                 this.authenticated = true;
+                Bootloader.getGame().getEventManager().callEvent(new SessionAuthenticatedEvent(this));
                 return true;
             }
         } catch (final SQLException exception) {

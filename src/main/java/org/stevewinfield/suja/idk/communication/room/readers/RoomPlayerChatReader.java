@@ -9,6 +9,7 @@ import org.stevewinfield.suja.idk.InputFilter;
 import org.stevewinfield.suja.idk.communication.IMessageReader;
 import org.stevewinfield.suja.idk.communication.MessageReader;
 import org.stevewinfield.suja.idk.communication.OperationCodes;
+import org.stevewinfield.suja.idk.game.event.player.PlayerChatEvent;
 import org.stevewinfield.suja.idk.game.miscellaneous.ChatType;
 import org.stevewinfield.suja.idk.game.rooms.RoomInstance;
 import org.stevewinfield.suja.idk.network.sessions.Session;
@@ -44,7 +45,12 @@ public class RoomPlayerChatReader implements IMessageReader {
             }
         }
 
-        session.getRoomPlayer().chat(message, shouting ? ChatType.SHOUT : ChatType.SAY);
+        PlayerChatEvent event = Bootloader.getGame().getEventManager().callEvent(new PlayerChatEvent(session.getRoomPlayer(), message, shouting));
+
+        if (event.isCancelled()) {
+            return;
+        }
+        session.getRoomPlayer().chat(event.getMessage(), event.isShouting() ? ChatType.SHOUT : ChatType.SAY);
     }
 
 }

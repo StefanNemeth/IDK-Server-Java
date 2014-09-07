@@ -6,6 +6,9 @@ package org.stevewinfield.suja.idk.network.sessions;
 
 import org.apache.log4j.Logger;
 import org.jboss.netty.channel.Channel;
+import org.stevewinfield.suja.idk.Bootloader;
+import org.stevewinfield.suja.idk.game.event.session.SessionMakeEvent;
+import org.stevewinfield.suja.idk.game.event.session.SessionRemoveEvent;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,7 +43,7 @@ public class SessionManager {
 
     public boolean removeSession(final Channel channel) {
         if (this.sessions.containsKey(channel.getId())) {
-            this.sessions.remove(channel.getId());
+            Bootloader.getGame().getEventManager().callEvent(new SessionRemoveEvent(this.sessions.remove(channel.getId())));
             if (((Session) channel.getAttachment()).isAuthenticated()) {
                 activeSessions--;
                 this.authenticatedSessions.remove(((Session) channel.getAttachment()).getPlayerInstance().getInformation().getId());
@@ -65,6 +68,8 @@ public class SessionManager {
 
         final Session session = new Session(channel.getId(), channel);
         channel.setAttachment(session);
+
+        Bootloader.getGame().getEventManager().callEvent(new SessionMakeEvent(session));
 
         return this.sessions.putIfAbsent(channel.getId(), session) == null;
     }

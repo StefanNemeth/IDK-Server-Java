@@ -15,6 +15,8 @@ import org.stevewinfield.suja.idk.communication.catalog.writers.CatalogPurchaseR
 import org.stevewinfield.suja.idk.communication.catalog.writers.ClubGiftReadyWriter;
 import org.stevewinfield.suja.idk.communication.catalog.writers.GiftReceiverNotFoundWriter;
 import org.stevewinfield.suja.idk.communication.player.writers.*;
+import org.stevewinfield.suja.idk.game.event.item.ItemPurchaseClubEvent;
+import org.stevewinfield.suja.idk.game.event.item.ItemPurchaseEvent;
 import org.stevewinfield.suja.idk.game.furnitures.Furniture;
 import org.stevewinfield.suja.idk.game.furnitures.FurnitureInteractor;
 import org.stevewinfield.suja.idk.game.levels.ClubSubscriptionLevel;
@@ -169,14 +171,18 @@ public class CatalogManager {
                 return;
             }
 
-            if (offer.getPrice() > 0) {
-                session.getPlayerInstance().getInformation().setCredits(-offer.getPrice());
+            ItemPurchaseClubEvent event = new ItemPurchaseClubEvent(offer, offer.getPrice());
+            Bootloader.getGame().getEventManager().callEvent(event);
+            final int price = event.getPrice();
+
+            if (price > 0) {
+                session.getPlayerInstance().getInformation().addCredits(-price);
                 session.writeMessage(new CreditsBalanceWriter(session.getPlayerInstance().getInformation().getCreditsBalance()));
                 session.getPlayerInstance().getInformation().updateCurrencies();
             }
 
             session.getPlayerInstance().getSubscriptionManager().update(offer.getType() == CatalogClubOfferType.VIP ? ClubSubscriptionLevel.VIP : ClubSubscriptionLevel.BASIC, offer.getLengthSeconds());
-            session.writeMessage(new CatalogPurchaseResultWriter(offer.getId(), offer.getName(), offer.getPrice(), 0, 0));
+            session.writeMessage(new CatalogPurchaseResultWriter(offer.getId(), offer.getName(), price, 0, 0));
             session.writeMessage(new LevelRightsListWriter(session.getPlayerInstance().hasVIP(), session.getPlayerInstance().hasClub(), session.getPlayerInstance().hasRight("hotel_admin")));
             session.writeMessage(new SubscriptionStatusWriter(session.getPlayerInstance().getSubscriptionManager(), true));
 
@@ -208,7 +214,12 @@ public class CatalogManager {
         }
 
         int targetId = 0;
-        int coinsPrice = item.getCostsCoins();
+
+        ItemPurchaseEvent event = new ItemPurchaseEvent(item, item.getCostsCoins(), item.getCostsPixels(), item.getCostsExtra(), isGift);
+        Bootloader.getGame().getEventManager().callEvent(event);
+        int coinsPrice = event.getCostsCoins();
+        final int pixelsPrice = event.getCostsPixels();
+        final int extrasPrice = event.getCostsExtra();
 
         if (isGift) {
             if (giftBox < 0 || giftRibbon < 0 || giftBox >= IDK.CATA_GIFTS_BOX_COUNT || giftRibbon >= IDK.CATA_GIFTS_RIBBON_COUNT) {
@@ -265,15 +276,15 @@ public class CatalogManager {
         }
 
         if (coinsPrice > 0) {
-            session.getPlayerInstance().getInformation().setCredits(-coinsPrice);
+            session.getPlayerInstance().getInformation().addCredits(-coinsPrice);
             session.writeMessage(new CreditsBalanceWriter(session.getPlayerInstance().getInformation().getCreditsBalance()));
         }
 
-        if (item.getCostsPixels() > 0 || item.getCostsExtra() > 0) {
-            if (item.getCostsPixels() > 0) {
-                session.getPlayerInstance().getInformation().setPixels(-item.getCostsPixels());
+        if (pixelsPrice > 0 || extrasPrice > 0) {
+            if (pixelsPrice > 0) {
+                session.getPlayerInstance().getInformation().setPixels(-pixelsPrice);
             } else {
-                session.getPlayerInstance().getInformation().setShells(-item.getCostsExtra());
+                session.getPlayerInstance().getInformation().setShells(-extrasPrice);
             }
             session.writeMessage(new ActivityPointsWriter(session.getPlayerInstance().getInformation().getPixelsBalance(), session.getPlayerInstance().getInformation().getShellsBalance()));
         }
