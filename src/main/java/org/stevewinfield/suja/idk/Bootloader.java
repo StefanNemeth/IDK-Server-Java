@@ -222,7 +222,7 @@ public class Bootloader {
                     Bootloader.exitServer();
                 }
 
-            }, 0, 60000, WorkerTasks.getSystemExecutor());
+            }, 0, 60000);
 
             /**
              * Update plugins
@@ -235,7 +235,7 @@ public class Bootloader {
                     }
                     Bootloader.exitServer();
                 }
-            }, 600000, 600000, WorkerTasks.getSystemExecutor());
+            }, 600000);
 
             /**
              * Do all kind of stuff
@@ -253,7 +253,7 @@ public class Bootloader {
                         session.getPlayerInstance().getInventory().checkEffectExpiry(session);
                     }
                 }
-            }, 0, 5000, WorkerTasks.getSystemExecutor());
+            }, 0, 5000);
         }
     }
 

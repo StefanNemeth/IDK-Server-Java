@@ -44,8 +44,37 @@ public class WorkerTasks {
         logger.info("Worker Tasks initialized.");
     }
 
+    /**
+     * Adds a repeating task
+     * @param task Task to execute
+     * @param initialDelay Delay before executing the first the task for the first time
+     * @param period Delay between executions of this task
+     * @param worker Worker that executes this task
+     * @return a ScheduledFuture representing pending completion of the task, and whose get() method will throw an exception upon cancellation
+     */
     public static ScheduledFuture<?> addTask(final ServerTask task, final int initialDelay, final int period, final ScheduledThreadPoolExecutor worker) {
         return worker.scheduleAtFixedRate(task, initialDelay, period, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * Adds a repeating task with the default system executor
+     * @param task Task to execute
+     * @param initialDelay Delay before executing the first the task for the first time
+     * @param period Delay between executions of this task
+     * @return a ScheduledFuture representing pending completion of the task, and whose get() method will throw an exception upon cancellation
+     */
+    public static ScheduledFuture<?> addTask(final ServerTask task, final int initialDelay, final int period) {
+        return addTask(task, initialDelay, period, systemExecutor);
+    }
+
+    /**
+     * Adds a repeating task with the default system executor and the first execution after a delay of period
+     * @param task Task to execute
+     * @param period Delay between executions of this task
+     * @return a ScheduledFuture representing pending completion of the task, and whose get() method will throw an exception upon cancellation
+     */
+    public static ScheduledFuture<?> addTask(final ServerTask task, final int period) {
+        return addTask(task, period, period);
     }
 
     // fields
