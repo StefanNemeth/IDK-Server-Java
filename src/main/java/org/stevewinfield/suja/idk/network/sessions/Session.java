@@ -81,6 +81,9 @@ public class Session {
         return loadingsCheckPassed;
     }
 
+    /**
+     * @return RoomPlayer if player is in room, otherwise null
+     */
     public RoomPlayer getRoomPlayer() {
         return roomPlayer;
     }
